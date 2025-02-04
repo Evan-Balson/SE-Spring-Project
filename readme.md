@@ -11,7 +11,7 @@ This repository is the collaborative hub for our **Software Engineering Project*
 
 ---
 
-<img src='https://github.com/Evan-Balson/SE-Spring-Project/blob/main/cover.jpg' alt="Team Project Banner" />
+<img src='https://github.com/Evan-Balson/SE-Spring-Project/blob/master/cover.jpg' alt="Team Project Banner" />
 
 ---
 
