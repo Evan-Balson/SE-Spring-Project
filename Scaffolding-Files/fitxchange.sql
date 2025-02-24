@@ -320,7 +320,7 @@ INSERT INTO Payment_Method (payment_id, payment_type, transaction_id) VALUES
 
 
 -- Insert data into Transaction table
-INSERT INTO Transaction (transaction_id, user_id, date, total) VALUES
+INSERT INTO Transaction (transaction_id, user_id, transaction_date, total) VALUES
 ('T001', 'U001', '2023-01-10', 120.00),
 ('T002', 'U002', '2023-01-15', 250.00),
 ('T003', 'U003', '2023-01-20', 75.00),
@@ -348,7 +348,7 @@ INSERT INTO Offers (offer_id, terms, validity, offer_type) VALUES
 
 
 -- Insert data into Delivery table
-INSERT INTO Delivery (delivery_id, address, delivery_option, date, transaction_id) VALUES
+INSERT INTO Delivery (delivery_id, delivery_address, delivery_option, delivery_date, transaction_id) VALUES
 (1, '12 High St, Oxford, OX1 4DB', 'Next Day', '2023-01-11', 'T001'),
 (2, '58 Queen St, Edinburgh, EH2 3NS', 'Standard', '2023-01-16', 'T002'),
 (3, '103 King’s Road, Chelsea, SW3 5EQ', 'Express', '2023-01-21', 'T003'),
