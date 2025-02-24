@@ -113,7 +113,7 @@ CREATE TABLE Inspection (
 
 
 -- Insert data into Outfit table
-INSERT INTO OUTFIT(O_ID, Name, Colour, Size, state, Description) VALUES 
+INSERT INTO OUTFIT(O_ID, Name, Colour, Size, State, Description) VALUES 
 ('101', 'Blazer', 'Grey', '16', 'New', 'Neat structured fit, soft cotton fabric and single button fastening'),
 ('102', 'Suit', 'Beige', '12', 'New', 'Front pocket'),
 ('103', 'Jacket', 'Grey', '10 UK', 'Used', 'There is a small cut in the left bottom corner of jacket. It’s hardly visible'), 
