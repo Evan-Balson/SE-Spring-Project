@@ -33,13 +33,33 @@ SET time_zone = "+00:00";
 
 
 -- Creating Outfit table
+CREATE TABLE OUTFIT (
+    O_ID VARCHAR(10) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Colour VARCHAR(50),
+    Size VARCHAR(20),
+    State VARCHAR(20) CHECK (State IN ('New', 'Used')),
+    Description TEXT
+);
 
 
 -- Creating Category table
-
+CREATE TABLE CATEGORY (
+    C_ID VARCHAR(10) PRIMARY KEY,
+    Availability VARCHAR(50) CHECK (Availability IN ('In Stock', 'Out of Stock', 'Limited Stock')),
+    Quantity INT CHECK (Quantity >= 0),
+    O_ID VARCHAR(10),
+    FOREIGN KEY (O_ID) REFERENCES OUTFIT(O_ID)
+);
 
 -- Creating Outfit_and_Categories table
-
+CREATE TABLE OUTFIT_and_CATEGORIES (
+    C_ID VARCHAR(10),
+    O_ID VARCHAR(10),
+    PRIMARY KEY (C_ID, O_ID),
+    FOREIGN KEY (C_ID) REFERENCES CATEGORY(C_ID),
+    FOREIGN KEY (O_ID) REFERENCES OUTFIT(O_ID)
+);
 
 -- Creating Inventory table
 CREATE TABLE Inventory (
