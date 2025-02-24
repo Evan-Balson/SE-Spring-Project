@@ -113,12 +113,47 @@ CREATE TABLE Inspection (
 
 
 -- Insert data into Outfit table
+INSERT INTO OUTFIT(O_ID, Name, Colour, Size, state, Description) VALUES 
+('101', 'Blazer', 'Grey', '16', 'New', 'Neat structured fit, soft cotton fabric and single button fastening'),
+('102', 'Suit', 'Beige', '12', 'New', 'Front pocket'),
+('103', 'Jacket', 'Grey', '10 UK', 'Used', 'There is a small cut in the left bottom corner of jacket. It’s hardly visible'), 
+('104', 'Coat', 'Green', '46_R UK', 'Used', 'Graphic design and dynamic elegance, two side welt pockets'),
+('105', 'Jacket', 'Green', '12 UK', 'New', 'One-button single-breasted closure. Two front welt pockets. Decorative striped detail on sleeves'),
+('106', 'Cardigan', 'Navy blue', '44 UK', 'Used', 'Fabric: 100% cashmere'),
+('107', 'Jacket', 'Blue', '44_R UK', 'Used', 'Two-buttoned jacket, two patch pockets'),
+('108', 'Trousers', 'Blue', '40_R UK', 'Used', 'Elasticated waist, two side pockets, zip closure'),
+('109', 'Jacket', 'Charcoal grey', '44_R UK', 'New', 'Crafted from a textured fabric, features two-button fastening'),
+('110', 'Trousers', 'Navy', '30 UK', 'New', 'Designed with pockets, zip fly and button fastening');
+
 
 
 -- Insert data into Category table
+INSERT INTO CATEGORY (C_ID, Availability, Quantity, O_ID) VALUES
+('C001', 'In Stock', 10, '101'),
+('C002', 'Out of Stock', 0, '102'),
+('C003', 'In Stock', 5, '103'),
+('C004', 'In Stock', 8, '104'),
+('C005', 'In Stock', 6, '105'), 
+('C006', 'Limited Stock', 2, '106'), 
+('C007', 'In Stock', 7, '107'),
+('C008', 'In Stock', 4, '108'),
+('C009', 'Limited Stock', 3, '109'), 
+('C010', 'In Stock', 9, '110');
 
 
 -- Insert data into Outfit_and_Categories table
+ INSERT INTO OUTFIT_and_CATEGORIES (C_ID, O_ID) VALUES 
+('C001', '101'), 
+('C002', '102'),
+('C003', '103'),
+('C004', '104'), 
+('C005', '105'), 
+('C006', '106'), 
+('C007', '107'),
+('C008', '108'),
+('C009', '109'), 
+('C010', '110');
+
 
 
 -- Insert data into Inventory table
