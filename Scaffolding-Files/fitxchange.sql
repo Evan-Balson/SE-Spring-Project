@@ -26,9 +26,9 @@ SET time_zone = "+00:00";
 -- Creating Users table
 CREATE TABLE Users (
     user_id VARCHAR(32) NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    role VARCHAR(10),
-    address VARCHAR(100),
+    user_name VARCHAR(50) NOT NULL,
+    user_role VARCHAR(10),
+    user_address VARCHAR(100),
     email_address VARCHAR(100),
     contact_number BIGINT(15),
     PRIMARY KEY (user_id)
@@ -51,10 +51,10 @@ CREATE TABLE Fashion_Advice (
 -- Creating Membership table
 CREATE TABLE Membership (
     membership_id INT(10) NOT NULL,
-    type VARCHAR(25),
+    membership_type VARCHAR(25),
     renewal_status VARCHAR(30),
-    start_date DATE,
-    end_date DATE,
+    membership_start_date DATE,
+    membership_end_date DATE,
     benefits VARCHAR(150),
     user_id VARCHAR(32) NOT NULL,
     PRIMARY KEY (membership_id),
@@ -66,10 +66,10 @@ CREATE TABLE Membership (
 -- Creating Outfit table
 CREATE TABLE Outfit (
     outfit_id VARCHAR(32) NOT NULL,
-    name VARCHAR(100),
-    color VARCHAR(20),
-    size VARCHAR(10),
-    description VARCHAR(100),
+    outfit_name VARCHAR(100),
+    outfit_color VARCHAR(20),
+    outfit_size VARCHAR(10),
+    outfit_description VARCHAR(100),
     item_condition INT(15),
     user_id VARCHAR(32) NOT NULL,
     PRIMARY KEY (outfit_id),
@@ -81,7 +81,7 @@ CREATE TABLE Outfit (
 -- Creating Category table
 CREATE TABLE Category (
     category_id VARCHAR(32) NOT NULL,
-    name VARCHAR(100),
+    category_name VARCHAR(100),
     PRIMARY KEY (category_id)
 );
 
@@ -101,7 +101,7 @@ CREATE TABLE Inventory (
     inventory_id VARCHAR(32) NOT NULL,
     outfit_id VARCHAR(32) NOT NULL,
     price DOUBLE(8,2),
-    availability BOOLEAN,
+    item_availability BOOLEAN,
     quantity INT(5),
     PRIMARY KEY (inventory_id),
     FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id)
@@ -112,7 +112,7 @@ CREATE TABLE Review (
     review_id VARCHAR(32) NOT NULL,
     outfit_id VARCHAR(32) NOT NULL,
     user_id VARCHAR(32) NOT NULL,
-    date DATE,
+    review_date DATE,
     rating INT(2),
     comment VARCHAR(250),
     PRIMARY KEY (review_id),
@@ -144,7 +144,7 @@ CREATE TABLE Payment_Method (
 CREATE TABLE Transaction (
     transaction_id VARCHAR(32) NOT NULL,
     user_id VARCHAR(32) NOT NULL,
-    date DATE,
+    transaction_date DATE,
     total DOUBLE(8,2),
     PRIMARY KEY (transaction_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
@@ -164,9 +164,9 @@ CREATE TABLE Offers (
 -- Creating Delivery table
 CREATE TABLE Delivery (
     delivery_id INT(10) NOT NULL,
-    address VARCHAR(100),
+    delivery_address VARCHAR(100),
     delivery_option VARCHAR(25),
-    date DATE,
+    delivery_date DATE,
     transaction_id VARCHAR(32) NOT NULL,
     PRIMARY KEY (delivery_id),
     FOREIGN KEY (transaction_id) REFERENCES Transaction(transaction_id)
@@ -179,7 +179,7 @@ CREATE TABLE Delivery (
 -- only do this after all the code for creating each table is added for everyone.
 
 -- Insert data into Users table
-INSERT INTO Users (user_id, name, role, address, email_address, contact_number) VALUES
+INSERT INTO Users (user_id, user_name, user_role, user_address, email_address, contact_number) VALUES
 ('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456),
 ('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457),
 ('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458),
@@ -207,7 +207,7 @@ INSERT INTO Fashion_Advice (advice_id, content, date_created, user_id) VALUES
 
 
 -- Insert data into Membership table
-INSERT INTO Membership (membership_id, type, renewal_status, start_date, end_date, benefits, user_id) VALUES
+INSERT INTO Membership (membership_id, membership_type, renewal_status, membership_start_date, membership_end_date, benefits, user_id) VALUES
 (1, 'Gold', 'Active', '2023-01-01', '2024-01-01', 'Free next-day delivery', 'U001'),
 (2, 'Silver', 'Active', '2023-02-01', '2024-02-01', '15% off all full-price items', 'U002'),
 (3, 'Gold', 'Pending', '2023-03-01', '2024-03-01', 'Access to exclusive sales', 'U003'),
@@ -221,22 +221,22 @@ INSERT INTO Membership (membership_id, type, renewal_status, start_date, end_dat
 
 
 -- Insert data into Outfit table
-INSERT INTO OUTFIT (O_ID, Name, Colour, Size, State, Description) VALUES
-('101', 'Blazer', 'Grey', '16', 'New', 'Neat structured fit, soft cotton fabric and single button fastening'),
-('102', 'Suit', 'Beige', '12', 'New', 'Front pocket'),
-('103', 'Jacket', 'Grey', '10 UK', 'Used', 'There is a small cut in the left bottom corner of jacket. It’s hardly visible'), 
-('104', 'Coat', 'Green', '46_R UK', 'Used', 'Graphic design and dynamic elegance, two side welt pockets'),
-('105', 'Jacket', 'Green', '12 UK', 'New', 'One-button single-breasted closure. Two front welt pockets. Decorative striped detail on sleeves'),
-('106', 'Cardigan', 'Navy blue', '44 UK', 'Used', 'Fabric: 100% cashmere'),
-('107', 'Jacket', 'Blue', '44_R UK', 'Used', 'Two-buttoned jacket, two patch pockets'),
-('108', 'Trousers', 'Blue', '40_R UK', 'Used', 'Elasticated waist, two side pockets, zip closure'),
-('109', 'Jacket', 'Charcoal grey', '44_R UK', 'New', 'Crafted from a textured fabric, features two-button fastening'),
-('110', 'Trousers', 'Navy', '30 UK', 'New', 'Designed with pockets, zip fly and button fastening');
+INSERT INTO Outfit (outfit_id, outfit_name, outfit_color, outfit_size, outfit_description, item_condition, user_id) VALUES
+('101', 'Blazer', 'Grey', '16', 'Neat structured fit, soft cotton fabric and single button fastening', 10, 'U001'),
+('102', 'Suit', 'Beige', '12', 'Front pocket', 10, 'U002'),
+('103', 'Jacket', 'Grey', '10 UK', 'There is a small cut in the left bottom corner of jacket. It’s hardly visible', 5, 'U003'),
+('104', 'Coat', 'Green', '46_R UK', 'Graphic design and dynamic elegance, two side welt pockets', 5, 'U004'),
+('105', 'Jacket', 'Green', '12 UK', 'One-button single-breasted closure. Two front welt pockets. Decorative striped detail on sleeves', 10, 'U005'),
+('106', 'Cardigan', 'Navy blue', '44 UK', 'Fabric: 100% cashmere', 5, 'U006'),
+('107', 'Jacket', 'Blue', '44_R UK', 'Two-buttoned jacket, two patch pockets', 5, 'U007'),
+('108', 'Trousers', 'Blue', '40_R UK', 'Elasticated waist, two side pockets, zip closure', 5, 'U008'),
+('109', 'Jacket', 'Charcoal grey', '44_R UK', 'Crafted from a textured fabric, features two-button fastening', 10, 'U009'),
+('110', 'Trousers', 'Navy', '30 UK', 'Designed with pockets, zip fly and button fastening', 10, 'U010');
 
 
 
 -- Insert data into Category table
-INSERT INTO Category (category_id, name) VALUES
+INSERT INTO Category (category_id, category_name) VALUES
 ('C001', 'Outerwear'),
 ('C002', 'Suits'),
 ('C003', 'Casual Wear'),
@@ -251,20 +251,20 @@ INSERT INTO Category (category_id, name) VALUES
 
 -- Insert data into Outfit_and_Categories table
 INSERT INTO Outfit_and_Categories (outfit_id, category_id) VALUES
-('101', 'C002'), 
+('101', 'C002'),
 ('102', 'C002'),
 ('103', 'C001'),
-('104', 'C001'), 
-('105', 'C001'), 
-('106', 'C003'), 
+('104', 'C001'),
+('105', 'C001'),
+('106', 'C003'),
 ('107', 'C001'),
 ('108', 'C003'),
-('109', 'C001'), 
+('109', 'C001'),
 ('110', 'C003');
 
 
 -- Insert data into Inventory table
-INSERT INTO Inventory (inventory_id, outfit_id, price, availability, quantity) VALUES
+INSERT INTO Inventory (inventory_id, outfit_id, price, item_availability, quantity) VALUES
 ('I001', '101', 120.00, TRUE, 10),
 ('I002', '102', 250.00, FALSE, 0),
 ('I003', '103', 75.00, TRUE, 5),
@@ -278,7 +278,7 @@ INSERT INTO Inventory (inventory_id, outfit_id, price, availability, quantity) V
 
 
 -- Insert data into Review table
-INSERT INTO Review (review_id, outfit_id, user_id, date, rating, comment) VALUES
+INSERT INTO Review (review_id, outfit_id, user_id, review_date, rating, comment) VALUES
 ('R001', '101', 'U001', '2023-01-12', 5, 'Perfect fit and classy look.'),
 ('R002', '102', 'U002', '2023-01-15', 4, 'Great quality but arrived late.'),
 ('R003', '103', 'U003', '2023-01-18', 5, 'Very comfortable and stylish.'),
