@@ -42,7 +42,7 @@ SET time_zone = "+00:00";
 
 
 -- Creating Inventory table
-CREATE TABLE "Inventory" (
+CREATE TABLE Inventory (
     inventory_id VARCHAR(32) NOT NULL,
     outfit_id VARCHAR(32) NOT NULL,
     price DOUBLE(8,2),
@@ -56,7 +56,7 @@ CREATE TABLE "Inventory" (
 
 
 -- Creating Inspection table
-CREATE TABLE "Inspection" (
+CREATE TABLE Inspection (
     auth_id VARCHAR(32) NOT NULL,
     outfit_id VARCHAR(32) NOT NULL,
     verification_date DATE,
