@@ -4,7 +4,7 @@ This repository is the collaborative hub for our **Software Engineering Project*
 ---
 
 ## **Submitted By:**
-- **Team Members:** Evan, Mahboubah  
+- **Team Members:** Evan, Mahbouba  
 - **Product Manager:** Niwhar  
 - **Scrum Master:** Hala  
 - **Time spent:** Ongoing  
