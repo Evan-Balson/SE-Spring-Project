@@ -36,6 +36,20 @@ CREATE TABLE Users (
 
 
 
+-- user, fashion advice, membership
+
+
+CREATE TABLE `User` (
+  `User_ID` varchar(20) NOT NULL,
+  `Name` varchar(20) DEFAULT NULL,
+  `Role` varchar(10) DEFAULT NULL,
+  `Address` varchar(40) DEFAULT NULL,
+  `Email_Address` varchar(60) DEFAULT NULL,
+  `Contact_Number` bigint(15) DEFAULT NULL,
+  PRIMARY KEY (`User_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 -- Creating Fashion_Advice table
 CREATE TABLE Fashion_Advice (
     advice_id INT(15) NOT NULL,
@@ -46,6 +60,17 @@ CREATE TABLE Fashion_Advice (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+
+
+CREATE TABLE `Fashion_Advice` (
+    `Advice_ID` int(15) NOT NULL AUTO_INCREMENT,
+    `Content` varchar(250) DEFAULT NULL,
+    `Date_Created` date DEFAULT NULL,
+    `User_ID` varchar(20) NOT NULL,
+    PRIMARY KEY (`Advice_ID`),
+    KEY `usr_id_fshn_fk` (`User_ID`),
+    CONSTRAINT `usr_id_fshn_fk` FOREIGN KEY (`User_ID`) REFERENCES `User` (`User_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- Creating Membership table
@@ -61,6 +86,20 @@ CREATE TABLE Membership (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+
+
+CREATE TABLE `Membership` (
+    `Membership_ID` int(20) NOT NULL AUTO_INCREMENT,
+    `Type` varchar(25) DEFAULT NULL,
+    `Renewal_Status` varchar(30) DEFAULT NULL,
+    `Start_Date` date DEFAULT NULL,
+    `End_Date` date DEFAULT NULL,
+    `Benefits` varchar(50) DEFAULT NULL,
+    `User_ID` varchar(20) NOT NULL,
+    PRIMARY KEY (`Membership_ID`),
+    KEY `usr_id_mmshp_fk` (`User_ID`),
+    CONSTRAINT `usr_id_mmshp_fk` FOREIGN KEY (`User_ID`) REFERENCES `User` (`User_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- Creating Outfit table
