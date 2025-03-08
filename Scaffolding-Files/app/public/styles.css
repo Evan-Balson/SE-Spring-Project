@@ -1,0 +1,74 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif; /* Consider using a web-safe font or importing one from Google Fonts */
+}
+
+body {
+  background-color: #f0f0f0; /* Light grey background for slight contrast */
+}
+
+header {
+  background-color: #ffffff; /* White header */
+  color: #333; /* Dark grey text for better readability */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.logo {
+  font-size: 24px; /* Larger font size for logo */
+  font-weight: bold; /* Making the logo stand out */
+}
+
+.search-bar input, .search-bar button {
+  padding: 8px 10px;
+  border: 1px solid #ccc; /* Defined borders */
+  background: #fff; /* Ensure background is white for visibility */
+}
+
+.search-bar input {
+  width: 300px; /* Consistent input width */
+}
+
+.search-bar button {
+  cursor: pointer;
+  background-color: #007BFF; /* Button color for visibility */
+  color: #fff; /* Text color for contrast */
+}
+
+.user-controls .icon {
+  display: inline-block;
+  padding: 8px;
+  margin-left: 10px;
+  font-size: 18px; /* Suitable icon size */
+  cursor: pointer;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three columns for items */
+  gap: 20px; /* Spacing between columns */
+  padding: 20px;
+}
+
+.product {
+  background-color: #fff; /* White background for product cards */
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Shadow for depth */
+}
+
+footer {
+  background-color: #333; /* Dark footer */
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
