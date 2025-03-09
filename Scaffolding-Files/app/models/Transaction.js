@@ -6,37 +6,52 @@ class Transaction {
 
     // Attributes
     transaction_ID;
-    date;
-    total_price;
-    inventory_IDs = [];
-    userID;
+    transaction_date;
+    total;
+    user_id;
+
 
     // Constructor
-
-    constructor(id,name,email,password,role,address) {
-        this.userID = id;
-        this.userName = name;
-        this.userEmail = email;
-        this.userPassword = password;
-        this.userRole = role;
-        this.userAddress = address;
+    constructor(transactionId, date, totalPrice, userID){
+        this.transaction_ID = transactionId;
+        this.transaction_date = date;
+        this.total = totalPrice;
+        this.user_id = userID;
     }
 
-    // Methods
+    // methods
+    async newTransaction() {
+        try {
+            // insert into transaction table
+            const transactionSQL =
+            `INSERT INTO Transaction (
+                transaction_id,
+                transaction_date,
+                total,
+                user_id)
+            VALUES (?, ?, ?, ?)`;
+
+            var result = await db.query(transactionSQL, [this.transactionID, this.date, this.totalPrice, this.userID]);
+
+            return result;
     
-    async checkout() {
-    }
-    
-    async checkInventory()  {
-    }
-    
-    async () {
+        } catch (error) {
+            console.error("Error adding transaction to database:", error);
+            throw error;
+        }
     }
 
-    async writeReview(){}
+    async checkInventory(){
+        try {
+            // no inventory linked in database code - but in ERD deliberate or ??
+        } catch (error) {
+            console.error("Error checking inventory:", error);
+            throw error;
+        }
+    }
+
 }
 
-// needed to  export functions, objects, or other values from a module so they can be imported and used in other files.
 module.exports = {
-    User
+    Transaction
 }
