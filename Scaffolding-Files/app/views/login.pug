@@ -1,1 +1,9 @@
-extends default_web_layout.pug
+extends default_web_logged-out_layout.pug
+
+block content 
+
+    h1 Login
+    form(action="/login", method="post")
+      input(type="text", name="username", placeholder="Username")
+      input(type="password", name="password", placeholder="Password")
+      button(type="submit") Log in
