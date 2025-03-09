@@ -25,10 +25,25 @@ class Membership{
 
     //methods
 
-    async getMembershipDetails(){}
+    async getMembershipDetails(){
+        try{
+            const result = await db.query('SELECT * FROM MEMBERSHIP\
+                WHERE membership_id = ?',this.membership_ID);
+                if (result && result.length>0){
+                    console.log("Membership is available: ", result[0]);
+                    return result[0];
+                } else{
+                    console.log("Membership not found");
+                    return null;
+                }
+                
+            } catch (error){
+                console.error("Error during membership: ", error);
+                throw error;
+            }
+        }
 
-}
-
-momdule.export = {
+    }
+module.export = {
     Membership
 } 
