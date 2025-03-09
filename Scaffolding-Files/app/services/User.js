@@ -1,4 +1,4 @@
-// import User from './user';
+import User from './User';
 
 require ("dotenv").config()  // Load environmet variables
 
@@ -87,9 +87,9 @@ class User {
         }
 
     }
-    // Export the User class (NEED IMPORT PATH TO SOLVE THE BUG)
-    module.export = User;
 }
+// Export the User class
+    module.export = User;
  // Function to generate unique id
  function generateUniqueId(){
     return Math.random().toString(5).substring(2, 5)
