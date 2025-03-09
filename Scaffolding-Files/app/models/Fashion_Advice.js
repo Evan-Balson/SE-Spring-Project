@@ -1,4 +1,3 @@
-
 // Get the functions in the db.js file to use
 const db = require('./../services/db');
 
@@ -8,7 +7,7 @@ class Fashion_Advice {
     fashion_Advice_ID;
     fashion_Advice_Content;
     date_Created;
-    userID;
+    userID; 
 
 
     constructor(id,content,date,userId) {
@@ -24,12 +23,12 @@ class Fashion_Advice {
         try {
 
             // Selects the advice and creators name from the Fashion_Advice and Users table by joining
-            var fashionAdviceSQL =
+            var fashionAdviceSQL = 
             `SELECT
                 f.advice_id,
                 f.content,
                 f.date_created,
-                u.user_id
+                u.user_name
             FROM
                 Fashion_Advice AS f
             JOIN
