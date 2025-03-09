@@ -32,7 +32,7 @@ class Payment_Method{
             
         } catch (error) {
             console.error("Error adding payment method:", error);
-            return error;
+            throw error;
         }
     }
 
