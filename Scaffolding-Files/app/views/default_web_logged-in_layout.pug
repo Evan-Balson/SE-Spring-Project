@@ -1,0 +1,68 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title FitXchange: #{title}
+    link(rel="icon", href="/images/FitXchange_site-icon.png", type="image/png")
+    link(rel="stylesheet", href="/css/site_wide_styles.css")
+
+  body
+    header
+      .menu-container
+        a.logo-link(href="/")
+          img.logo(src="/images/FitXchange_logo_horizontal.png", alt="FitXchange Horizontal Logo")
+        nav.main-menu
+          ul
+            li
+              a(href="/") Browse Outfits
+            li
+              a(href="/outfit-advice") Outfit Advice
+            li
+              a(href="/new-listing") List Oufits
+            li
+              a(href="/order-history") Order History
+            li
+              a(href="/account") Account
+
+        nav.mobile-menu
+          ul
+            li.dropdown-main-menu
+              a.dropdown-toggle(href="#") Menu
+              ul.dropdown-list
+                li
+                  a(href="/") Browse Outfits
+                li
+                  a(href="/outfit-advice") Outfit Advice
+                li
+                  a(href="/new-listing") List Outfits
+                li
+                  a(href="/order-history") Order History
+                li
+                  a(href="/account") Account
+        
+        div.icon-container
+          a.menu-icon(href="/favourites")
+            img.menu-icon(src="/images/heart-icon.png", alt="FitXchange Logo")
+
+          a.menu-icon(href="/cart")
+            img.menu-icon(src="/images/cart-icon.png", alt="FitXchange Logo")
+
+          a.menu-icon(href="#", id="search-btn")
+            img.menu-icon(src="/images/search-icon.png", alt="FitXchange Logo")
+
+          div#search-dropdown(class="dropdown")
+            input#search-input(type="text", placeholder="Search...")
+            button(type="submit") Search
+
+          script(src="/js/features.js")
+
+    main
+      .brand-body-container
+        img.bodyheader(src="/images/FitXchange_Text.png", alt="FitXchange Logo")
+
+
+    block content
+
+    footer
+      p © 2025 FitXchange. Shared oppurtunities, Shared Goals, Shared Clothes.
