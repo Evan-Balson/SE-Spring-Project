@@ -51,6 +51,7 @@ class User extends IUserManagement{
     async sell(outfitName, outfitColor, outfitSize, outfitDescription, itemCondition, categoryIds) {
             try{
                 const outfitID = generateUniqueId() // Generate a unique outfit ID
+                // Add outfit
                 const [result] = await db.query('INSERT INTO Outfit \
                     (outfit_id, outfit_name, outfit_color, outfit_size, outfit_description, item_condition, user_id)\
                     VALUES (?, ?, ?, ?, ?, ?, ?)',
