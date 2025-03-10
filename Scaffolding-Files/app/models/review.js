@@ -20,7 +20,6 @@ class review{
     }
 
     //methods
-
     async getReview(){
         try{
             const [row] =await db.query('SELECT * FROM WHERE review_ID=?', [this.review_ID]);
