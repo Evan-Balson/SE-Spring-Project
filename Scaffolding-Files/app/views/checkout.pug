@@ -1,1 +1,39 @@
 extends default_web_logged-in_layout.pug
+
+block content
+    header 
+        .logo-container 
+            img(src="/images/logo.png", alt = "FitXchange Logo")
+            h1 CHECKOUT
+        
+        .menu-container 
+            nav.main-menu 
+                u1 
+                    li 
+                        a(href="/", aria-label="Go to Shipping Address") Shipping Address
+                    li 
+                        a(href="/payment-method", aria-label="Go to Payment Method") Payment Method 
+                    li 
+                        a(href="/estimated-delivery", aria-label="See Estimated Delivery Date") Estimated Delivery Date 
+
+        .catalog 
+            each inventory in inventories
+                .product 
+                    img(src="images/sample.jpg", alt=inventory.outfit_name)
+                    .product-details 
+                        h2 inventory.outfit_name
+                        p SKU Number: #{inventory.outfit_id}
+                        p 
+                            strong £#{inventory.price} 
+
+                        p Color : #{inventory.outfit_color} 
+                        p Size:
+                        .size-options 
+                            button.size-btn= inventory.outfit_size 
+                        p Condition: #{inventory.item_condition}
+                        p Quantity Available: #{inventory.quantity}
+
+                        from(action= "/checkout", method="POST")
+                        input(type="hidden", name= "inventory_id", value=inventory.inventory_id)
+                        input(type="hidden", name= "user_id", value= user.user_id)
+                        button(type="submit", class="pay-now") Pay Now
