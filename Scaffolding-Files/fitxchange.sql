@@ -132,7 +132,7 @@ CREATE TABLE Inspection (
 );
 
 -- Creating Payment_Method table
-CREATE TABLE Payment_Method (
+CREATE TABLE Payment (
     payment_id INT(10) NOT NULL,
     payment_type VARCHAR(25),
     transaction_id VARCHAR(32) NOT NULL,
