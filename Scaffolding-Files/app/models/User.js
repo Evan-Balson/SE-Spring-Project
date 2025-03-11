@@ -42,14 +42,7 @@ class User  extends IUserManagement{
 
     async writeReview(){}
 
-    static async authenticate(email, password) {
-        // Mock database check
-        if (email === "user@example.com" && password === "password123") {
-            return new User(1, email, password);
-        } else {
-            return null;
-        }
-
+   
 }
 
 // needed to  export functions, objects, or other values from a module so they can be imported and used in other files.
