@@ -56,7 +56,7 @@ const db = require('./services/db');
             });
         }
     });
-});
+};
 
 
 // Create a route for add outfit lising - /
