@@ -75,6 +75,7 @@ class User extends IUserManagement{
     
     }
 
+
     async writeReview(outfitId, rating, comment){
         try {
             const reviewId = generateUniqueId();

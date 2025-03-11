@@ -15,7 +15,7 @@ app.set('views', './app/views');
 const db = require('./services/db');
 
 // Create a route for root - /
-app.get("/", function(req, res) {
+ {
     var user = { name: 'John Doe', loggedIn: true };
 
     const itemsPerPage = 4;
@@ -56,7 +56,7 @@ app.get("/", function(req, res) {
             });
         }
     });
-});
+};
 
 
 // Create a route for add outfit lising - /

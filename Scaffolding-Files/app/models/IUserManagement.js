@@ -26,5 +26,11 @@ class IUserManagement{
         throw new Error('Method "writeReview" must be implemented');
     }
 
+    //User Must also login & Logout
+    Login(){}
+
+    Logout(){}
+
+
 }
 export default IUserManagement;
