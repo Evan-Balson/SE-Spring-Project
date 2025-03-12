@@ -29,7 +29,7 @@ class Inventory {
                 this.isAvailable = false;
             }
             try {
-                await db.query ('UPDATE Inventory SET quantity = ?item_availability = ? WHERE inventory_id = ?' 
+                await db.query ('UPDATE Inventory SET quantity = ?, item_availability = ? WHERE inventory_id = ?' 
                 [this.quantity, this.isAvailable, this.Inventory_ID]);
                 return true; // Rent successful
             } catch (error) {
