@@ -1,9 +1,20 @@
 extends default_web_logged-out_layout.pug
 
-block content 
+block content
 
-    h1 Login
-    form(action="/login", method="post")
-      input(type="text", name="username", placeholder="Username")
-      input(type="password", name="password", placeholder="Password")
-      button(type="submit") Log in
+  
+  .login-page
+    link(rel="stylesheet", href="/css/login.css")
+    
+    .login-container
+      h1 Login
+      form(action="/login", method="post")
+        .form-group
+          input(type="email", name="email", placeholder="Email", required)
+        .form-group
+          input(type="password", name="password", placeholder="Password", required)
+        .form-checkbox
+          label
+            input(type="checkbox", name="remember")
+            | Remember me
+        button.login-button(type="submit") Log in
