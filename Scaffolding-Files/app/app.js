@@ -17,7 +17,7 @@ const db = require('./services/db');
 // Create a route for root - /
 app.get("/", function(req, res)
  {
-    var user = { name: 'John Doe', loggedIn: false };
+    var user = { name: 'John Doe', loggedIn: true };
 
     const itemsPerPage = 4;
     let currentPage = parseInt(req.query.page) || 1; // Get the page number from the query or default to 1
