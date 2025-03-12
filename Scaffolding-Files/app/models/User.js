@@ -25,7 +25,6 @@ class User extends IUserManagement{
         this.userAddress = address;
         // using aggregation to create an intance of payment method.
         this.paymentMethod = new Payment();
-
     }
 
     // Methods

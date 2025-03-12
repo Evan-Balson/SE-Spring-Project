@@ -32,27 +32,31 @@ class Administrator extends User {
     }
 
     // monitors the outfit listings, approving them
-    async monitorListingActivity(){}
-
-    // nothing to resolve in the database
-    async resolveDisputes(){}
-
-    // changes the pass_status in the inspection table
-    async inspectItem(outfit_id){
+    async monitorListingActivity(){
         try{
-            var inspectSQL =
-            `UPDATE inspection
-            SET pass_status = 1
-            WHERE outfit_id = ?`;
-
-            var result = await db.query(inspectSQL, outfit_id);
-
-            return result;
-        
+            console.out("Monitoring listings.");
+            return;
         } catch (error) {
-            console.error("Error could not inspect item:", error);
+            console.error("Error could not monitor listing:", error);
             throw error;
         }
+    }
+
+    // nothing to resolve in the database
+    async resolveDisputes(){
+        try{
+            console.out("Resolving Disputes.");
+            return;
+        } catch (error) {
+            console.error("Error could not resolve disputes:", error);
+            throw error;
+        }
+    }
+
+    // changes the pass_status in the inspection table
+    async inspectItem(id, date, outfit_id){
+        inspect = new Inspection(id, date, outfit_id);
+        inspect.verifyItem();
     }
 
 }

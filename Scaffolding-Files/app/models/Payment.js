@@ -8,9 +8,7 @@ class Payment{
     payment_type;
     transaction_ID
 
-
     // Constructor
-
     constructor(paymentId, paymentType, transactionId) {
         this.payment_ID = paymentId;
         this.payment_type = paymentType;

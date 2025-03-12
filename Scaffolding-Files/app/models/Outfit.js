@@ -32,18 +32,35 @@ class Outfit {
 
     // Methods
     
-    async getOutfit_ID(){}
-    async getOutfit_Name(){}
-    async getOutfit_Color(){}
-    async getOutfit_Size(){}
-    async getOutfit_Description(){}
-    async getOutfit_Condition(){}
-    async getOutfit_Category(){}
-    async geOutfit_tReview(){}
+    async getOutfit_ID(){
+        return this.outfit_ID;
+    }
+    async getOutfit_Name(){
+        return this.outfit_Name;
+    }
+    async getOutfit_Color(){
+        return this.outfit_Color;
+    }
+    async getOutfit_Size(){
+        return this.outfit_Size;
+    }
+    async getOutfit_Description(){
+        return this.outfit_Description;
+    }
+    async getOutfit_Condition(){
+        return this.outfit_Condition;
+    }
+    async getOutfit_Category(){
+        return this.outfit_Category;
+    }
+    async geOutfit_Review(){
+        return this.review;
+    }
 
-
-    async setOutfit_Category(){}
-    async setOutfit_Review(){}
+    async setOutfit_Review(r_id ,date, rate, comment){
+        review = new review(r_id ,date, rate, comment);
+        review.addReview();
+    }
 
 }
 
