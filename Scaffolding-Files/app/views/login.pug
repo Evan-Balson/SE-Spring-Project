@@ -1,11 +1,12 @@
 extends default_web_logged-out_layout.pug
 
-block content
+block styles
+  link(rel="stylesheet", href="/css/login.css")  
 
-  
+block content
+ 
   .login-page
-    link(rel="stylesheet", href="/css/login.css")
-    
+
     .login-container
       h1 Login
       form(action="/login", method="post")
@@ -18,3 +19,7 @@ block content
             input(type="checkbox", name="remember")
             | Remember me
         button.login-button(type="submit") Log in
+
+      .signup
+        
+        a.new-account-link(href="/register") Create a new account →

@@ -17,7 +17,7 @@ const db = require('./services/db');
 // Create a route for root - /
 app.get("/", function(req, res)
  {
-    var user = { name: 'John Doe', loggedIn: false };
+    var user = { name: 'John Doe', loggedIn: true };
 
     const itemsPerPage = 4;
     let currentPage = parseInt(req.query.page) || 1; // Get the page number from the query or default to 1
@@ -77,7 +77,29 @@ app.get("/new-listing", function(req, res){
 
 // Create a route for add outfit lising - /
 app.get("/cart", function(req, res){
-    res.render("cart",{title:'My Cart'});
+    const cartItems = [
+        {
+            orderId: '2311140-8793735',
+            name: 'Green exotic sundress',
+            image: '/images/dress.jpeg',
+            description: 'Designer dress from Tampa Florida',
+            orderDate: '16 January 2025',
+            penalty: '7.99',
+            dispatchTo: 'Evan Balson',
+            deliveryDate: '17 January 2025'
+        },
+        {
+            orderId: '2311140-8793736',
+            name: 'Green exotic sundress',
+            image: '/images/dress.jpeg',
+            description: 'Designer dress from Tampa Florida',
+            orderDate: '16 January 2025',
+            penalty: '7.99',
+            dispatchTo: 'Evan Balson',
+            deliveryDate: '17 January 2025'
+        },
+        ];
+    res.render("cart",{title:'My Cart', cartItems});
 });
 
 // Create a route for add outfit lising - /
@@ -108,8 +130,18 @@ app.get("/outfit-advice", function(req, res){
 
 // Create a route for add outfit lising - /
 app.get("/favourites", function(req, res){
-    res.render("favourites",{title:'Favourites'});
+    const outfits = [
+        { id: 1, name: 'Casual Tee', image: "/images/dress.jpeg", savedDate: '01 October 2025' },
+        { id: 2, name: 'Summer Dress', image: '/images/dress.jpeg', savedDate: '12 September 2025' },
+        { id: 3, name: 'Evening Wear', image: '/images/dress.jpeg', savedDate: '18 August 2025' },
+        { id: 4, name: 'Spring Jacket', image: '/images/dress.jpeg', savedDate: '24 July 2025' },
+        { id: 5, name: 'Winter Coat', image: './images/dress.jpeg', savedDate: '15 June 2025' },
+        { id: 6, name: 'Formal Attire', image: '/images/dress.jpeg', savedDate: '30 May 2025' }
+      ];
+    res.render("favourites",{title:'Favourites', outfits});
 });
+
+  
 
 
 
