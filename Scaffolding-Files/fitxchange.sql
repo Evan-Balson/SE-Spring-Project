@@ -306,7 +306,7 @@ INSERT INTO Inspection (auth_id, outfit_id, verification_date, pass_status) VALU
 
 
 -- Insert data into Payment_Method table
-INSERT INTO Payment_Method (payment_id, payment_type, transaction_id) VALUES
+INSERT INTO Payment (payment_id, payment_type, transaction_id) VALUES
 (1, 'Credit Card', 'T001'),
 (2, 'PayPal', 'T002'),
 (3, 'Debit Card', 'T003'),
