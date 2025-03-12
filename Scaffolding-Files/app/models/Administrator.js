@@ -20,7 +20,10 @@ class Administrator extends User {
     // verifying user
     async verifyUser(userID){
         try{
-            verifyUserSQL = `--placeholder text`;
+            verifyUserSQL =
+            `UPDATE Users
+            SET verified = true
+            WHERE user_id = ?`;
             var result = await db.query(verifyUserSQL, [userID]);
             return result;
         } catch (error) {
