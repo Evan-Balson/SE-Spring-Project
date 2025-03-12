@@ -11,6 +11,7 @@ block content
       each item in cartItems
         .cart-item
           img.cart-img(src=item.image alt=item.name)
+
           .item-info
             h3 #{item.name}
             p #{item.description}
@@ -18,11 +19,15 @@ block content
             p Misuse Penalty: £#{item.penalty}
             p Dispatched to: #{item.dispatchTo}
             p Delivery Date: #{item.deliveryDate}
-            .item-options
-                .item-actions
-                    a(href=`/order-details/${item.orderId}`) View product details
-                .item-actions2
-                    a(href=`/remove/${item.orderId}`) remove item
+
+            hr.line-separater
+            nav 
+              ul
+                li 
+                  a(href=`/order-details/${item.orderId}`) View product details
+                li 
+                  a(href=`/remove/${item.orderId}`) remove item
+
       .checkout-button
         button(type="button") Checkout
     else
