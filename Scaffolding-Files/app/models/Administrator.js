@@ -21,9 +21,7 @@ class Administrator extends User {
     async verifyUser(userID){
         try{
             verifyUserSQL =
-            `UPDATE Users
-            SET verified = true
-            WHERE user_id = ?`;
+            `--placeholder text because sql database hasn't been updated with verified variables`;
             var result = await db.query(verifyUserSQL, [userID]);
             return result;
         } catch (error) {
