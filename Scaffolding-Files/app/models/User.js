@@ -115,7 +115,16 @@ class User extends IUserManagement{
                 WHERE email_address = ? AND user_password =?', [email, password]);
                 if (results && results.length > 0) {
                     const user = results[0];
-                    return new User(user.user_id, user.user_name,user.email_address, user.user_password, user.user_role, user.user_address);
+                    const newUser= new User (
+                        user.user_id,
+                        user.user_name,
+                        user.email_address,
+                        user.user_password,
+                        user.user_role,
+                        user.user_address
+                    );
+                    newUser.isLoggedIn = true;
+                    return newUser;
                 } else {
                     return null;
                 }
@@ -124,8 +133,12 @@ class User extends IUserManagement{
             return null;
         }
     }
-}
 
+    // Usesr logout
+    logout() {
+        this.isLoggedIn = false;
+    }
+}
 
 function generateUniqueId() {
     return Math.random().toString(5).substring(2, 5);

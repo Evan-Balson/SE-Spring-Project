@@ -14,6 +14,17 @@ exports.login = async (req, res) => {
         res.status (500).send(error.toString());
     }
 };
+
+exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Logout error:', err);
+            res.status(500).send('Could not log out, please try again.');
+        } else {
+            res.redirect('/login');
+        }
+    });
+};
 exports.register = async (req, res) => {
     try {
         const {name, email, password, address, contactNumber} = req.body;
