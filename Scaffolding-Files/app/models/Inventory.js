@@ -24,6 +24,7 @@ class Inventory {
     
     async rent(){}
     async return(){}
+    async displayinventory(){}
 
 }
 
