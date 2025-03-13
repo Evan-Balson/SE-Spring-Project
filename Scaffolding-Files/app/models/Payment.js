@@ -1,16 +1,14 @@
 // Get the functions in the db.js file to use
-const db = require('./../services/db');
+const db = require('../services/db');
 
-class Payment_Method{
+class Payment{
 
     // Attributes
     payment_ID;
     payment_type;
     transaction_ID
 
-
     // Constructor
-
     constructor(paymentId, paymentType, transactionId) {
         this.payment_ID = paymentId;
         this.payment_type = paymentType;

@@ -37,6 +37,7 @@ class review{
             }
         }
 
+    //add review
     async addReview(){
         try{
         const [result] = await db.query('INSERT INTO REVIEW (review_Date, rating, review_comment, userID\
