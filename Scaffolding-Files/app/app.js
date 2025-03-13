@@ -61,9 +61,23 @@ app.get("/", function(req, res)
 
 
 // Create a route for add outfit lising - /
-app.get("/outfit-listing-guest", function(req, res){
-    res.render("outfit-listing-logged-out",{title:'Listing'});
+app.get("/outfit-listing", function(req, res){
+    const productDetails = {
+        name: 'Green Exotic Sundress',
+        sku: 'SKU123456',
+        price: 25.66,
+        originalPrice: 40.34,
+        description: 'A designer dress from Tampa, Florida. Perfect for summer outings and beach holidays.',
+        sizeOptions: ['XL', 'L'],
+        color: 'Dark Green',
+        material: '100% Organic Cotton',
+        careInstructions: 'Hand wash or professional dry clean only',
+        imagePath: '/images/dress.jpeg'
+    };
+    res.render("outfit-listing",{title:'Listing', product: productDetails});
 });
+
+
 
 // Create a route for account - /
 app.get("/account", function(req, res){
@@ -104,7 +118,33 @@ app.get("/cart", function(req, res){
 
 // Create a route for add outfit lising - /
 app.get("/checkout", function(req, res){
-    res.render("checkout",{title:'Checkout'});
+    const cartItems = [
+        {
+            name: 'Casual Tee',
+            image: '/images/dress.jpeg',
+            description: 'A comfortable casual wear',
+            quantity: 1,
+            penalty: 10.00,
+            orderDate: '2023-09-01',
+            deliveryDate: '2023-09-05',
+            dispatchTo: 'User Address'
+        },
+        {
+            name: 'Summer Dress',
+            image: '/images/dress.jpeg',
+            description: 'Perfect for summer outings',
+            quantity: 1,
+            penalty: 15.00,
+            orderDate: '2023-09-02',
+            deliveryDate: '2023-09-06',
+            dispatchTo: 'User Address'
+        }
+      ];
+      
+    const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  
+
+    res.render("checkout",{title:'Checkout', cartItems, total});
 });
 
 // Create a route for add outfit lising - /
@@ -120,7 +160,25 @@ app.get("/register", function(req, res){
 
 // Create a route for add outfit lising - /
 app.get("/order-history", function(req, res){
-    res.render("order-history",{title:'My Orders'});
+    const orders = [
+    {
+        itemName: 'Casual Tee',
+        image: '/images/dress.jpeg',
+        description: 'Comfortable and stylish',
+        orderDate: '2023-09-01',
+        dispatchTo: 'User Address',
+        penalty: 5.00
+    },
+    {
+        itemName: 'Summer Dress',
+        image: '/images/dress.jpeg',
+        description: 'Perfect for summer outings',
+        orderDate: '2023-09-02',
+        dispatchTo: 'User Address',
+        penalty: 10.00
+    }
+];
+    res.render("order-history",{title:'My Orders', orders});
 });
 
 // Create a route for add outfit lising - /

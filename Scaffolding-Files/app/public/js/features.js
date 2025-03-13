@@ -17,7 +17,11 @@ document.addEventListener("click", function(event) {
   }
 });
 
-
+// When the small image is selected display it in frame
+script
+  function setMainImage(src) {
+    document.getElementById('mainImage').src = src;
+  }
 
 
 
