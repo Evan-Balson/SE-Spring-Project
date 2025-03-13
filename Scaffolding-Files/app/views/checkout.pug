@@ -8,7 +8,7 @@ block content
         
         .menu-container 
             nav.main-menu 
-                u1 
+                ul
                     li 
                         a(href="/", aria-label="Go to Shipping Address") Shipping Address
                     li 
@@ -21,7 +21,7 @@ block content
                 .product 
                     img(src="images/sample.jpg", alt=inventory.outfit_name)
                     .product-details 
-                        h2 inventory.outfit_name
+                        h2 #{inventory.outfit_name}
                         p SKU Number: #{inventory.outfit_id}
                         p 
                             strong £#{inventory.price} 
@@ -33,7 +33,7 @@ block content
                         p Condition: #{inventory.item_condition}
                         p Quantity Available: #{inventory.quantity}
 
-                        from(action= "/checkout", method="POST")
+                        form(action= "/checkout", method="POST")
                         input(type="hidden", name= "inventory_id", value=inventory.inventory_id)
                         input(type="hidden", name= "user_id", value= user.user_id)
                         button(type="submit", class="pay-now") Pay Now

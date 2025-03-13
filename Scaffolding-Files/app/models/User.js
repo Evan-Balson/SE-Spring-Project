@@ -17,7 +17,7 @@ class User extends IUserManagement{
 
     // Constructor
     constructor(id,name,email,password,role,address) {
-        this.userID = id;
+        this.userID= id;
         this.userName = name;
         this.userEmail = email;
         this.userPassword = password;
@@ -61,7 +61,7 @@ class User extends IUserManagement{
                 for (const categoryId of categoryIds) {
                     await db.query(
                         'INSERT INTO Outfit_and_Categories (outfit_id, category_id) Values (?, ?)',
-                        [outfitID, categoryID]
+                        [outfitID, categoryId]
                     );
                 }
     
@@ -90,6 +90,53 @@ class User extends IUserManagement{
             throw error;
         }
     }
+
+    // Method to create a user account
+    async createAccount(email, password, name, address, contactNumber) {
+        try {
+            const userId= generateUniqueId();
+            const [AddUser] = await db.query(
+                'INSERT INTO Users(user_id, user_name, user_address, email_address, contact_number, user_password)\
+                VALUES (?, ?, ?, ?, ?, ?)',
+                [userId, name, address, email, contactNumber, password]
+            );
+            return AddUser;
+    } catch (error) {
+        console.error("Error in adding user", error);
+        throw error;
+    }
+}
+
+    // User authentication
+    static async authenticate (email, password) {
+        try {
+            const [results] = await db.query('SELECT * FROM Users\
+                WHERE email_address = ? AND user_password =?', [email, password]);
+                if (results && results.length > 0) {
+                    const user = results[0];
+                    const newUser= new User (
+                        user.user_id,
+                        user.user_name,
+                        user.email_address,
+                        user.user_password,
+                        user.user_role,
+                        user.user_address
+                    );
+                    newUser.isLoggedIn = true;
+                    return newUser;
+                } else {
+                    return null;
+                }
+        } catch (error) {
+            console.error("Authentication error: ", error);
+            return null;
+        }
+    }
+
+    // Usesr logout
+    logout() {
+        this.isLoggedIn = false;
+    }
 }
 
 function generateUniqueId() {
@@ -97,6 +144,6 @@ function generateUniqueId() {
 }
 
 // needed to  export functions, objects, or other values from a module so they can be imported and used in other files.
-module.export = {
+module.exports = {
     User
 }

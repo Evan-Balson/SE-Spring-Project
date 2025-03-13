@@ -43,6 +43,6 @@ class Membership{
         }
 
     }
-module.export = {
+module.exports = {
     Membership
 } 

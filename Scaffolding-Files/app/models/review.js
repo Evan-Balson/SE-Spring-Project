@@ -10,6 +10,7 @@ class review{
     review_Date;
     rating;
     review_comment;
+    userID;
 
     //constructor
     constructor(id,date, rate, comment){
@@ -17,12 +18,13 @@ class review{
         this.review_Date = date;
         this.rating = rate;
         this.review_comment = comment;
+        this.userID = this.userID;
     }
 
     //methods
     async getReview(){
         try{
-            const [row] =await db.query('SELECT * FROM WHERE review_ID=?', [this.review_ID]);
+            const [row] =await db.query('SELECT * FROM WHERE review_id=?', [this.review_ID]);
                 if (row && row.length >0){
                     console.log("Review found: ", row[0]);
                     return row[0]; // Return the review object
@@ -40,22 +42,22 @@ class review{
     //add review
     async addReview(){
         try{
-        const [result] = await db.query('INSERT INTO REVIEW (review_Date, rating, review_comment, userID\
-            VALUES (?, ?, ?, ?'
-        [this.review_Date, this.rating, this.review_comment, this.userID]);
-        if (result && result.affectedRows > 0) {
-            console.log("Review added successfully");
-            return true;
-        } else {
-            console.log("Failes to add review");
-            return false;
-        }
+            const [result] = await db.query('INSERT INTO REVIEW (review_date, rating, comment, this.userID\
+                VALUES (?, ?, ?, ?)',
+            [this.review_Date, this.rating, this.review_comment, this.userID]);
+            if (result && result.affectedRows > 0) {
+                console.log("Review added successfully");
+                return true;
+            } else {
+                console.log("Failes to add review");
+                return false;
+            }
         } catch(error){
             console.error("Error during adding review: ", error);
-            return null; // Return null on error
+            throw null;
         }
     }
 }
-module.export = {
+module.exports = {
     review
 } 

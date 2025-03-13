@@ -24,6 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 -- Creating Users table
+-- Update Users table, adding password!
 CREATE TABLE Users (
     user_id VARCHAR(32) NOT NULL,
     user_name VARCHAR(50) NOT NULL,
@@ -31,6 +32,7 @@ CREATE TABLE Users (
     user_address VARCHAR(100),
     email_address VARCHAR(100),
     contact_number BIGINT(15),
+    user_password VARCHAR(15),
     PRIMARY KEY (user_id)
 );
 
@@ -179,17 +181,18 @@ CREATE TABLE Delivery (
 -- only do this after all the code for creating each table is added for everyone.
 
 -- Insert data into Users table
-INSERT INTO Users (user_id, user_name, user_role, user_address, email_address, contact_number) VALUES
-('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456),
-('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457),
-('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458),
-('U004', 'Oliver Wilson', 'Customer', '2 The Drive, Richmond, TW9 1AE', 'oliver.wilson@hotmail.com', 447890123459),
-('U005', 'Sophia Evans', 'Seller', '49 Piccadilly, Manchester, M1 2AP', 'sophia.evans@icloud.com', 447890123450),
-('U006', 'Liam Brown', 'Customer', '32 Elm Row, Leith, EH7 4AH', 'liam.brown@sky.com', 447890123451),
-('U007', 'Isabella Jones', 'Admin', '27 Westgate, Bath, BA1 1EP', 'isabella.jones@outlook.com', 447890123452),
-('U008', 'Noah Davis', 'Seller', '144 High St, Guildford, GU1 3HJ', 'noah.davis@gmail.com', 447890123453),
-('U009', 'Amelia Green', 'Customer', '88 Church St, Liverpool, L1 3AY', 'amelia.green@yahoo.com', 447890123454),
-('U010', 'Jacob Martin', 'Customer', '14 Bond St, Bristol, BS1 3LU', 'jacob.martin@hotmail.com', 447890123455);
+-- Insert password into Users table
+INSERT INTO Users (user_id, user_name, user_role, user_address, email_address, contact_number, user_password) VALUES
+('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, '123456'),
+('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457), '234567',
+('U003', 'Ava Taylor', 'Customer', '103 Kings Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, '1045678'),
+('U004', 'Oliver Wilson', 'Customer', '2 The Drive, Richmond, TW9 1AE', 'oliver.wilson@hotmail.com', 447890123459, '234567'),
+('U005', 'Sophia Evans', 'Seller', '49 Piccadilly, Manchester, M1 2AP', 'sophia.evans@icloud.com', 447890123450, '345678'),
+('U006', 'Liam Brown', 'Customer', '32 Elm Row, Leith, EH7 4AH', 'liam.brown@sky.com', 447890123451, '456789'),
+('U007', 'Isabella Jones', 'Admin', '27 Westgate, Bath, BA1 1EP', 'isabella.jones@outlook.com', 447890123452, '567890'),
+('U008', 'Noah Davis', 'Seller', '144 High St, Guildford, GU1 3HJ', 'noah.davis@gmail.com', 447890123453, '678901'),
+('U009', 'Amelia Green', 'Customer', '88 Church St, Liverpool, L1 3AY', 'amelia.green@yahoo.com', 447890123454, '789012'),
+('U010', 'Jacob Martin', 'Customer', '14 Bond St, Bristol, BS1 3LU', 'jacob.martin@hotmail.com', 447890123455, '890123');
 
 
 -- Insert data into Fashion_Advice table
