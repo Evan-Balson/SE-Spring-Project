@@ -24,7 +24,6 @@ class Membership{
     }
 
     //methods
-
     async getMembershipDetails(){
         try{
             const result = await db.query('SELECT * FROM MEMBERSHIP\

@@ -12,16 +12,33 @@ class Inspection {
     outfit;
 
 
-    constructor(id,date,status) {
+    constructor(id, date, Outfit) {
         this.Authentication_ID = id;
         this.verification_Date = date;
-        this.Status = status;
+        this.Status = false;
         this.outfit = Outfit;
     }
 
     // Methods
     
-    async verifyItem (){}
+    async verifyItem (){
+        try{
+            var inspectSQL =
+            `UPDATE inspection
+            SET pass_status = 1
+            WHERE outfit_id = ?`;
+
+            var result = await db.query(inspectSQL, outfit);
+
+            this.Status = true;
+
+            return result;
+
+        } catch (error) {
+            console.error("Error could not inspect item:", error);
+            throw error;
+        }
+    }
 
 }
 

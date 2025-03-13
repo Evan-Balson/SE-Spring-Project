@@ -19,6 +19,7 @@ services:
     volumes:
       - ./db:/var/lib/mysql
       - ./fitxchange.sql:/docker-entrypoint-initdb.d/init.sql 
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always

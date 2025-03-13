@@ -3,14 +3,14 @@ extends default_web_logged-in_layout.pug
 block content 
     header 
         .logo-container 
-            img(src="/images/logo.png", alt= "FitXchange Logo")
+            img(src="/images/logo.png", alt="FitXchange Logo")
             h1 MY CART VIEW 
         
         .menu-container
             nav.main-menu 
             ul 
                 li 
-                    a(href="/", aria-label = "Go to Home") Menu 
+                    a(href="/", aria-label="Go to Home") Menu 
                 li 
                     a(href="/search", aria-label="Search Outfits") Search 
         
@@ -37,9 +37,9 @@ block content
                     
                     .order-actions 
                         a(href=`/order-details/${item.transaction_id}`) View order details 
-                        from(action= "/remove-from-cart", method = "POST")
-                            input (type="hidden", name="inventory_id", value=item.inventory_id)
-                            button(type= "submit", class= "remove-item") Remove Item 
+                        form(action="/remove-from-cart", method="POST")
+                            input(type="hidden", name="inventory_id", value=item.inventory_id)
+                            button(type="submit", class="remove-item") Remove Item 
 
 
         .cart-summary 
@@ -49,6 +49,6 @@ block content
             p Order Total: 
                 strong £#{totalAmount} 
 
-            from (action= "/checkout", mothod="POST")
-                input (type="hidden", name = "user_id", value=user.user_id)
-                button(type="submit", class= "checkout-btn") Checkout
+            form(action="/checkout", method="POST")
+                input(type="hidden", name="user_id", value=user.user_id)
+                button(type="submit", class="checkout-btn") Checkout

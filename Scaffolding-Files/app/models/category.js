@@ -16,7 +16,26 @@ class category {
 
     // Methods
     
-    async getCategory_Name(){}
+    async getCategory_Name(){
+        return this.category_Name;
+    }
+
+    async addCatergoryToDB(){
+        try {
+            var categorySQL = 
+            `INSERT INTO category(
+                category_id,
+                category_name)
+            VALUES
+                (?, ?)`; // curdate() would get the current date
+            
+            // stores it into the result variable
+            var result = await db.query (categorySQL, [this.category_ID, this.category_Name])
+            return result;
+        } catch (error) {
+            console.error("Error updating database:",error);
+        } 
+    }
 
 }
 
