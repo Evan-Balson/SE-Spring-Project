@@ -8,3 +8,11 @@ block content
         img(src="/images/sample.jpg" alt=product.name)  
         h2= product.name
         p Price: $#{product.price}
+                
+  // Pagination controls
+  if prevPage || nextPage
+    nav.pagination
+      if prevPage
+        a(href=`/?page=${prevPage}`) Previous
+      if nextPage
+        a(href=`/?page=${nextPage}`) Next
