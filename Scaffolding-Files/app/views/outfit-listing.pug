@@ -12,3 +12,23 @@ block content
                     img.thumbnail(src=product.imagePath, alt=product.name, onclick='setMainImage(this.src)')
                     img.thumbnail(src=product.imagePath, alt=product.name, onclick='setMainImage(this.src)')
                 img.main-image#mainImage(src=product.imagePath, alt=product.name)
+            
+            .product-info
+                h1= product.name
+                h2= product.sku
+                .price-container
+                    span.current-price $#{product.price}
+                    span.original-price $#{product.originalPrice}
+                p= product.description
+
+                .size-options
+                    span Size:
+                    each size in product.sizeOptions
+                        button.size-option= size
+
+                p Color: #{product.color}
+                p Material: #{product.material}
+                p Care Instructions: #{product.careInstructions}
+                
+                button.add-to-cart Add to Cart
+                p.discount 26% off discount
