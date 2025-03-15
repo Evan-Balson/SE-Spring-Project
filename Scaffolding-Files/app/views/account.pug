@@ -1,0 +1,59 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/account.css")
+
+
+block content
+
+  .user-profile
+    img.user-image(src="/images/profile.jpg", alt="User Name")
+    h2 Hi #{Username}
+
+  div.dashboard-container
+  
+    section.profile-section
+      h2 Profile
+      form(action="/update-profile", method="post")
+        div.form-group
+          label(for="firstName") First Name:
+          input(type="text", name="firstName", id="firstName", required=true)
+        div.form-group
+          label(for="lastName") Last Name:
+          input(type="text", name="lastName", id="lastName", required=true)
+        div.form-group
+          label(for="email") Email:
+          input(type="email", name="email", id="email", required=true)
+        button.update-button(type="submit") Update Personal Details
+
+    section.orders-section
+      h2 Orders
+      table
+        thead
+          tr
+            th Order ID
+            th Date
+            th Status
+        tbody
+          tr
+            td 001
+            td 10/10/2023
+            td Shipped
+          tr
+            td 002
+            td 12/10/2023
+            td Pending
+
+    section.wishlist-section
+      h2 Wish List
+      table
+        thead
+          tr
+            th Item Name
+            th Price
+            th Action
+        tbody
+          tr
+            td Stylish Hat
+            td $25
+            td a(href="#") Remove
