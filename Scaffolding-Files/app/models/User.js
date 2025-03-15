@@ -37,9 +37,11 @@ class User extends IUserManagement{
     }
     
     async addOutfit() {
+        console.log('Adding outfit...');
     }
 
     async writeReview() {
+        console.log('Review written...');
     }
 
     async addPaymentMethod() {
