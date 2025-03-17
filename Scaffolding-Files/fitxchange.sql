@@ -37,6 +37,14 @@ CREATE TABLE User (
 
 );
 
+-- Creating the Payment table
+CREATE TABLE Payment (
+    Payment_ID INT(20) PRIMARY KEY NOT NULL,
+    Payment_Type VARCHAR(25),
+    User_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
+);
+
 
 
 -- Creating Fashion_Advice table
@@ -132,14 +140,6 @@ CREATE TABLE Inspection (
     pass_status BOOLEAN,
     PRIMARY KEY (auth_id, outfit_id),
     FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id)
-);
-
--- Creating Payment_Method table
-CREATE TABLE Payment_Method (
-    payment_id INT(10) NOT NULL,
-    payment_type VARCHAR(25),
-    transaction_id VARCHAR(32) NOT NULL,
-    PRIMARY KEY (payment_id)
 );
 
 
