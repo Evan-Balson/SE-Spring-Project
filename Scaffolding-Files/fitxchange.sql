@@ -108,6 +108,18 @@ CREATE TABLE Inspection (
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID)
 );
 
+-- Creating the Review table
+CREATE TABLE Review (
+    Review_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Inventory_ID VARCHAR(20) NOT NULL,
+    User_ID VARCHAR(20) NOT NULL,
+    Review_Date DATE,
+    Rating INT(2),
+    Comment VARCHAR(250),
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
+);
+
 
 
 
@@ -142,19 +154,6 @@ CREATE TABLE Outfit_and_Categories (
     PRIMARY KEY (outfit_id, category_id),
     FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id),
     FOREIGN KEY (category_id) REFERENCES Category(category_id)
-);
-
--- Creating Review table
-CREATE TABLE Review (
-    review_id VARCHAR(32) NOT NULL,
-    outfit_id VARCHAR(32) NOT NULL,
-    user_id VARCHAR(32) NOT NULL,
-    review_date DATE,
-    rating INT(2),
-    comment VARCHAR(250),
-    PRIMARY KEY (review_id),
-    FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 
