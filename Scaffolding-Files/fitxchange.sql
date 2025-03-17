@@ -139,6 +139,20 @@ CREATE TABLE Review (
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
+CREATE TABLE Return (
+    Return_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Transaction_ID VARCHAR(20) NOT NULL,
+    Inventory_ID VARCHAR(20) NOT NULL,
+    User_ID VARCHAR(20) NOT NULL,
+    Return_Reason VARCHAR(200),
+    Return_Date DATE,
+    Return_Status VARCHAR(20), -- e.g., "Pending", "Completed"
+    Return_Location VARCHAR(255), -- Added return location
+    FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID),
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
+);
+
 -- Insert data into Users table
 -- Insert password into Users table
 INSERT INTO Users (user_id, user_name, user_role, user_address, email_address, contact_number, user_password) VALUES
