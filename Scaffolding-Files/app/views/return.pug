@@ -1,0 +1,32 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/return.css")
+
+block content
+  .container
+    h1 Initiate a Return
+
+    if returnableItems.length > 0
+      form(action="/submit-return", method="post")
+        each item in returnableItems
+          .return-item
+            img(src=item.image alt=item.name)
+            .details
+              h2= item.name
+              p Description: #{item.description}
+              p Order Date: #{item.orderDate}
+              p Delivery Date: #{item.deliveryDate}
+              p Reason for Return:
+              select(name="returnReason_" + item.inventoryId)
+                option(value="damaged") Damaged
+                option(value="wrong_item") Wrong Item Received
+                option(value="not_satisfied") Not Satisfied
+                option(value="other") Other
+
+              input(type="hidden", name="inventoryId_" + item.inventoryId, value=item.inventoryId)
+              input(type="hidden", name="transactionId_" + item.transactionId, value=item.transactionId)
+
+        button(type="submit") Submit Return Request
+    else
+      p You have no items eligible for return.
