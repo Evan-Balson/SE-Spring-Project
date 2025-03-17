@@ -45,6 +45,22 @@ CREATE TABLE Payment (
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
+-- Creating the Inventory table
+CREATE TABLE Inventory (
+    Inventory_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Price DOUBLE(5, 2),
+    Availability BOOLEAN,
+    Quantity INT(5),
+    Name VARCHAR(20),
+    Color VARCHAR(10),
+    Size VARCHAR(10),
+    Description VARCHAR(60),
+    Condition_Level INT(15),
+    User_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID),
+    Product_Image_Path VARCHAR(255)
+);
+
 
 
 -- Creating Fashion_Advice table
@@ -104,18 +120,6 @@ CREATE TABLE Outfit_and_Categories (
     PRIMARY KEY (outfit_id, category_id),
     FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id),
     FOREIGN KEY (category_id) REFERENCES Category(category_id)
-);
-
-
--- Creating Inventory table
-CREATE TABLE Inventory (
-    inventory_id VARCHAR(32) NOT NULL,
-    outfit_id VARCHAR(32) NOT NULL,
-    price DOUBLE(8,2),
-    item_availability BOOLEAN,
-    quantity INT(5),
-    PRIMARY KEY (inventory_id),
-    FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id)
 );
 
 -- Creating Review table
