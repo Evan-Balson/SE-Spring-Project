@@ -23,18 +23,17 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
--- Creating the User table
-CREATE TABLE User (
-    User_ID VARCHAR(20) PRIMARY KEY NOT NULL,
-    Name VARCHAR(20),
-    Role VARCHAR(10),
-    Address VARCHAR(40),
-    Email_Address VARCHAR(60),
-    Contact_Number BIGINT(15),
-    Password VARCHAR(20),
-    Profile_Image_Path VARCHAR(255),
-    login_status BOOLEAN
-
+-- Creating Users table
+-- Update Users table, adding password!
+CREATE TABLE Users (
+    user_id VARCHAR(32) NOT NULL,
+    user_name VARCHAR(50) NOT NULL,
+    user_role VARCHAR(10),
+    user_address VARCHAR(100),
+    email_address VARCHAR(100),
+    contact_number BIGINT(15),
+    user_password VARCHAR(15),
+    PRIMARY KEY (user_id)
 );
 
 -- Creating the Payment table
@@ -70,7 +69,27 @@ CREATE TABLE Fashion_Advice (
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
--- Creating the Transaction table
+
+-- Creating Inspection table
+CREATE TABLE Inspection (
+    auth_id VARCHAR(32) NOT NULL,
+    outfit_id VARCHAR(32) NOT NULL,
+    verification_date DATE,
+    pass_status BOOLEAN,
+    PRIMARY KEY (auth_id, outfit_id),
+    FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id)
+);
+
+-- Creating Payment_Method table
+CREATE TABLE Payment (
+    payment_id INT(10) NOT NULL,
+    payment_type VARCHAR(25),
+    transaction_id VARCHAR(32) NOT NULL,
+    PRIMARY KEY (payment_id)
+);
+
+
+-- Creating Transaction table
 CREATE TABLE Transaction (
     Transaction_ID VARCHAR(20) PRIMARY KEY NOT NULL,
     Payment_ID INT(20) NOT NULL,
@@ -120,47 +139,19 @@ CREATE TABLE Review (
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
--- Creating the Favorites table
-CREATE TABLE Favorites (
-    User_ID VARCHAR(20) NOT NULL,
-    Inventory_ID VARCHAR(20) NOT NULL,
-    FOREIGN KEY (User_ID) REFERENCES User(User_ID),
-    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
-    PRIMARY KEY (User_ID, Inventory_ID)
-);
-
--- Creating the Dispute table
-CREATE TABLE Dispute (
-    Dispute_ID VARCHAR(20) PRIMARY KEY NOT NULL,
-    Dispute_Message VARCHAR(200) NOT NULL,
-    User_ID VARCHAR(20) NOT NULL,
-    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
-);
-
--- Creating Outfit_and_Categories (Join table for many-to-many relationship)
-CREATE TABLE Outfit_and_Categories (
-    Inventory_ID VARCHAR(20) NOT NULL,
-    Category_ID VARCHAR(20) NOT NULL,
-    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
-    FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID),
-    PRIMARY KEY (Inventory_ID, Category_ID)
-);
-
--- Sample Data
-
-
--- Insert data into User table with profile image path
-INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status) VALUES
-('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, 'password123', '/images/profile.jpg', FALSE),
-('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457, 'password123', '/images/profile.jpg', FALSE),
-('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, 'password123', '/images/profile.jpg', FALSE),
-('U004', 'Oliver Wilson', 'Customer', '2 The Drive, Richmond, TW9 1AE', 'oliver.wilson@hotmail.com', 447890123459, 'password123', '/images/profile.jpg', FALSE),
-('U005', 'Sophia Evans', 'Seller', '49 Piccadilly, Manchester, M1 2AP', 'sophia.evans@icloud.com', 447890123450, 'password123', '/images/profile.jpg', FALSE),
-('U006', 'Liam Brown', 'Customer', '32 Elm Row, Leith, EH7 4AH', 'liam.brown@sky.com', 447890123451, 'password123', '/images/profile.jpg', FALSE),
-('U007', 'Isabella Jones', 'Admin', '27 Westgate, Bath, BA1 1EP', 'isabella.jones@outlook.com', 447890123452, 'password123', '/images/profile.jpg', FALSE),
-('U008', 'Noah Davis', 'Seller', '144 High St, Guildford, GU1 3HJ', 'noah.davis@gmail.com', 447890123453, 'password123', '/images/profile.jpg', FALSE),
-('U009', 'Amelia Green', 'Customer', '88 Church St, Liverpool, L1 3AY', 'amelia.green@yahoo.com', 447890123454, 'password123', '/images/profile.jpg', FALSE),
-('U010', 'Jacob Martin', 'Customer', '14 Bond St, Bristol, BS1 3LU', 'jacob.martin@hotmail.com', 447890123455, 'password123', '/images/profile.jpg', FALSE);
+-- Insert data into Users table
+-- Insert password into Users table
+INSERT INTO Users (user_id, user_name, user_role, user_address, email_address, contact_number, user_password) VALUES
+('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, '123456'),
+('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457), '234567',
+('U003', 'Ava Taylor', 'Customer', '103 Kings Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, '1045678'),
+('U004', 'Oliver Wilson', 'Customer', '2 The Drive, Richmond, TW9 1AE', 'oliver.wilson@hotmail.com', 447890123459, '234567'),
+('U005', 'Sophia Evans', 'Seller', '49 Piccadilly, Manchester, M1 2AP', 'sophia.evans@icloud.com', 447890123450, '345678'),
+('U006', 'Liam Brown', 'Customer', '32 Elm Row, Leith, EH7 4AH', 'liam.brown@sky.com', 447890123451, '456789'),
+('U007', 'Isabella Jones', 'Admin', '27 Westgate, Bath, BA1 1EP', 'isabella.jones@outlook.com', 447890123452, '567890'),
+('U008', 'Noah Davis', 'Seller', '144 High St, Guildford, GU1 3HJ', 'noah.davis@gmail.com', 447890123453, '678901'),
+('U009', 'Amelia Green', 'Customer', '88 Church St, Liverpool, L1 3AY', 'amelia.green@yahoo.com', 447890123454, '789012'),
+('U010', 'Jacob Martin', 'Customer', '14 Bond St, Bristol, BS1 3LU', 'jacob.martin@hotmail.com', 447890123455, '890123');
 
 
 -- Insert data into Fashion_Advice table
@@ -203,18 +194,61 @@ INSERT INTO Inventory (Inventory_ID, Price, Availability, Quantity, Name, Color,
 ('I010', 60.00, TRUE, 9, 'Trousers', 'Navy', '30 UK', 'Designed with pockets, zip fly and button fastening', 10, 'U010', '/images/dress.jpeg');
 
 
--- Insert data into Payment table
-INSERT INTO Payment (Payment_ID, Payment_Type, User_ID) VALUES
-(1, 'Credit Card', 'U001'),
-(2, 'PayPal', 'U002'),
-(3, 'Debit Card', 'U003'),
-(4, 'Apple Pay', 'U004'),
-(5, 'Google Pay', 'U005'),
-(6, 'Credit Card', 'U006'),
-(7, 'PayPal', 'U007'),
-(8, 'Debit Card', 'U008'),
-(9, 'Apple Pay', 'U009'),
-(10, 'Google Pay', 'U010');
+-- Insert data into Inventory table
+INSERT INTO Inventory (inventory_id, outfit_id, price, item_availability, quantity) VALUES
+('I001', '101', 120.00, TRUE, 10),
+('I002', '102', 250.00, FALSE, 0),
+('I003', '103', 75.00, TRUE, 5),
+('I004', '104', 300.00, TRUE, 3),
+('I005', '105', 150.00, TRUE, 4),
+('I006', '106', 90.00, TRUE, 7),
+('I007', '107', 110.00, TRUE, 6),
+('I008', '108', 50.00, TRUE, 8),
+('I009', '109', 200.00, TRUE, 2),
+('I010', '110', 60.00, TRUE, 9);
+
+
+-- Insert data into Review table
+INSERT INTO Review (review_id, outfit_id, user_id, review_date, rating, comment) VALUES
+('R001', '101', 'U001', '2023-01-12', 5, 'Perfect fit and classy look.'),
+('R002', '102', 'U002', '2023-01-15', 4, 'Great quality but arrived late.'),
+('R003', '103', 'U003', '2023-01-18', 5, 'Very comfortable and stylish.'),
+('R004', '104', 'U004', '2023-01-20', 3, 'Good but overpriced.'),
+('R005', '105', 'U005', '2023-01-22', 4, 'Beautiful design but tight on the shoulders.'),
+('R006', '106', 'U006', '2023-01-25', 4, 'Loved the material, very soft.'),
+('R007', '107', 'U007', '2023-01-28', 5, 'Just what I was looking for!'),
+('R008', '108', 'U008', '2023-02-01', 5, 'Excellent value for the price.'),
+('R009', '109', 'U009', '2023-02-05', 5, 'Classy and sharp for professional settings.'),
+('R010', '110', 'U010', '2023-02-10', 4, 'Nice trousers but the fit is a bit off.');
+
+
+-- Insert data into Inspection table
+INSERT INTO Inspection (auth_id, outfit_id, verification_date, pass_status) VALUES
+('A001', '101', '2023-01-10', TRUE),
+('A002', '102', '2023-01-11', FALSE),
+('A003', '103', '2023-01-12', TRUE),
+('A004', '104', '2023-01-13', TRUE),
+('A005', '105', '2023-01-14', TRUE),
+('A006', '106', '2023-01-15', TRUE),
+('A007', '107', '2023-01-16', TRUE),
+('A008', '108', '2023-01-17', TRUE),
+('A009', '109', '2023-01-18', TRUE),
+('A010', '110', '2023-01-19', TRUE);
+
+
+-- Insert data into Payment_Method table
+INSERT INTO Payment (payment_id, payment_type, transaction_id) VALUES
+(1, 'Credit Card', 'T001'),
+(2, 'PayPal', 'T002'),
+(3, 'Debit Card', 'T003'),
+(4, 'Apple Pay', 'T004'),
+(5, 'Google Pay', 'T005'),
+(6, 'Credit Card', 'T006'),
+(7, 'PayPal', 'T007'),
+(8, 'Debit Card', 'T008'),
+(9, 'Apple Pay', 'T009'),
+(10, 'Google Pay', 'T010');
+
 
 -- Insert data into Transaction table
 INSERT INTO Transaction (Transaction_ID, Payment_ID, Transaction_Date, Total_Price, User_ID, Inventory_ID) VALUES
