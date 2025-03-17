@@ -129,71 +129,21 @@ CREATE TABLE Favorites (
     PRIMARY KEY (User_ID, Inventory_ID)
 );
 
-
-
-
--- Creating Outfit table
-CREATE TABLE Outfit (
-    outfit_id VARCHAR(32) NOT NULL,
-    outfit_name VARCHAR(100),
-    outfit_color VARCHAR(20),
-    outfit_size VARCHAR(10),
-    outfit_description VARCHAR(100),
-    item_condition INT(15),
-    user_id VARCHAR(32) NOT NULL,
-    PRIMARY KEY (outfit_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+-- Creating the Dispute table
+CREATE TABLE Dispute (
+    Dispute_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Dispute_Message VARCHAR(200) NOT NULL,
+    User_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
-
-
--- Creating Category table
-CREATE TABLE Category (
-    category_id VARCHAR(32) NOT NULL,
-    category_name VARCHAR(100),
-    PRIMARY KEY (category_id)
-);
-
-
--- Creating Outfit_and_Categories table
+-- Creating Outfit_and_Categories (Join table for many-to-many relationship)
 CREATE TABLE Outfit_and_Categories (
-    outfit_id VARCHAR(32) NOT NULL,
-    category_id VARCHAR(32) NOT NULL,
-    PRIMARY KEY (outfit_id, category_id),
-    FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id),
-    FOREIGN KEY (category_id) REFERENCES Category(category_id)
-);
-
-
--- Creating Inspection table
-CREATE TABLE Inspection (
-    auth_id VARCHAR(32) NOT NULL,
-    outfit_id VARCHAR(32) NOT NULL,
-    verification_date DATE,
-    pass_status BOOLEAN,
-    PRIMARY KEY (auth_id, outfit_id),
-    FOREIGN KEY (outfit_id) REFERENCES Outfit(outfit_id)
-);
-
-
--- Creating Transaction table
-CREATE TABLE Transaction (
-    transaction_id VARCHAR(32) NOT NULL,
-    user_id VARCHAR(32) NOT NULL,
-    transaction_date DATE,
-    total DOUBLE(8,2),
-    PRIMARY KEY (transaction_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
-
--- Creating Offers table
-CREATE TABLE Offers (
-    offer_id INT(10) NOT NULL,
-    terms VARCHAR(100),
-    validity VARCHAR(100),
-    offer_type VARCHAR(25),
-    PRIMARY KEY (offer_id)
+    Inventory_ID VARCHAR(20) NOT NULL,
+    Category_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
+    FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID),
+    PRIMARY KEY (Inventory_ID, Category_ID)
 );
 
 
