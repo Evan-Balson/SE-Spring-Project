@@ -1,0 +1,22 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/favourites.css")
+
+
+
+block content
+  div.container
+    h1 6 Saved Outfits
+    div.sort-by
+      label Sort by:
+      select(name="sortOrder")
+        option(value="newest") Newest to Oldest
+        option(value="oldest") Oldest to Newest
+
+    each outfit in outfits
+      div.outfit-item
+        img(src=outfit.image alt=outfit.name)
+        h2= outfit.name
+        p Saved: #{outfit.savedDate + " "}
+        button.remove(href=`/remove-outfit/${outfit.id}`) Remove

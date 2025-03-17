@@ -1,0 +1,27 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/checkout.css")
+
+block content
+  .container
+    h1 My Checkout
+    if cartItems.length > 0
+      each item in cartItems
+        .outfit-item
+          img(src=item.image alt=item.name)
+          .details
+            h2= item.name
+            p Description: #{item.description}
+            p Quantity: #{item.quantity}
+            p Misuse Penalty: £#{item.penalty.toFixed(2)}
+            p Order Date: #{item.orderDate}
+            p Delivery Date: #{item.deliveryDate}
+            p Dispatch To: #{item.dispatchTo}
+            hr
+      .terms
+        p By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
+      .checkout-button
+        button.agree-button(type="button") Agree and Collect
+    else
+      p Your cart is empty.
