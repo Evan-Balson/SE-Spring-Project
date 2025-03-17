@@ -1,0 +1,22 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/outfit-listing.css")
+
+block content
+    .product-div
+        .product-detail-container
+            .image-gallery
+                .thumbnail-container
+                    img.thumbnail(src=product.imagePath, alt=product.name, onclick='setMainImage(this.src)')
+                    img.thumbnail(src=product.imagePath, alt=product.name, onclick='setMainImage(this.src)')
+                    img.thumbnail(src=product.imagePath, alt=product.name, onclick='setMainImage(this.src)')
+                img.main-image#mainImage(src=product.imagePath, alt=product.name)
+            
+            .product-info
+                h1= product.name
+                h2= product.sku
+                .price-container
+                    span.current-price $#{product.price}
+                    span.original-price $#{product.originalPrice}
+                p= product.description
