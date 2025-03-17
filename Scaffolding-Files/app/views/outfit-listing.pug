@@ -20,3 +20,15 @@ block content
                     span.current-price $#{product.price}
                     span.original-price $#{product.originalPrice}
                 p= product.description
+
+                .size-options
+                    span Size:
+                    each size in product.sizeOptions
+                        button.size-option= size
+
+                p Color: #{product.color}
+                p Material: #{product.material}
+                p Care Instructions: #{product.careInstructions}
+                
+                button.add-to-cart Add to Cart
+                p.discount 26% off discount
