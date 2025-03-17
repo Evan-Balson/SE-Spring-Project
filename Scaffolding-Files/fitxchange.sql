@@ -70,19 +70,17 @@ CREATE TABLE Fashion_Advice (
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
-
-
--- Creating Membership table
-CREATE TABLE Membership (
-    membership_id INT(10) NOT NULL,
-    membership_type VARCHAR(25),
-    renewal_status VARCHAR(30),
-    membership_start_date DATE,
-    membership_end_date DATE,
-    benefits VARCHAR(150),
-    user_id VARCHAR(32) NOT NULL,
-    PRIMARY KEY (membership_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+-- Creating the Transaction table
+CREATE TABLE Transaction (
+    Transaction_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Payment_ID INT(20) NOT NULL,
+    Transaction_Date DATE,
+    Total_Price DOUBLE(5, 2),
+    User_ID VARCHAR(20) NOT NULL,
+    Inventory_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (Payment_ID) REFERENCES Payment(Payment_ID),
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID),
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID)
 );
 
 
