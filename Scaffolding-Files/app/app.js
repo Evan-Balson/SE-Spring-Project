@@ -37,6 +37,8 @@ const userLoginController = require('./controllers/UserloginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
+const AdminController = require('./controllers/AdminController');
+
 
 // Get the models
 const { User } = require("./models/User");
@@ -257,6 +259,16 @@ app.get("/favourites", async (req, res) => {
         res.render("login", { title: 'Login' });  // If user is not logged in, render login page
     }
 });
+
+
+//admin controller and admin pages
+app.get("/admin", AdminController.adminDashboard);
+
+//admin task routes
+app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
+app.get("/admin/inspect-items", AdminController.inspectItems);
+app.get("/admin/monitor-listings", AdminController.monitorListings);
+app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 
 // Start server on port 3000
