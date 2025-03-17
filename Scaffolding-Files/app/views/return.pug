@@ -5,7 +5,7 @@ block styles
 
 block content
   .container
-    h1 Initiate a Return
+    h1 Initiate an Outfit Return
 
     if returnableItems.length > 0
       form(action="/submit-return", method="post")
@@ -15,18 +15,20 @@ block content
             .details
               h2= item.name
               p Description: #{item.description}
-              p Order Date: #{item.orderDate}
-              p Delivery Date: #{item.deliveryDate}
+              p Borrow Date: #{item.orderDate}
+              p Return By: #{item.deliveryDate}
               p Reason for Return:
               select(name="returnReason_" + item.inventoryId)
-                option(value="damaged") Damaged
-                option(value="wrong_item") Wrong Item Received
-                option(value="not_satisfied") Not Satisfied
+                option(value="borrow_period_ended") Borrow Period Ended
+                option(value="no_longer_needed") No Longer Needed
                 option(value="other") Other
+
+              p Return Location:
+              input(type="text", name="returnLocation_" + item.inventoryId, placeholder="Enter Return Location")
 
               input(type="hidden", name="inventoryId_" + item.inventoryId, value=item.inventoryId)
               input(type="hidden", name="transactionId_" + item.transactionId, value=item.transactionId)
 
         button(type="submit") Submit Return Request
     else
-      p You have no items eligible for return.
+      p You have no outfits eligible for return.
