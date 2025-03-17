@@ -120,6 +120,14 @@ CREATE TABLE Review (
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
+-- Creating the Favorites table
+CREATE TABLE Favorites (
+    User_ID VARCHAR(20) NOT NULL,
+    Inventory_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID),
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
+    PRIMARY KEY (User_ID, Inventory_ID)
+);
 
 
 
