@@ -93,6 +93,23 @@ CREATE TABLE Delivery (
     FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID)
 );
 
+-- Creating the Category table
+CREATE TABLE Category (
+    Category_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Category_Name VARCHAR(20)
+);
+
+-- Creating the Inspection table
+CREATE TABLE Inspection (
+    AUTH_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Inventory_ID VARCHAR(20) NOT NULL,
+    Verification_Date DATE,
+    Pass_Status BOOLEAN,
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID)
+);
+
+
+
 
 
 -- Creating Outfit table
