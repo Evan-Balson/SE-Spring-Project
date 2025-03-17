@@ -61,16 +61,13 @@ CREATE TABLE Inventory (
     Product_Image_Path VARCHAR(255)
 );
 
-
-
--- Creating Fashion_Advice table
+-- Creating the Fashion Advice table
 CREATE TABLE Fashion_Advice (
-    advice_id INT(15) NOT NULL,
-    content VARCHAR(250),
-    date_created DATE,
-    user_id VARCHAR(32) NOT NULL,
-    PRIMARY KEY (advice_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    Advice_ID INT(15) PRIMARY KEY NOT NULL,
+    Content VARCHAR(250),
+    Creation_Date DATE,
+    User_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
 
 
