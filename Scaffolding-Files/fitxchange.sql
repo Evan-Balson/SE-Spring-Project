@@ -23,15 +23,18 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
--- Creating Users table
-CREATE TABLE Users (
-    user_id VARCHAR(32) NOT NULL,
-    user_name VARCHAR(50) NOT NULL,
-    user_role VARCHAR(10),
-    user_address VARCHAR(100),
-    email_address VARCHAR(100),
-    contact_number BIGINT(15),
-    PRIMARY KEY (user_id)
+-- Creating the User table
+CREATE TABLE User (
+    User_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Name VARCHAR(20),
+    Role VARCHAR(10),
+    Address VARCHAR(40),
+    Email_Address VARCHAR(60),
+    Contact_Number BIGINT(15),
+    Password VARCHAR(20),
+    Profile_Image_Path VARCHAR(255),
+    login_status BOOLEAN
+
 );
 
 
