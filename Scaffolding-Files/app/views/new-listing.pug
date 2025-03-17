@@ -1,0 +1,60 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+    link(rel='stylesheet', href="/css/new-listing.css")
+
+block content
+  .container
+    h1 Add New Listing
+    form(action="/submit-listing", method="post").item-details-form
+      .form-group
+        label(for="name") Name of Product
+        input(type="text", id="name", name="name" required)
+
+      .form-group
+        label(for="sku") SKU Number
+        input(type="text", id="sku", name="sku" disabled)
+
+      .form-group
+        label(for="price") Price
+        input(type="number", id="price", name="price" required)
+
+      .form-group
+        label(for="size") Size
+        select(name="size")
+          option(value="", disabled, selected) None
+          option(value="XL") XL
+          option(value="L") L
+
+      .form-group
+        label(for="categories") Categories / Tags
+        input(type="text", id="categories", name="categories", placeholder="Enter categories separated by a comma")
+
+      .form-group
+        label(for="imageUpload") Upload Image
+        input#imageUpload(type="file", name="image")
+
+      .form-group
+        label(for="productName") Name of Product
+        input#productName(type="text", name="name", required=true)
+
+      .form-group
+        label(for="colors") Colors
+        select(name="colors", id="colors", required)
+          option(value="", disabled, selected) None
+          option(value="red") Red
+          option(value="blue") Blue
+          option(value="green") Green
+          option(value="yellow") Yellow
+          option(value="black") Black
+          option(value="white") White
+          option(value="pink") Pink
+          option(value="purple") Purple
+          option(value="orange") Orange
+          option(value="gray") Gray
+      
+      .form-group
+        label(for="description") Description
+        textarea#description(name="description", required=true)
+
+      button(type="submit") Post Item to Store
