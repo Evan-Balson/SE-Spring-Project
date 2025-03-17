@@ -146,7 +146,8 @@ CREATE TABLE Return (
     User_ID VARCHAR(20) NOT NULL,
     Return_Reason VARCHAR(200),
     Return_Date DATE,
-    Return_Status VARCHAR(20), -- "Pending", "Approved", "Rejected"
+    Return_Status VARCHAR(20), --"Pending", "Completed"
+    Return_Location VARCHAR(255),
     FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID),
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
