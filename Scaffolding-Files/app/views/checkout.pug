@@ -14,19 +14,19 @@ block content
             h2= item.name
             p Description: #{item.description}
             p Quantity: #{item.quantity}
-            p Misuse Penalty: £#{item.penalty.toFixed(2)}
+            p Price: £#{item.price.toFixed(2)}
             p Order Date: #{item.orderDate}
             p Delivery Date: #{item.deliveryDate}
             p Dispatch To: #{item.dispatchTo}
             hr
-        
+
         .delivery-return
-            h3 Delivery Information 
-            p Delivery Option: #{item.deliveryOption || 'Standard Delivery'}
-            p Estimated Delivery: 
+          h3 Delivery Information
+          p Delivery Option: #{item.deliveryOption || 'Standard Delivery'}
+          p Estimated Delivery: #{item.deliveryDate} // Display deliveryDate
 
       .terms
-        p By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
+        p By clicking "Agree and Collect", you accept the terms and conditions.
       .checkout-button
         button.agree-button(type="button") Agree and Collect
     else
