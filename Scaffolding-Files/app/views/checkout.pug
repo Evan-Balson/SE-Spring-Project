@@ -19,6 +19,12 @@ block content
             p Delivery Date: #{item.deliveryDate}
             p Dispatch To: #{item.dispatchTo}
             hr
+        
+        .delivery-return
+            h3 Delivery Information 
+            p Delivery Option: #{item.deliveryOption || 'Standard Delivery'}
+            p Estimated Delivery: 
+
       .terms
         p By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
       .checkout-button
