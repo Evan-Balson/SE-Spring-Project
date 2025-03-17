@@ -1,0 +1,31 @@
+extends default_web_logged-out_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/register.css")
+
+
+
+block content
+
+  .register-page
+
+    .register-container
+        h2 Register For Free!
+        form(action="/register" method="post")
+            .form-group
+                label First Name:
+                input(type="text" name="firstName" required)
+            .form-group
+                label Last Name:
+                input(type="text" name="lastName" required)
+            .form-group
+                label Phone number (optional):
+                input(type="text" name="phone")
+            .form-group
+                label Date of birth (dd/mm/yyyy):
+                input(type="text" name="dob" required)
+            .form-group
+                label Password:
+                input(type="password" name="password" required)
+                small The password must be between 8 and 13 characters long.
+            button(type="submit") Sign Up →
