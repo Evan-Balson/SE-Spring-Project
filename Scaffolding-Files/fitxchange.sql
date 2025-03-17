@@ -129,7 +129,22 @@ CREATE TABLE Favorites (
     PRIMARY KEY (User_ID, Inventory_ID)
 );
 
+-- Creating the Dispute table
+CREATE TABLE Dispute (
+    Dispute_ID VARCHAR(20) PRIMARY KEY NOT NULL,
+    Dispute_Message VARCHAR(200) NOT NULL,
+    User_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID)
+);
 
+-- Creating Outfit_and_Categories (Join table for many-to-many relationship)
+CREATE TABLE Outfit_and_Categories (
+    Inventory_ID VARCHAR(20) NOT NULL,
+    Category_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
+    FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID),
+    PRIMARY KEY (Inventory_ID, Category_ID)
+);
 
 
 -- Creating Outfit table
