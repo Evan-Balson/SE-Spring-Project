@@ -1,0 +1,34 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/cart.css")  
+
+
+block content
+  .cart-container
+    h1 My Cart
+    if cartItems.length > 0
+      each item in cartItems
+        .cart-item
+          img.cart-img(src=item.image alt=item.name)
+
+          .item-info
+            h3 #{item.name}
+            p #{item.description}
+            p Order Placed: #{item.orderDate}
+            p Misuse Penalty: £#{item.penalty}
+            p Dispatched to: #{item.dispatchTo}
+            p Delivery Date: #{item.deliveryDate}
+
+            hr.line-separater
+            nav 
+              ul
+                li 
+                  a(href=`/order-details/${item.orderId}`) View product details
+                li 
+                  a(href=`/remove/${item.orderId}`) remove item
+
+      .checkout-button
+        button(type="button") Checkout
+    else
+      p Your cart is empty!
