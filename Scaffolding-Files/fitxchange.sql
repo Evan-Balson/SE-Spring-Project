@@ -83,6 +83,16 @@ CREATE TABLE Transaction (
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID)
 );
 
+-- Creating the Delivery table
+CREATE TABLE Delivery (
+    Delivery_ID INT(20) PRIMARY KEY NOT NULL,
+    Delivery_Address VARCHAR(25),
+    Delivery_Option VARCHAR(25),
+    Delivery_Date DATE,
+    Transaction_ID VARCHAR(20) NOT NULL,
+    FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID)
+);
+
 
 
 -- Creating Outfit table
@@ -160,18 +170,6 @@ CREATE TABLE Offers (
     validity VARCHAR(100),
     offer_type VARCHAR(25),
     PRIMARY KEY (offer_id)
-);
-
-
--- Creating Delivery table
-CREATE TABLE Delivery (
-    delivery_id INT(10) NOT NULL,
-    delivery_address VARCHAR(100),
-    delivery_option VARCHAR(25),
-    delivery_date DATE,
-    transaction_id VARCHAR(32) NOT NULL,
-    PRIMARY KEY (delivery_id),
-    FOREIGN KEY (transaction_id) REFERENCES Transaction(transaction_id)
 );
 
 
