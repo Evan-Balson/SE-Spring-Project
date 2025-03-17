@@ -1,0 +1,28 @@
+extends default_web_logged-out_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/login.css")  
+
+block content
+ 
+  .login-page
+
+    .login-container
+      h1 Login
+      form(action="/login", method="post")
+        .form-group
+          input(type="email", name="email", placeholder="Email", required)
+        .form-group
+          input(type="password", name="password", placeholder="Password", required)
+        .form-checkbox
+          label
+            input(type="checkbox", name="remember")
+            | Remember me
+        button.login-button(type="submit") Log in
+
+      .signup
+        
+        a.new-account-link(href="/register") Create a new account →
+    br
+  if error
+    p.message(style='color: red;') #{error}
