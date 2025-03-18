@@ -37,10 +37,12 @@ const userLoginController = require('./controllers/UserloginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
+const cartController =  require('./controllers/cartController');
 
 // Get the models
 const { User } = require("./models/User");
 const { Inventory } = require("./models/Inventory");
+const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
@@ -101,38 +103,25 @@ app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
 
-// Create a route for cart lising - /
-app.get("/cart", function(req, res){
-    const cartItems = [
-        {
-            orderId: '2311140-8793735',
-            name: 'Green exotic sundress',
-            image: '/images/dress.jpeg',
-            description: 'Designer dress from Tampa Florida',
-            orderDate: '16 January 2025',
-            penalty: '7.99',
-            dispatchTo: 'Evan Balson',
-            deliveryDate: '17 January 2025'
-        },
-        {
-            orderId: '2311140-8793736',
-            name: 'Green exotic sundress',
-            image: '/images/dress.jpeg',
-            description: 'Designer dress from Tampa Florida',
-            orderDate: '16 January 2025',
-            penalty: '7.99',
-            dispatchTo: 'Evan Balson',
-            deliveryDate: '17 January 2025'
-        },
-        ];
-
-    if(activeUser.login_Status){
-        res.render("cart",{title:'My Cart', cartItems});
+// Create a route for cart lising
+app.get("/cart", async function(req, res) {
+    if (activeUser.login_Status) {
+        try {
+            // Fetch cart items for the logged-in user
+            const cartItems = await Cart.getCartItems(activeUser.userID); // Assuming activeUser.userID holds the logged-in user's ID
+            
+            res.render("cart", { title: 'My Cart', cartItems });
+            
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
+            res.status(500).render("error", { message: 'An error occurred while fetching cart items.' });
+        }
+    } else {
+        // If the user is not logged in, redirect to login page
+        res.render("login", { title: 'Login' });
     }
-    else{
-        res.render("login",{title:'Login'});}
-    
 });
+
 
 // Create a route for checkout lising - /
 app.get("/checkout", function(req, res){

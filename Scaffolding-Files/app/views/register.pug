@@ -19,13 +19,21 @@ block content
                 label Last Name:
                 input(type="text" name="lastName" required)
             .form-group
+                label(for="email") Email:
+                input(type="email" name="email" id="email" required)
+            .form-group
+                label Address:
+                input(type="text" name="address" required)
+            .form-group
                 label Phone number (optional):
                 input(type="text" name="phone")
-            .form-group
-                label Date of birth (dd/mm/yyyy):
-                input(type="text" name="dob" required)
             .form-group
                 label Password:
                 input(type="password" name="password" required)
                 small The password must be between 8 and 13 characters long.
+            .form-group
+                label(for="imageUpload") Upload Image
+                input#imageUpload(type="file", name="image")           
             button(type="submit") Sign Up →
+
+            //firstName, lastName, email, address, phone, password, image
