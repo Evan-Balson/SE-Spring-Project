@@ -69,7 +69,8 @@ app.get("/", async function(req, res)
             title: 'Home',
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
-            prevPage: inventoryItems.prevPage
+            prevPage: inventoryItems.prevPage,
+            loginStatus: activeUser.login_Status
            
         }); 
         
@@ -78,7 +79,8 @@ app.get("/", async function(req, res)
             title: 'Home',
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
-            prevPage: inventoryItems.prevPage
+            prevPage: inventoryItems.prevPage,
+            loginStatus: activeUser.login_Status
         });
     }
 });
@@ -233,14 +235,11 @@ app.get("/favourites", async (req, res) => {
     if (activeUser.login_Status) {
         try {
             // Get saved items from the database using the controller method
-            const savedItems =null; //await favouritesController.viewSavedItems(activeUser.userID);
+            const savedItems = await favouritesController.viewSavedItems(activeUser.userID);
             console.log(savedItems);
             // Check if any saved items exist
-            if (savedItems) {
-                res.render("favourites", { title: 'Favourites', outfits: savedItems });
-            } else {
-                res.render("favourites", { title: 'Favourites', outfits: savedItems });
-            }
+            res.render("favourites", { title: 'Favourites', outfits: savedItems });
+            
         } catch (error) {
             console.error('Error fetching saved items:', error);
             //res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });

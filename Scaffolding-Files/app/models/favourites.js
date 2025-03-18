@@ -70,7 +70,7 @@ class Favourites {
     
         try {
             var result = await db.query(sql, params);
-            console.log(result);  // Check what the database returns
+            //console.log(result);  // Check what the database returns
     
             if (result && result.length > 0) {
                 return result; // Return the saved items

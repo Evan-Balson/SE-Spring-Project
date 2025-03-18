@@ -66,8 +66,7 @@ const viewSavedItems = async (User_ID) => {
         if (result && result.length > 0) {
             return result;  // Return the saved items if found
         } else {
-            // No saved items found, so throw an error to be handled in the route
-            throw new Error('No saved items found for this user.');
+            return null;
         }
     } catch (error) {
         // Log and rethrow the error to be handled in the route

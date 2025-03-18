@@ -38,8 +38,12 @@ block content
   div.catalog
     each product in products
       div.product
-        div.product-clickable(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
-          img(src=product.Product_Image_Path, alt=product.Name)   
+        if(loginStatus)
+          div.product-clickable(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
+            img(src=product.Product_Image_Path, alt=product.Name) 
+        else
+          div.product-clickable(onclick=`window.location.href='/outfit-listing-logged-out/${product.Inventory_ID}'`)
+            img(src=product.Product_Image_Path, alt=product.Name) 
         h2= product.name
         p Price: $#{product.Price}
         

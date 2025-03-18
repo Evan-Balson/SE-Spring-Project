@@ -27,11 +27,6 @@ class User {
     setLoginStatus(login){
         this.login_Status = login;
     }
-
-    getLoginStatus(){
-        return this.login_Status;
-    }
-
     static async authenticate(email, password) {
         var sql = 'SELECT * FROM `User` WHERE `Email_Address` = ? AND `Password` = ?';
         var params = [email, password];

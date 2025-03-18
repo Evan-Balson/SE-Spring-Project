@@ -11,7 +11,7 @@ exports.showOutfitListing = async (req, res) => {
             // Render the outfit listing page with the fetched product details
             
             const user = res.locals.activeUser;
-            if(user.getLoginStatus()){
+            if(user.login_Status){
                 return res.render("outfit-listing", { title: 'Listing', product: item });
             }
             else{return res.render("outfit-listing-logged-out", { title: 'Listing', product: item });}
