@@ -4,7 +4,7 @@ block styles
   link(rel="stylesheet", href="/css/favourites.css")
 
 block content
-  if (outfits.length)  // Check if outfits array has items
+  if (outfits)
     div.container
       h1 You have #{" "+ outfits.length} Saved Outfits
       div.sort-by

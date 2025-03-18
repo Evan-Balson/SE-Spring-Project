@@ -244,17 +244,17 @@ app.get("/favourites", async (req, res) => {
     if (activeUser.login_Status) {
         try {
             // Get saved items from the database using the controller method
-            const savedItems = await favouritesController.viewSavedItems(activeUser.userID);
+            const savedItems =null; //await favouritesController.viewSavedItems(activeUser.userID);
             console.log(savedItems);
             // Check if any saved items exist
-            if (savedItems.length > 0) {
+            if (savedItems) {
                 res.render("favourites", { title: 'Favourites', outfits: savedItems });
             } else {
-                res.render("favourites", { title: 'Favourites' });
+                res.render("favourites", { title: 'Favourites', outfits: savedItems });
             }
         } catch (error) {
             console.error('Error fetching saved items:', error);
-            res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
+            //res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
         }
     } else {
         res.render("login", { title: 'Login' });  // If user is not logged in, render login page

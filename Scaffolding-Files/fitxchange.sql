@@ -145,6 +145,19 @@ CREATE TABLE Outfit_and_Categories (
     FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID),
     PRIMARY KEY (Inventory_ID, Category_ID)
 );
+
+-- create the cart table
+CREATE TABLE Cart (
+    Cart_ID INT AUTO_INCREMENT PRIMARY KEY,
+    User_ID VARCHAR(20) NOT NULL,
+    Inventory_ID VARCHAR(20) NOT NULL,
+    Quantity INT NOT NULL DEFAULT 1,
+    Date_Added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID),
+    FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
+    UNIQUE (User_ID, Inventory_ID)
+);
+
 -- ----------------------------------------------------------------------------------
 
 -- Insert data into User table with profile image path
@@ -304,3 +317,17 @@ INSERT INTO Outfit_and_Categories (Inventory_ID, Category_ID) VALUES
 ('I008', 'C003'),
 ('I009', 'C001'),
 ('I010', 'C003');
+
+
+-- Insert sample data into Cart table
+INSERT INTO Cart (User_ID, Inventory_ID, Quantity) VALUES
+('U001', 'I001', 2),   -- Ella Morris has 2 units of 'Blazer' in the cart
+('U001', 'I003', 1),   -- Ella Morris has 1 unit of 'Jacket' in the cart
+('U002', 'I005', 3),   -- Mason Clarke has 3 units of 'Jacket' in the cart
+('U003', 'I007', 1),   -- Ava Taylor has 1 unit of 'Jacket' in the cart
+('U003', 'I006', 2),   -- Ava Taylor has 2 units of 'Cardigan' in the cart
+('U004', 'I008', 4),   -- Oliver Wilson has 4 units of 'Trousers' in the cart
+('U005', 'I009', 1),   -- Sophia Evans has 1 unit of 'Jacket' in the cart
+('U006', 'I010', 2),   -- Liam Brown has 2 units of 'Trousers' in the cart
+('U007', 'I002', 1),   -- Isabella Jones has 1 unit of 'Suit' in the cart
+('U008', 'I004', 1);   -- Noah Davis has 1 unit of 'Coat' in the cart

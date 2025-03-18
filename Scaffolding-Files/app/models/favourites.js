@@ -76,7 +76,7 @@ class Favourites {
                 return result; // Return the saved items
             } else {
                 console.log('No items found for this user.');
-                return []; // Return an empty array instead of 0
+                return null; // Return an empty array instead of 0
             }
         } catch (error) {
             console.error('Error during Database search:', error);
