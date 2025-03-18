@@ -62,12 +62,15 @@ app.get("/", async function(req, res)
     //console.log(req.session.activeUser);
     //console.log(activeUser);
     if (activeUser.login_Status) {
+        console.log(".........\n",inventoryItems);
         res.render("home-logged-in", {
             title: 'Home',
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
-            prevPage: inventoryItems.prevPage,
-        });
+            prevPage: inventoryItems.prevPage
+           
+        }); 
+        
     } else {
         res.render("home", {
             title: 'Home',
@@ -244,10 +247,10 @@ app.get("/favourites", async (req, res) => {
             const savedItems = await favouritesController.viewSavedItems(activeUser.userID);
             console.log(savedItems);
             // Check if any saved items exist
-            if (savedItems && savedItems.length > 0) {
+            if (savedItems.length > 0) {
                 res.render("favourites", { title: 'Favourites', outfits: savedItems });
             } else {
-                res.render("favourites", { title: 'Favourites', outfits: [] });
+                res.render("favourites", { title: 'Favourites' });
             }
         } catch (error) {
             console.error('Error fetching saved items:', error);
@@ -257,6 +260,7 @@ app.get("/favourites", async (req, res) => {
         res.render("login", { title: 'Login' });  // If user is not logged in, render login page
     }
 });
+
 
 
 // Start server on port 3000

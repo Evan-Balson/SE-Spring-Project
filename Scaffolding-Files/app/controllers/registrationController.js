@@ -2,9 +2,9 @@ const { User } = require("../models/User");
 
     // Controller function to handle user registration
 exports.registerUser = async (req, res) => {
-    const { firstName, lastName, phone, dob, password } = req.body;
+    const { firstName, lastName, email, address, phone, password, image } = req.body;
 
-    const userData = { firstName, lastName, phone, dob, password };
+    const userData = { firstName, lastName, email, address, phone, password, image };
 
     try {
         // Call the model to register the user
