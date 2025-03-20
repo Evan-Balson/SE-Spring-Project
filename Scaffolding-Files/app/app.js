@@ -33,7 +33,7 @@ app.set('views', './app/views');
 const db = require('./services/db');
 
 // get the controllers
-const userLoginController = require('./controllers/UserloginController');
+const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
