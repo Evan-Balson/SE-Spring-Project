@@ -37,6 +37,7 @@ const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
+const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
 
 // Get the models
@@ -249,6 +250,15 @@ app.get("/favourites", async (req, res) => {
     }
 });
 
+
+//admin controller and admin pages
+app.get("/admin", AdminController.adminDashboard);
+
+//admin task routes
+app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
+app.get("/admin/inspect-items", AdminController.inspectItems);
+app.get("/admin/monitor-listings", AdminController.monitorListings);
+app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 
 // Start server on port 3000
