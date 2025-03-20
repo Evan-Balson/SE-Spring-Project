@@ -1,0 +1,26 @@
+.sort-container {
+    max-width: 100%;
+    
+    padding: 20px;
+  }
+
+.sort-by, .page-title {
+    display: flex;
+    justify-content:center;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .sort-by label {
+    margin-right: 10px;
+  }
+  
+  .sort-by select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .product-clickable:hover{
+    cursor: pointer;
+  }

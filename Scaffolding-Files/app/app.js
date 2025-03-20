@@ -33,16 +33,17 @@ app.set('views', './app/views');
 const db = require('./services/db');
 
 // get the controllers
-const userLoginController = require('./controllers/UserloginController');
+const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
 const AdminController = require('./controllers/AdminController');
-
+const cartController =  require('./controllers/cartController');
 
 // Get the models
 const { User } = require("./models/User");
 const { Inventory } = require("./models/Inventory");
+const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
@@ -64,18 +65,23 @@ app.get("/", async function(req, res)
     //console.log(req.session.activeUser);
     //console.log(activeUser);
     if (activeUser.login_Status) {
+        console.log(".........\n",inventoryItems);
         res.render("home-logged-in", {
             title: 'Home',
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
             prevPage: inventoryItems.prevPage,
-        });
+            loginStatus: activeUser.login_Status
+           
+        }); 
+        
     } else {
         res.render("home", {
             title: 'Home',
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
-            prevPage: inventoryItems.prevPage
+            prevPage: inventoryItems.prevPage,
+            loginStatus: activeUser.login_Status
         });
     }
 });
@@ -100,38 +106,25 @@ app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
 
-// Create a route for cart lising - /
-app.get("/cart", function(req, res){
-    const cartItems = [
-        {
-            orderId: '2311140-8793735',
-            name: 'Green exotic sundress',
-            image: '/images/dress.jpeg',
-            description: 'Designer dress from Tampa Florida',
-            orderDate: '16 January 2025',
-            penalty: '7.99',
-            dispatchTo: 'Evan Balson',
-            deliveryDate: '17 January 2025'
-        },
-        {
-            orderId: '2311140-8793736',
-            name: 'Green exotic sundress',
-            image: '/images/dress.jpeg',
-            description: 'Designer dress from Tampa Florida',
-            orderDate: '16 January 2025',
-            penalty: '7.99',
-            dispatchTo: 'Evan Balson',
-            deliveryDate: '17 January 2025'
-        },
-        ];
-
-    if(activeUser.login_Status){
-        res.render("cart",{title:'My Cart', cartItems});
+// Create a route for cart lising
+app.get("/cart", async function(req, res) {
+    if (activeUser.login_Status) {
+        try {
+            // Fetch cart items for the logged-in user
+            const cartItems = await Cart.getCartItems(activeUser.userID); // Assuming activeUser.userID holds the logged-in user's ID
+            
+            res.render("cart", { title: 'My Cart', cartItems });
+            
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
+            res.status(500).render("error", { message: 'An error occurred while fetching cart items.' });
+        }
+    } else {
+        // If the user is not logged in, redirect to login page
+        res.render("login", { title: 'Login' });
     }
-    else{
-        res.render("login",{title:'Login'});}
-    
 });
+
 
 // Create a route for checkout lising - /
 app.get("/checkout", function(req, res){
@@ -246,14 +239,11 @@ app.get("/favourites", async (req, res) => {
             const savedItems = await favouritesController.viewSavedItems(activeUser.userID);
             console.log(savedItems);
             // Check if any saved items exist
-            if (savedItems && savedItems.length > 0) {
-                res.render("favourites", { title: 'Favourites', outfits: savedItems });
-            } else {
-                res.render("favourites", { title: 'Favourites', outfits: [] });
-            }
+            res.render("favourites", { title: 'Favourites', outfits: savedItems });
+            
         } catch (error) {
             console.error('Error fetching saved items:', error);
-            res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
+            //res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
         }
     } else {
         res.render("login", { title: 'Login' });  // If user is not logged in, render login page

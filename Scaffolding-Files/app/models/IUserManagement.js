@@ -35,8 +35,4 @@ class IUserManagement{
 
 
 }
-//export default IUserManagement;
-
-module.exports = {
-    IUserManagement
-}
+export default IUserManagement;
