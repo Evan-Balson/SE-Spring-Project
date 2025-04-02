@@ -24,11 +24,11 @@ block content
             nav 
               ul
                 li 
-                  a(href=`/order-details/${item.orderId}`) View product details
+                  a(href=`/Outfit/${item.orderId}`) View product details
                 li 
                   a(href=`/remove/${item.orderId}`) remove item
 
       .checkout-button
-        button(type="button") Checkout
+        a(href="/checkout") Checkout
     else
       p Your cart is empty!
