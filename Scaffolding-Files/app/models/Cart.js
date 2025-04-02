@@ -31,6 +31,17 @@ class Cart {
       throw error;
     }
   }
+
+  static async deleteCartItem(cartId) {
+    const sql = 'DELETE FROM Cart WHERE Cart_ID = ?';
+    try {
+      await db.query(sql, [cartId]);
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting cart item:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = {Cart};

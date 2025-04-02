@@ -143,6 +143,19 @@ app.get('/Outfit/:orderId', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+// Create a route for delete cart item -/
+app.get('/remove/:cartId', async (req, res) => {
+    const cartId = req.params.cartId; // Get the cart ID from the URL parameter
+    try {
+        await Cart.deleteCartItem(cartId); // Call the delete method from Cart model
+        res.redirect('/cart'); // Redirect to the cart page after deletion
+    } catch (error) {
+        console.error('Error deleting cart item:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // Create a route for checkout lising - /
 app.get("/checkout", function(req, res){
     const cartItems = [
