@@ -33,10 +33,11 @@ app.set('views', './app/views');
 const db = require('./services/db');
 
 // get the controllers
-const userLoginController = require('./controllers/UserloginController');
+const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
+const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
 
 // Get the models
@@ -261,6 +262,14 @@ app.get("/remove-outfit/:id", async (req, res) =>  {
     
     await favouritesController.removeFromFavourites(req, res); 
 });
+//admin controller and admin pages
+app.get("/admin", AdminController.adminDashboard);
+
+//admin task routes
+app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
+app.get("/admin/inspect-items", AdminController.inspectItems);
+app.get("/admin/monitor-listings", AdminController.monitorListings);
+app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 
 // Start server on port 3000
