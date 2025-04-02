@@ -64,7 +64,7 @@ app.get("/", async function(req, res)
     //console.log(req.session.activeUser);
     //console.log(activeUser);
     if (activeUser.login_Status) {
-        console.log(".........\n",inventoryItems);
+        //console.log(".........\n",inventoryItems);
         res.render("home-logged-in", {
             title: 'Home',
             products: inventoryItems.results,
@@ -229,16 +229,22 @@ app.get("/outfit-advice", function(req, res){
 
 });
 
+app.get("/inspect-items", function(req, res){
+
+    res.render("admin/inspect-items",{title:'Login'});
+
+});
+
+
+
 // Route to view saved items for the logged-in user
 app.get("/favourites", async (req, res) => {
-    console.log(activeUser);
+    //console.log(activeUser);
     if (activeUser.login_Status) {
         try {
             // Get saved items from the database using the controller method
-            const savedItems = await favouritesController.viewSavedItems(activeUser.userID);
-            console.log(savedItems);
-            // Check if any saved items exist
-            res.render("favourites", { title: 'Favourites', outfits: savedItems });
+            const savedItems = await favouritesController.filterSavedItems(req, res);
+            //console.log(savedItems);
             
         } catch (error) {
             console.error('Error fetching saved items:', error);
@@ -248,7 +254,13 @@ app.get("/favourites", async (req, res) => {
         res.render("login", { title: 'Login' });  // If user is not logged in, render login page
     }
 });
+app.post("/favourites",favouritesController.filterSavedItems);
 
+
+app.get("/remove-outfit/:id", async (req, res) =>  {
+    
+    await favouritesController.removeFromFavourites(req, res); 
+});
 
 
 // Start server on port 3000
