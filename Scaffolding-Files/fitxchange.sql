@@ -143,12 +143,7 @@ CREATE TABLE Return (
     Return_ID VARCHAR(20) PRIMARY KEY NOT NULL,
     Transaction_ID VARCHAR(20) NOT NULL,
     Inventory_ID VARCHAR(20) NOT NULL,
-    User_ID VARCHAR(20) NOT NULL,
-    Return_Reason VARCHAR(200),
-    Return_Date DATE,
-    Return_Status VARCHAR(20), -- e.g., "Pending", "Completed"
-    Return_Location VARCHAR(255), -- Added return location
-    FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID),
+    FOREIGN KEY (User_ID) REFERENCES User(User_ID),
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
@@ -317,7 +312,6 @@ INSERT INTO Inspection (AUTH_ID, Inventory_ID, Verification_Date, Pass_Status) V
 ('A010', 'I010', '2023-01-19', TRUE);
 
 -- Insert data into Favorites table
--- Assuming each user favorites two items, example insert
 INSERT INTO Favorites (User_ID, Inventory_ID) VALUES
 ('U001', 'I001'),
 ('U001', 'I002'),

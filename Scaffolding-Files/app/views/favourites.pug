@@ -6,17 +6,36 @@ block styles
 
 
 block content
-  div.container
-    h1 6 Saved Outfits
-    div.sort-by
-      label Sort by:
-      select(name="sortOrder")
-        option(value="newest") Newest to Oldest
-        option(value="oldest") Oldest to Newest
+  if (outfits)
+    div.container
+      h1 You have #{" "+ outfits.length} Saved Outfits
+      div.sort-by
+        form(method="POST", action="/favourites")
+          select(name="sortOrder")
+            option(value=null) filter
+            option(value="newest") Newest to Oldest
+            option(value="oldest") Oldest to Newest
+          button(type="submit") Go
 
-    each outfit in outfits
-      div.outfit-item
-        img(src=outfit.image alt=outfit.name)
-        h2= outfit.name
-        p Saved: #{outfit.savedDate + " "}
-        button.remove(href=`/remove-outfit/${outfit.id}`) Remove
+      each outfit in outfits
+        div.outfit-item
+          div.product-clickable(onclick=`window.location.href='/outfit-listing/${outfit.Inventory_ID}'`)
+            img(src=outfit.Product_Image_Path alt=outfit.Name)
+          div.product-clickable(onclick=`window.location.href='/outfit-listing/${outfit.Inventory_ID}'`)          
+            h3= outfit.Name
+          
+          br
+          h5= "Date saved: " + outfit.Date_Added
+          p= outfit.Description
+          a(href=`/remove-outfit/${outfit.Inventory_ID}`) 
+            button.remove(type="button") Remove
+  else
+    div.container
+      h1 You Don't have any Saved Outfits
+      div.sort-by
+        form(method="POST", action="/filter-favourites")
+          select(name="sortOrder")
+            option(value=null) filter
+            option(value="newest") Newest to Oldest
+            option(value="oldest") Oldest to Newest
+          button(type="submit") Go
