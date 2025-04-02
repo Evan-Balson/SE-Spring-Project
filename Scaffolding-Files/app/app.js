@@ -125,6 +125,36 @@ app.get("/cart", async function(req, res) {
     }
 });
 
+// Create a route for outfit details -/
+app.get('/Outfit/:orderId', async (req, res) => {
+    const orderId = req.params.orderId; // Get the order ID from the URL parameter
+    try {
+        const product = await db.query('SELECT * FROM Inventory WHERE Inventory_ID = ?', [orderId]);
+        if (product.length > 0) {
+            if (typeof product[0].Images == 'string') {
+                product[0].Images = product[0].Images.split(',');
+            }
+            res.render('Outfit', { title: 'Outfit Details', product: product[0] });
+        } else {
+            res.status(404).send('Product not found');
+        }   
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Create a route for delete cart item -/
+app.get('/remove/:cartId', async (req, res) => {
+    const cartId = req.params.cartId; // Get the cart ID from the URL parameter
+    try {
+        await Cart.deleteCartItem(cartId); // Call the delete method from Cart model
+        res.redirect('/cart'); // Redirect to the cart page after deletion
+    } catch (error) {
+        console.error('Error deleting cart item:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 // Create a route for checkout lising - /
 app.get("/checkout", function(req, res){
@@ -160,6 +190,8 @@ app.get("/checkout", function(req, res){
         res.render("login",{title:'Login'});}
     
 });
+
+//app.post("/checkout", cartController.processCheckout);
 
 
 
