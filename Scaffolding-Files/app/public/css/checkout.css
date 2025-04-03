@@ -20,15 +20,15 @@
 
   ul {
     display: flex; /* Flexbox for the container */
-    justify-content: space-between; /* Distribute space between the list items */
     align-items: center; /* Centers items vertically */
     list-style: none;
+    padding: 0px;
        
   }
   
   li.backLink {
     text-align: left; 
-    justify-self: left;
+    margin-right: auto;
    }
    
   
@@ -66,8 +66,12 @@
   
   .terms {
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 13px;
     color: #666;
+  }
+
+  .termsOfUseLink{
+    margin-left: 7px;
   }
   
   .checkout-button {
