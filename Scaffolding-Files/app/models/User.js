@@ -60,8 +60,12 @@ class User {
         const role = 'User';  // Default role is user
         const Address = address; 
         const emailAddress = email;
-        const contactNumber = phone;  // Optional phone number
-        const profileImagePath = "../images/profile.jpg";  // Optional, if you want to handle profile images
+        const contactNumber = phone; 
+        var profileImagePath = null;
+        if(image){
+            profileImagePath = image;
+        }
+        else{profileImagePath = "../images/default-profile-image.jpg";}
         const loginStatus = false;  // Default login status as false until they log in
         
             //const { firstName, lastName, email, address, phone, dob, , password, image } = userData;
