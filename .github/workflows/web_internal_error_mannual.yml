@@ -31,9 +31,7 @@ jobs:
 
             - name: install dependencies
               run: |
-                  npm install
-                  npm install express
-                  npm install express-session
+                  npm install express express-session
 
             - name: build and start Docker containers
               run: |
