@@ -1,5 +1,6 @@
 // Get the functions in the db.js file to use
 const db = require('./../services/db');
+const bcrypt = require("bcryptjs");
 
 class User {
     userID;
@@ -19,7 +20,7 @@ class User {
         this.userPassword = password;
         this.userRole = role;
         this.userAddress = address;
-        this.userContact = phone;  // Fixed here to `this.userContact`
+        this.userContact = phone;
         this.Profile_Image = image;
         this.login_Status = login;
     }
@@ -27,19 +28,24 @@ class User {
     setLoginStatus(login){
         this.login_Status = login;
     }
+
     static async authenticate(email, password) {
-        var sql = 'SELECT * FROM `User` WHERE `Email_Address` = ? AND `Password` = ?';
-        var params = [email, password];
+        var sql = 'SELECT * FROM `User` WHERE `Email_Address` = ?';
 
         try {
-            var result = await db.query(sql, params);
-            //console.log(result);  // Check what the database returns
+            const result = await db.query(sql, [email]);
 
             if (result && result.length > 0) {
-                var user = result[0];
-                return new User(user.User_ID, user.Name, user.Role, user.Email_Address, user.Password, user.Address, user.Contact_Number, user.Profile_Image_Path);
+                const user = result[0];
+                const passwordMatch = await bcrypt.compare(password, user.Password);
+                if (passwordMatch) {
+                    return new User(user.User_ID, user.Name, user.Role, user.Email_Address, user.Password, user.Address, user.Contact_Number, user.Profile_Image_Path);
+                } else {
+                    console.log('Incorrect password');
+                    return null;
+                }
             } else {
-                console.log('No user found with the provided credentials.');
+                console.log('No user found with the provided email.');
                 return null;
             }
         } catch (error) {
@@ -52,12 +58,10 @@ class User {
         this.login_Status = false;
     }
 
-    // Function to insert a new user into the database
     static async registerUser(userData){
         const { firstName, lastName, email, address, phone, password, image } = userData;
-        //console.log(userData);
-        const userID = `U${Date.now()}`;  // Generate a unique User_ID based on the timestamp
-        const role = 'User';  // Default role is user
+        const userID = `U${Date.now()}`;
+        const role = 'User';
         const Address = address; 
         const emailAddress = email;
         const contactNumber = phone; 
@@ -75,14 +79,20 @@ class User {
         `;
         //INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status) VALUES
 
-        const params = [userID, `${firstName} ${lastName}`, role, Address, emailAddress, contactNumber, password, profileImagePath, loginStatus];
-        console.log(params)
         try {
-            const result = await db.query(sql, params);  // Execute the query
+            const hashedPassword = await bcrypt.hash(password, 10);
+            console.log("Hashed password:", hashedPassword);
+            const sql = `
+                INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+            `;
+
+            const params = [userID, `${firstName} ${lastName}`, role, Address, emailAddress, contactNumber, hashedPassword, profileImagePath, loginStatus];
+            const result = await db.query(sql, params);
             return result;
         } catch (error) {
             console.error('Error during user registration:', error);
-            throw error;  // Throw error to be handled by controller
+            throw error;
         }
     };
 }
@@ -90,5 +100,3 @@ class User {
 module.exports = {
     User
 }
-
-
