@@ -29,12 +29,23 @@ jobs:
                       rm package-lock.json
                   fi
 
-            - name: install dependencies
+            - name: install Docker Compose
               run: |
-                  npm install
-                  npm install express
-                  npm install express-session
+                  sudo apt-get update
+                  sudo apt-get install -y docker-compose
 
-            - name: build and start Docker containers
+            - name: Create .env file from env-sample
               run: |
-                  docker-compose up --build
+                  cp ${{ github.workspace }}/Scaffolding-Files/env-sample ${{ github.workspace }}/Scaffolding-Files/.env
+                
+            - name: install dependencies npm express
+              run: |
+                  npm install express
+
+            - name: install dependencies npm express-session
+              run: |
+                  npm install express-session
+                  
+            - name: stop and remove existing Docker containers
+              run: |
+                  docker-compose -f ${{ github.workspace }}/Scaffolding-Files/docker-compose.yml --env-file ${{ github.workspace }}/Scaffolding-Files/.env down

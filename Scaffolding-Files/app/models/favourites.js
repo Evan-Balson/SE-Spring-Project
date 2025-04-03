@@ -71,7 +71,14 @@ class Favourites {
     
         try {
             var result = await db.query(sql, params);
-            //console.log(result);  
+            //console.log(result); 
+            
+            // Convert dates to a desired format (YYYY-MM-DD)
+            result.forEach(item => {
+                if (item.Date_Added) {
+                    item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // YYYY-MM-DD format
+                }
+                });            
     
             if (result && result.length > 0) {
                 return result; // Return the saved items
@@ -100,6 +107,13 @@ async viewSavedItems_oldest(User_ID) {
     try {
         var result = await db.query(sql, params);
         console.log(result);
+
+            // Convert dates to a desired format (YYYY-MM-DD)
+            result.forEach(item => {
+            if (item.Date_Added) {
+                item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // YYYY-MM-DD format
+            }
+            });
 
         if (result && result.length > 0) {
             return result; // Return the saved items
