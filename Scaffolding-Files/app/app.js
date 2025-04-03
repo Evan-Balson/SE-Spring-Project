@@ -47,7 +47,11 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-var activeUser= new User("guest","","","","","","","",false);
+//var activeUser= new User("guest","","","","","","","",false);
+
+//delete this user after testing
+
+var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
@@ -60,12 +64,12 @@ app.get("/", async function(req, res)
 
     // Get inventory items based on the page
     const inventoryItems = await Inventory.displayinventory(itemsPerPage, currentPage);
-    //console.log(inventoryItems)
+    //console.log(inventoryItems);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
     //console.log(activeUser);
     if (activeUser.login_Status) {
-        console.log(".........\n",inventoryItems);
+        //console.log(".........\n",inventoryItems);
         res.render("home-logged-in", {
             title: 'Home',
             products: inventoryItems.results,
@@ -125,41 +129,51 @@ app.get("/cart", async function(req, res) {
     }
 });
 
+// Create a route for outfit details -/
+app.get('/Outfit/:orderId', async (req, res) => {
+    const orderId = req.params.orderId; // Get the order ID from the URL parameter
+    try {
+        const product = await db.query('SELECT * FROM Inventory WHERE Inventory_ID = ?', [orderId]);
+        if (product.length > 0) {
+            if (typeof product[0].Images == 'string') {
+                product[0].Images = product[0].Images.split(',');
+            }
+            res.render('Outfit', { title: 'Outfit Details', product: product[0] });
+        } else {
+            res.status(404).send('Product not found');
+        }   
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Create a route for delete cart item -/
+app.get('/remove/:cartId', async (req, res) => {
+    const cartId = req.params.cartId; // Get the cart ID from the URL parameter
+    try {
+        await Cart.deleteCartItem(cartId); // Call the delete method from Cart model
+        res.redirect('/cart'); // Redirect to the cart page after deletion
+    } catch (error) {
+        console.error('Error deleting cart item:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 // Create a route for checkout lising - /
 app.get("/checkout", function(req, res){
-    const cartItems = [
-        {
-            name: 'Casual Tee',
-            image: '/images/dress.jpeg',
-            description: 'A comfortable casual wear',
-            quantity: 1,
-            penalty: 10.00,
-            orderDate: '2023-09-01',
-            deliveryDate: '2023-09-05',
-            dispatchTo: 'User Address'
-        },
-        {
-            name: 'Summer Dress',
-            image: '/images/dress.jpeg',
-            description: 'Perfect for summer outings',
-            quantity: 1,
-            penalty: 15.00,
-            orderDate: '2023-09-02',
-            deliveryDate: '2023-09-06',
-            dispatchTo: 'User Address'
-        }
-      ];
-      
-    const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+   
+    const cartItems = Cart.getCartItems(activeUser.userID); 
   
     if(activeUser.login_Status){
-        res.render("checkout",{title:'Checkout', cartItems, total});
+        res.render("checkout",{title:'Checkout', cartItems});
     }
     else{
         res.render("login",{title:'Login'});}
     
 });
+
+//app.post("/checkout", cartController.processCheckout);
 
 
 
@@ -230,16 +244,22 @@ app.get("/outfit-advice", function(req, res){
 
 });
 
+app.get("/inspect-items", function(req, res){
+
+    res.render("admin/inspect-items",{title:'Login'});
+
+});
+
+
+
 // Route to view saved items for the logged-in user
 app.get("/favourites", async (req, res) => {
-    console.log(activeUser);
+    //console.log(activeUser);
     if (activeUser.login_Status) {
         try {
             // Get saved items from the database using the controller method
-            const savedItems = await favouritesController.viewSavedItems(activeUser.userID);
-            console.log(savedItems);
-            // Check if any saved items exist
-            res.render("favourites", { title: 'Favourites', outfits: savedItems });
+            const savedItems = await favouritesController.filterSavedItems(req, res);
+            //console.log(savedItems);
             
         } catch (error) {
             console.error('Error fetching saved items:', error);
@@ -249,17 +269,29 @@ app.get("/favourites", async (req, res) => {
         res.render("login", { title: 'Login' });  // If user is not logged in, render login page
     }
 });
+app.post("/favourites",favouritesController.filterSavedItems);
 
 
+app.get("/remove-outfit/:id", async (req, res) =>  {
+    
+    await favouritesController.removeFromFavourites(req, res); 
+});
+
+app.get("/terms-and-conditions", async (req, res) => {
+    res.render("termsofuse");
+});
+
+/*
 //admin controller and admin pages
 app.get("/admin", AdminController.adminDashboard);
+
 
 //admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
 app.get("/admin/inspect-items", AdminController.inspectItems);
 app.get("/admin/monitor-listings", AdminController.monitorListings);
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
-
+*/
 
 // Start server on port 3000
 app.listen(3000,function(){

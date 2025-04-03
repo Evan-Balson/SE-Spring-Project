@@ -78,6 +78,13 @@
     height:auto ;
   }
   
+  .description {
+    font-size: 18px;
+    color: #333;
+  }
+  ul.buttonlink {
+    list-style-type: none;
+  }
   .checkout-button {
     display: flex;
     justify-content: flex-end;

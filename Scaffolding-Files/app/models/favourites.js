@@ -10,10 +10,10 @@ class Favourites {
 
     // Remove item from favorites for a user
     async removeFromFavourites(User_ID, Inventory_ID) {
-        var sql = `
-            DELETE FROM Favorites 
-            WHERE User_ID = ? AND Inventory_ID = ?;
-        `;
+        //'SELECT * FROM `User` WHERE `Email_Address` = ? AND `Password` = ?';
+        
+        var sql = 'DELETE FROM `Favorites` WHERE `User_ID` = ? AND `Inventory_ID` = ?;';
+                    
         var params = [User_ID, Inventory_ID];
 
         try {
@@ -61,16 +61,17 @@ class Favourites {
     // View all saved items for a user
     async viewSavedItems(User_ID) {
         var sql = `
-            SELECT Inventory.* 
-            FROM Inventory
-            JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
-            WHERE Favorites.User_ID = ?;
-        `;
+        SELECT Inventory.*, Favorites.Date_Added
+        FROM Inventory
+        JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
+        WHERE Favorites.User_ID = ?
+        ORDER BY Favorites.Date_Added DESC;
+    `;
         var params = [User_ID];
     
         try {
             var result = await db.query(sql, params);
-            //console.log(result);  // Check what the database returns
+            //console.log(result);  
     
             if (result && result.length > 0) {
                 return result; // Return the saved items
@@ -83,6 +84,36 @@ class Favourites {
             throw error;
         }
     }
+
+
+// View all saved items for a user, ordered by oldest
+async viewSavedItems_oldest(User_ID) {
+    var sql = `
+        SELECT Inventory.*, Favorites.Date_Added
+        FROM Inventory
+        JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
+        WHERE Favorites.User_ID = ?
+        ORDER BY Favorites.Date_Added ASC;
+    `;
+    var params = [User_ID];
+
+    try {
+        var result = await db.query(sql, params);
+        console.log(result);
+
+        if (result && result.length > 0) {
+            return result; // Return the saved items
+        } else {
+            console.log('No items found for this user.');
+            return null; // Return null if no items are found
+        }
+    } catch (error) {
+        console.error('Error during Database search:', error);
+        throw error;
+    }
+}
+
+
 }
 
 module.exports = {Favourites}

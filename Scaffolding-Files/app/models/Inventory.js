@@ -71,11 +71,6 @@ class Inventory {
         }
     }
     
-    
-
-
-
-
 }
 
 // needed to  export functions, objects, or other values from a module so they can be imported and used in other files.

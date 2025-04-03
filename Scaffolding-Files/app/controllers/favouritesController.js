@@ -27,17 +27,23 @@ const addToFavourites = async (req, res) => {
 
 // Controller to handle removing an item from favorites
 const removeFromFavourites = async (req, res) => {
-    const { User_ID, Inventory_ID } = req.body;  // Assuming you are sending the data in the body of the request
+    const User_ID = req.session.activeUser.userID; // Accessing activeUser from session
+    console.log(User_ID);
+    const Inventory_ID = req.params.id;
+    console.log(Inventory_ID);
+    console.log("The Inventory Item is:", Inventory_ID);
 
-    if (!User_ID || !Inventory_ID) {
-        return res.status(400).json({ message: 'User_ID and Inventory_ID are required.' });
+    if (!Inventory_ID) {
+        return res.status(400).json({ message: 'Inventory_ID are required.' });
     }
 
     try {
         const result = await favourites.removeFromFavourites(User_ID, Inventory_ID);
 
         if (result) {
-            return res.status(200).json({ message: 'Item removed from favorites.' });
+
+            //res.status(200).json({ message: 'Item removed from favorites.' });
+            return res.redirect("/favourites");
         } else {
             return res.status(500).json({ message: 'Failed to remove item from favorites.' });
         }
@@ -46,8 +52,13 @@ const removeFromFavourites = async (req, res) => {
     }
 };
 
-// Controller to handle viewing saved items for a user
-const viewSavedItems = async (User_ID) => {
+
+
+// Controller to handle filtered viewing saved items for a user
+const filterSavedItems = async (req, res) => {
+
+    User_ID = req.session.activeUser.userID;
+    const {sortOrder} = req.body
     
     console.log(User_ID);
     if (!User_ID) {
@@ -55,19 +66,21 @@ const viewSavedItems = async (User_ID) => {
         throw new Error('User_ID is required.');
     }
 
+    let result;
+
     try {
         // Log User_ID for debugging purposes
         console.log('Fetching saved items for User_ID:', User_ID);
 
+        if (sortOrder == "oldest") {result = await favourites.viewSavedItems_oldest(User_ID);}
+        else if (sortOrder == "newest") {result = await favourites.viewSavedItems(User_ID);}
+        else if (!sortOrder) {result = await favourites.viewSavedItems(User_ID);}
         // Call the model's function to get saved items
-        const result = await favourites.viewSavedItems(User_ID);
 
-        // Return the result if found, otherwise return null or throw an error
-        if (result && result.length > 0) {
-            return result;  // Return the saved items if found
-        } else {
-            return null;
-        }
+        console.log(sortOrder);
+        
+        return res.render("favourites", { title: 'Favourites', outfits: result });
+
     } catch (error) {
         // Log and rethrow the error to be handled in the route
         console.error('Error fetching saved items:', error.message);
@@ -80,5 +93,5 @@ const viewSavedItems = async (User_ID) => {
 module.exports = {
     addToFavourites,
     removeFromFavourites,
-    viewSavedItems
+    filterSavedItems
 };

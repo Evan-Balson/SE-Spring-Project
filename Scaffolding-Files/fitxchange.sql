@@ -124,6 +124,7 @@ CREATE TABLE Review (
 CREATE TABLE Favorites (
     User_ID VARCHAR(20) NOT NULL,
     Inventory_ID VARCHAR(20) NOT NULL,
+    Date_Added DATE,
     FOREIGN KEY (User_ID) REFERENCES User(User_ID),
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
     PRIMARY KEY (User_ID, Inventory_ID)
@@ -280,17 +281,17 @@ INSERT INTO Inspection (AUTH_ID, Inventory_ID, Verification_Date, Pass_Status) V
 ('A010', 'I010', '2023-01-19', TRUE);
 
 -- Insert data into Favorites table
-INSERT INTO Favorites (User_ID, Inventory_ID) VALUES
-('U001', 'I001'),
-('U001', 'I002'),
-('U002', 'I003'),
-('U002', 'I004'),
-('U003', 'I005'),
-('U003', 'I006'),
-('U004', 'I007'),
-('U004', 'I008'),
-('U005', 'I009'),
-('U005', 'I010');
+INSERT INTO Favorites (User_ID, Inventory_ID, Date_Added) VALUES
+('U001', 'I001', '2023-01-12'),
+('U001', 'I002', '2024-01-12'),
+('U002', 'I003', '2025-01-12'),
+('U002', 'I004', '2013-01-12'),
+('U003', 'I005', '2012-01-12'),
+('U003', 'I006', '2013-01-12'),
+('U004', 'I007', '2020-01-12'),
+('U004', 'I008', '2021-01-12'),
+('U005', 'I009', '2008-01-12'),
+('U005', 'I010', '2009-01-12');
 
 -- Insert data into Dispute table
 INSERT INTO Dispute (Dispute_ID, Dispute_Message, User_ID) VALUES

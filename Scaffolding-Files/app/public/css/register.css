@@ -43,6 +43,14 @@
     margin-top: 5px;
     color: #666;
   }
+
+  .termsAndConditions{
+    margin-top: 20px;
+  }
+
+  .termsOfUseLink{
+    margin-left: 7px;
+  }
   
   button {
     background-color: #004544; /* Pink color similar to the login form */
@@ -57,5 +65,11 @@
   
   button:hover {
     background-color: #c2185b; /* Darker pink for hover effect */
+  }
+
+  .message {
+    justify-content: center;
+    display: flex;
+  
   }
   

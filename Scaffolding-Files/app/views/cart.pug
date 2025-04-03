@@ -5,8 +5,9 @@ block styles
 
 
 block content
+  h1 My Cart
   .cart-container
-    h1 My Cart
+    
     if cartItems.length > 0
       each item in cartItems
         .cart-item
@@ -14,7 +15,7 @@ block content
 
           .item-info
             h3 #{item.name}
-            p #{item.description}
+            p.description #{item.description}
             p Order Placed: #{item.orderDate}
             p Misuse Penalty: £#{item.penalty}
             p Dispatched to: #{item.dispatchTo}
@@ -24,11 +25,13 @@ block content
             nav 
               ul
                 li 
-                  a(href=`/order-details/${item.orderId}`) View product details
+                  a(href=`/outfit-listing/${item.orderId}`) View product details
                 li 
-                  a(href=`/remove/${item.orderId}`) remove item
-
-      .checkout-button
-        button(type="button") Checkout
+                  a(href=`/remove/${item.Cart_ID}`) remove item
+      ul.buttonlink 
+        li    
+          .checkout-button
+          a(href="/checkout")
+            button Go to Checkout
     else
       p Your cart is empty!
