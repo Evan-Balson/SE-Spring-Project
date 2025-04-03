@@ -40,8 +40,8 @@ jobs:
                   
             - name: stop and remove existing Docker containers
               run: |
-                  docker-compose down
+                  docker-compose -f ./Scaffolding-Files/docker-compose.yml down
 
             - name: build and start Docker containers
               run: |
-                  docker-compose up --build
+                  docker-compose -f ./Scaffolding-Files/docker-compose.yml up --build
