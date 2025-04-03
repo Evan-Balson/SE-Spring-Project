@@ -37,6 +37,10 @@ jobs:
               run: |
                   sudo apt-get update
                   sudo apt-get install -y docker-compose
+
+            - name: list files in Scaffolding-Files
+              run:
+                    ls -la ${{ github.workspace }}/Scaffolding-Files
                   
             - name: stop and remove existing Docker containers
               run: |
