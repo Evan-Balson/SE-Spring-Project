@@ -3,7 +3,7 @@ const { Inventory } = require('./Inventory');
 
 class Cart {
   // Fetch cart items for a specific user and join with Inventory table
-  async getCartItems(userId) {
+  static async getCartItems(userId) {
     const sql = `
       SELECT 
         c.Cart_ID,

@@ -31,7 +31,7 @@ CREATE TABLE User (
     Address VARCHAR(40),
     Email_Address VARCHAR(60),
     Contact_Number BIGINT(15),
-    Password VARCHAR(20),
+    Password VARCHAR(255),
     Profile_Image_Path VARCHAR(255),
     login_status BOOLEAN
 
@@ -163,16 +163,16 @@ CREATE TABLE Cart (
 
 -- Insert data into User table with profile image path
 INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status) VALUES
-('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, 'password123', '../images/profile.jpg', FALSE),
-('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457, 'password123', '../images/profile.jpg', FALSE),
-('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, 'password123', '../images/profile.jpg', FALSE),
-('U004', 'Oliver Wilson', 'Customer', '2 The Drive, Richmond, TW9 1AE', 'oliver.wilson@hotmail.com', 447890123459, 'password123', '../images/profile.jpg', FALSE),
-('U005', 'Sophia Evans', 'Seller', '49 Piccadilly, Manchester, M1 2AP', 'sophia.evans@icloud.com', 447890123450, 'password123', '../images/profile.jpg', FALSE),
-('U006', 'Liam Brown', 'Customer', '32 Elm Row, Leith, EH7 4AH', 'liam.brown@sky.com', 447890123451, 'password123', '../images/profile.jpg', FALSE),
-('U007', 'Isabella Jones', 'Admin', '27 Westgate, Bath, BA1 1EP', 'isabella.jones@outlook.com', 447890123452, 'password123', '../images/profile.jpg', FALSE),
-('U008', 'Noah Davis', 'Seller', '144 High St, Guildford, GU1 3HJ', 'noah.davis@gmail.com', 447890123453, 'password123', '../images/profile.jpg', FALSE),
-('U009', 'Amelia Green', 'Customer', '88 Church St, Liverpool, L1 3AY', 'amelia.green@yahoo.com', 447890123454, 'password123', '../images/profile.jpg', FALSE),
-('U010', 'Jacob Martin', 'Customer', '14 Bond St, Bristol, BS1 3LU', 'jacob.martin@hotmail.com', 447890123455, 'password123', '../images/profile.jpg', FALSE);
+('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U004', 'Oliver Wilson', 'Customer', '2 The Drive, Richmond, TW9 1AE', 'oliver.wilson@hotmail.com', 447890123459, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U005', 'Sophia Evans', 'Seller', '49 Piccadilly, Manchester, M1 2AP', 'sophia.evans@icloud.com', 447890123450, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U006', 'Liam Brown', 'Customer', '32 Elm Row, Leith, EH7 4AH', 'liam.brown@sky.com', 447890123451, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U007', 'Isabella Jones', 'Admin', '27 Westgate, Bath, BA1 1EP', 'isabella.jones@outlook.com', 447890123452, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U008', 'Noah Davis', 'Seller', '144 High St, Guildford, GU1 3HJ', 'noah.davis@gmail.com', 447890123453, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U009', 'Amelia Green', 'Customer', '88 Church St, Liverpool, L1 3AY', 'amelia.green@yahoo.com', 447890123454, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
+('U010', 'Jacob Martin', 'Customer', '14 Bond St, Bristol, BS1 3LU', 'jacob.martin@hotmail.com', 447890123455, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE);
 
 
 -- Insert data into Fashion_Advice table
