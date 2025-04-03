@@ -129,6 +129,46 @@ app.get("/cart", async function(req, res) {
     }
 });
 
+
+app.get("/order-history", async function(req, res) {
+    const { itemName, orderNumber, tags } = req.query; // Capture filter parameters
+
+    let sql = `SELECT * FROM Orders WHERE 1=1`; // Basic SQL query
+    let params = [];
+
+    // Add conditions based on filters
+    if (itemName) {
+        sql += ` AND itemName LIKE ?`; // Use LIKE for partial matching
+        params.push(`%${itemName}%`); // Wildcard search for itemName
+    }
+
+    if (orderNumber) {
+        sql += ` AND orderNumber = ?`;
+        params.push(orderNumber);
+    }
+
+    if (tags) {
+        sql += ` AND tags LIKE ?`; // Use LIKE for partial matching
+        params.push(`%${tags}%`);
+    }
+
+    try {
+        // Execute the query with the dynamic parameters
+        const orders = await db.query(sql, params);
+        
+        if (activeUser.login_Status) {
+            res.render("order-history", { title: 'My Orders', orders });
+        } else {
+            res.render("login", { title: 'Login' });
+        }
+    } catch (error) {
+        console.error('Error fetching order history:', error);
+        res.status(500).render("error", { message: 'An error occurred while fetching orders.' });
+    }
+});
+
+
+
 // Create a route for outfit details -/
 app.get('/Outfit/:orderId', async (req, res) => {
     const orderId = req.params.orderId; // Get the order ID from the URL parameter
