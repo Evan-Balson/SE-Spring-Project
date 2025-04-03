@@ -47,7 +47,11 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-var activeUser= new User("guest","","","","","","","",false);
+//var activeUser= new User("guest","","","","","","","",false);
+
+//delete this user after testing
+
+var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
@@ -158,33 +162,11 @@ app.get('/remove/:cartId', async (req, res) => {
 
 // Create a route for checkout lising - /
 app.get("/checkout", function(req, res){
-    const cartItems = [
-        {
-            name: 'Casual Tee',
-            image: '/images/dress.jpeg',
-            description: 'A comfortable casual wear',
-            quantity: 1,
-            penalty: 10.00,
-            orderDate: '2023-09-01',
-            deliveryDate: '2023-09-05',
-            dispatchTo: 'User Address'
-        },
-        {
-            name: 'Summer Dress',
-            image: '/images/dress.jpeg',
-            description: 'Perfect for summer outings',
-            quantity: 1,
-            penalty: 15.00,
-            orderDate: '2023-09-02',
-            deliveryDate: '2023-09-06',
-            dispatchTo: 'User Address'
-        }
-      ];
-      
-    const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+   
+    const cartItems = Cart.getCartItems(activeUser.userID); 
   
     if(activeUser.login_Status){
-        res.render("checkout",{title:'Checkout', cartItems, total});
+        res.render("checkout",{title:'Checkout', cartItems});
     }
     else{
         res.render("login",{title:'Login'});}

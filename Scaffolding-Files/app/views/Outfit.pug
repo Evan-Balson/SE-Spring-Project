@@ -29,7 +29,6 @@ block content
         p Condition Level: #{product.Condition_Level}
         p Availability: #{product.Availability ? 'In Stock' : 'Out of Stock'}
         p Quantity Available: #{product.Quantity}
-
-        a(href= "/cart") 
-          button.add-to-cart Back to Cart
+        li.backLink
+        a.goback-link(href="/cart") ← Back to Cart
 

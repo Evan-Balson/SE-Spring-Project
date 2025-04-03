@@ -15,7 +15,7 @@ block content
 
           .item-info
             h3 #{item.name}
-            p #{item.description}
+            p.description #{item.description}
             p Order Placed: #{item.orderDate}
             p Misuse Penalty: £#{item.penalty}
             p Dispatched to: #{item.dispatchTo}
@@ -28,8 +28,10 @@ block content
                   a(href=`/Outfit/${item.orderId}`) View product details
                 li 
                   a(href=`/remove/${item.Cart_ID}`) remove item
-
-      .checkout-button
-        a(href="/checkout") Go To Checkout
+      ul.buttonlink 
+        li    
+          .checkout-button
+          a(href="/checkout")
+            button Go to Checkout
     else
       p Your cart is empty!
