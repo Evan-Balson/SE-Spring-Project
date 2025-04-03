@@ -32,14 +32,15 @@ jobs:
             - name: install dependencies
               run: |
                   npm install express express-session
-            - name: stop and remove existing Docker containers
-              run: |
-                  docker-compose down
 
             - name: install Docker Compose
               run: |
                   sudo apt-get update
                   sudo apt-get install -y docker-compose
+                  
+            - name: stop and remove existing Docker containers
+              run: |
+                  docker-compose down
 
             - name: build and start Docker containers
               run: |
