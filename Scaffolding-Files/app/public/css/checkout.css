@@ -1,15 +1,56 @@
-.container {
+
+.back-to-cart {
+  background-color: #0d4508;
+  padding: 10px 15px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  text-decoration: none; /* Remove underline */
+  color: white;
+  font-size: 14px;
+}
+
+.back-to-cart:hover {
+  background-color: #0056b3;
+}
+  .container {
     max-width: 800px;
     margin: auto;
     padding: 20px;
     background-color: #fff;
   }
+
   
   h1 {
     font-size: 24px;
     color: #333;
     text-align: center;
   }
+  .cart-header {
+    display: flex;
+    justify-content: space-between; /* Space out the button and heading */
+    align-items: center; /* Vertically align them */
+    margin-bottom: 20px; /* Add some space below */
+  }
+
+  ul {
+    display: flex; /* Flexbox for the container */
+    justify-content: space-between; /* Distribute space between the list items */
+    align-items: center; /* Centers items vertically */
+    list-style: none;
+    
+  }
+  
+  li.backLink {
+    flex: 1; /* Takes up available space */
+    text-align: left; /* Centers text inside the li */
+    justify-self: flex-start; /* Align the item to the flex-end */
+  }
+  
+  li.buttonlink {
+    text-align: right; /* Align text to the right */
+    justify-self: flex-end; /* Align the item to the flex-end */
+  }
+
   
   .outfit-item {
     display: flex;
@@ -46,7 +87,6 @@
   .checkout-button {
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
   }
   
   button.agree-button {

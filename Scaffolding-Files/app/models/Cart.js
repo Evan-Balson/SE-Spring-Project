@@ -1,8 +1,9 @@
 const db = require('./../services/db');
+const { Inventory } = require('./Inventory');
 
 class Cart {
   // Fetch cart items for a specific user and join with Inventory table
-  static async getCartItems(userId) {
+  async getCartItems(userId) {
     const sql = `
       SELECT 
         c.Cart_ID,
@@ -13,7 +14,6 @@ class Cart {
         i.Description AS description,
         t.Transaction_Date AS orderDate,
         d.Delivery_Date AS deliveryDate,
-        -- Assuming penalty info is in Transaction or Delivery table (adjust accordingly)
         (SELECT SUM(t.Total_Price) * 0.1 FROM Transaction t WHERE t.User_ID = c.User_ID AND t.Inventory_ID = c.Inventory_ID) AS penalty, 
         d.Delivery_Address AS dispatchTo
       FROM Cart c

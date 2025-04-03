@@ -1,6 +1,6 @@
 const { User } = require("../models/User");
-
-exports.login = async (req, res) => {
+ 
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         
@@ -25,4 +25,8 @@ exports.login = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+
+
+module.exports = {login}
 
