@@ -29,10 +29,6 @@ jobs:
                       rm package-lock.json
                   fi
 
-            - name: install dependencies
-              run: |
-                  npm install express express-session
-
             - name: install Docker Compose
               run: |
                   sudo apt-get update
@@ -41,10 +37,14 @@ jobs:
             - name: Create .env file from env-sample
               run: |
                   cp ${{ github.workspace }}/Scaffolding-Files/env-sample ${{ github.workspace }}/Scaffolding-Files/.env
+                
+            - name: install dependencies npm express
+              run: |
+                  npm install express
 
-            - name: list files in Scaffolding-Files
-              run:
-                    ls -la ${{ github.workspace }}/Scaffolding-Files
+            - name: install dependencies npm express-session
+              run: |
+                  npm install express-session
                   
             - name: stop and remove existing Docker containers
               run: |
