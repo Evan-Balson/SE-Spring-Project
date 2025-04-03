@@ -2,23 +2,29 @@ const { User } = require("../models/User");
 
     // Controller function to handle user registration
 exports.registerUser = async (req, res) => {
-    const { firstName, lastName, email, address, phone, password, image } = req.body;
+    const { firstName, lastName, email, address, phone, password, image, termsofuse } = req.body;
 
-    const userData = { firstName, lastName, email, address, phone, password, image };
+    console.log(termsofuse);
+    if(termsofuse){
+        const userData = { firstName, lastName, email, address, phone, password, image };
 
-    try {
-        // Call the model to register the user
-        const result = await User.registerUser(userData);
-        console.log("here is the result from the insert function", result);
+        try {
+            // Call the model to register the user
+            const result = await User.registerUser(userData);
+            console.log("here is the result from the insert function", result);
 
-        // If the user was successfully inserted
-        res.status(201).redirect('/login');  // Redirect to login page or wherever you'd like
-    } catch (error) {
-        console.error('Error during registration:', error);
-        res.status(500).render('register', {
-            title: 'Register',
-            error: 'An error occurred during registration. Please try again.'
-        });
+            // If the user was successfully inserted
+            res.status(201).redirect('/login');  // Redirect to login page or wherever you'd like
+        } catch (error) {
+            console.error('Error during registration:', error);
+            res.status(500).render('register', {
+                title: 'Register',
+                error: 'An error occurred during registration. Please try again.'
+            });
+        }
+    }
+    else{// terms and conditions not accepted
+        res.render("register",{title:'Register', error: 'Agree to Terms & Conditions to continue' });
     }
 };
 

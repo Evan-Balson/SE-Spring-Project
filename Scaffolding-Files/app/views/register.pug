@@ -25,8 +25,8 @@ block content
                 label Address:
                 input(type="text" name="address" required)
             .form-group
-                label Phone number (optional):
-                input(type="text" name="phone")
+                label Phone number
+                input(type="text" name="phone" required)
             .form-group
                 label Password:
                 input(type="password" name="password" required)
@@ -34,6 +34,12 @@ block content
             .form-group
                 label(for="imageUpload") Upload Image(optional):
                 input#imageUpload(type="file", name="image")           
+            .termsAndConditions
+                input(type="checkbox", name="termsofuse")
+                | I agree to the
+                a.termsOfUseLink(href="/terms-and-conditions") Terms and Conditions
             button(type="submit") Sign Up →
+                      label
 
-            //firstName, lastName, email, address, phone, password, image
+  if error
+    p.message(style='color: red;') #{error}

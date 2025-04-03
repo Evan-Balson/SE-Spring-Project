@@ -64,7 +64,7 @@ app.get("/", async function(req, res)
 
     // Get inventory items based on the page
     const inventoryItems = await Inventory.displayinventory(itemsPerPage, currentPage);
-    //console.log(inventoryItems)
+    //console.log(inventoryItems);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
     //console.log(activeUser);
@@ -276,15 +276,22 @@ app.get("/remove-outfit/:id", async (req, res) =>  {
     
     await favouritesController.removeFromFavourites(req, res); 
 });
+
+app.get("/terms-and-conditions", async (req, res) => {
+    res.render("termsofuse");
+});
+
+/*
 //admin controller and admin pages
 app.get("/admin", AdminController.adminDashboard);
+
 
 //admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
 app.get("/admin/inspect-items", AdminController.inspectItems);
 app.get("/admin/monitor-listings", AdminController.monitorListings);
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
-
+*/
 
 // Start server on port 3000
 app.listen(3000,function(){
