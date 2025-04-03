@@ -59,7 +59,17 @@ app.get("/", async function(req, res)
     const itemsPerPage = 4; // Number of items per page
 
     // Get inventory items based on the page
-    const inventoryItems = await Inventory.displayinventory(itemsPerPage, currentPage);
+// Get filters from query parameters
+    const filters = {
+        sortOrder: req.query.sortOrder || null,
+        category: req.query.category || null,
+        price: req.query.price || null,
+        location: req.query.location || null
+    };
+
+    // Get filtered inventory items based on filters and pagination
+    const inventoryItems = await Inventory.displayinventory(itemsPerPage, currentPage, filters);
+
     //console.log(inventoryItems)
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);

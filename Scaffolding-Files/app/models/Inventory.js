@@ -25,27 +25,49 @@ class Inventory {
     async rent(){}
     async return(){}
 
-    static async displayinventory(itemsPerPage, currentPage) {
-        // Calculate the OFFSET for pagination
+    static async displayinventory(itemsPerPage, currentPage, filters = {}) {
         const offset = (currentPage - 1) * itemsPerPage;
-
-        // Query the database
-        var sql = `SELECT * FROM Inventory LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
-
+        const limit = itemsPerPage + 1;
+    
+        let sql = `SELECT * FROM Inventory WHERE Availability = 1`;
+        let params = [];
+    
+        // Apply filters dynamically
+        if (filters.category) {
+            sql += ` AND Category = ?`;
+            params.push(filters.category);
+        }
+    
+        if (filters.location) {
+            sql += ` AND Location = ?`;
+            params.push(filters.location);
+        }
+    
+        // Apply sorting
+        if (filters.sortOrder === 'newest') {
+            sql += ` ORDER BY CreatedAt DESC`;
+        } else if (filters.sortOrder === 'oldest') {
+            sql += ` ORDER BY CreatedAt ASC`;
+        } else if (filters.price === 'lowToHigh') {
+            sql += ` ORDER BY Price ASC`;
+        } else if (filters.price === 'highToLow') {
+            sql += ` ORDER BY Price DESC`;
+        }
+    
+        // Pagination
+        sql += ` LIMIT ? OFFSET ?`;
+        params.push(limit, offset);
+    
         try {
-            var results = await db.query(sql);
-           
-
-            // Determine if there's a next or previous page
-            const nextPage = results.length === itemsPerPage + 1 ? currentPage + 1 : null;
+            const results = await db.query(sql, params);
+    
+            const nextPage = results.length === limit ? currentPage + 1 : null;
             const prevPage = currentPage > 1 ? currentPage - 1 : null;
-
-            // If there are more than the itemsPerPage, pop the extra item
-            if (results.length === itemsPerPage + 1) {
-                results.pop();
+    
+            if (results.length === limit) {
+                results.pop(); // remove the extra item used to check if next page exists
             }
-            //console.log(results);
-
+    
             return {
                 results,
                 nextPage,
@@ -53,20 +75,6 @@ class Inventory {
             };
         } catch (error) {
             console.error("Error fetching inventory:", error);
-            throw error;
-        }
-    }
-
-    static async displayinventoryItem(id) {
-        // Use parameterized queries to prevent SQL injection
-        const sql = "SELECT * from Inventory WHERE Inventory_ID = ?";
-    
-        try {
-            const result = await db.query(sql, [id]);  // Pass `id` as an array to avoid direct interpolation
-            console.log(result);  // Check the result object structure
-            return result[0];  // Return the first row (product) if found
-        } catch (error) {
-            console.error("Error fetching inventory item:", error);
             throw error;
         }
     }

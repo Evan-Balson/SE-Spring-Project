@@ -4,35 +4,36 @@ block styles
   link(rel="stylesheet", href="/css/home.css")
 
 block content
-
-
   h1.page-title Browse Catalogue
-  .sort-container
-    div.sort-by
-        
-      label Filters:
 
-      select(name="sortOrder", id="sortOrder")
-        option(value="", disabled, selected) Select Sort Order
-        option(value="newest") Newest to Oldest
-        option(value="oldest") Oldest to Newest
+  form(method="GET", action="/")
+    .sort-container
+      div.sort-by
+        label Filters:
 
-      select(name="category", id="category")
-        option(value="", disabled, selected) Select Category
-        option(value="clothing") Clothing
-        option(value="electronics") Electronics
-        option(value="accessories") Accessories
+        select(name="sortOrder", id="sortOrder")
+          option(value="", disabled selected) Select Sort Order
+          option(value="newest") Newest to Oldest
+          option(value="oldest") Oldest to Newest
 
-      select(name="price", id="price")
-        option(value="", disabled, selected) Select Price Range
-        option(value="lowToHigh") Low to High
-        option(value="highToLow") High to Low
+        select(name="category", id="category")
+          option(value="", disabled selected) Select Category
+          option(value="clothing") Clothing
+          option(value="electronics") Electronics
+          option(value="accessories") Accessories
 
-      select(name="location", id="location")
-        option(value="", disabled, selected) Select Location
-        option(value="city") City
-        option(value="suburbs") Suburbs
-        option(value="rural") Rural
+        select(name="price", id="price")
+          option(value="", disabled selected) Select Price Range
+          option(value="lowToHigh") Low to High
+          option(value="highToLow") High to Low
+
+        select(name="location", id="location")
+          option(value="", disabled selected) Select Location
+          option(value="city") City
+          option(value="suburbs") Suburbs
+          option(value="rural") Rural
+
+        button(type="submit") Apply Filters
 
   div.catalog
     each product in products
@@ -41,7 +42,7 @@ block content
           img(src=product.Product_Image_Path, alt=product.Name) 
         h2= product.Name
         p Price: $#{product.Price}
-        
+
   // Pagination controls
   if prevPage || nextPage
     nav.pagination
