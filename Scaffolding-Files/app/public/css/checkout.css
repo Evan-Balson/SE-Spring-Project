@@ -1,4 +1,18 @@
-.container {
+
+.back-to-cart {
+  background-color: #0d4508;
+  padding: 10px 15px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  text-decoration: none; /* Remove underline */
+  color: white;
+  font-size: 14px;
+}
+
+.back-to-cart:hover {
+  background-color: #0056b3;
+}
+  .container {
     max-width: 800px;
     margin: auto;
     padding: 20px;
@@ -10,6 +24,13 @@
     color: #333;
     text-align: center;
   }
+  .cart-header {
+    display: flex;
+    justify-content: space-between; /* Space out the button and heading */
+    align-items: center; /* Vertically align them */
+    margin-bottom: 20px; /* Add some space below */
+  }
+
   
   .outfit-item {
     display: flex;

@@ -5,6 +5,8 @@ block styles
 
 block content
   .container
+    .cart-header 
+      a.back-to-cart(href="/cart") Return/Back to Cart
     h1 My Checkout
     if cartItems.length > 0
       each item in cartItems
