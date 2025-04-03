@@ -20,8 +20,7 @@ class Administrator extends User {
     // verifying user
     async verifyUser(userID){
         try{
-            verifyUserSQL =
-            `--placeholder text because sql database hasn't been updated with verified variables`;
+            verifyUserSQL = `--placeholder text`;
             var result = await db.query(verifyUserSQL, [userID]);
             return result;
         } catch (error) {
@@ -32,31 +31,27 @@ class Administrator extends User {
     }
 
     // monitors the outfit listings, approving them
-    async monitorListingActivity(){
-        try{
-            console.out("Monitoring listings.");
-            return;
-        } catch (error) {
-            console.error("Error could not monitor listing:", error);
-            throw error;
-        }
-    }
+    async monitorListingActivity(){}
 
     // nothing to resolve in the database
-    async resolveDisputes(){
-        try{
-            console.out("Resolving Disputes.");
-            return;
-        } catch (error) {
-            console.error("Error could not resolve disputes:", error);
-            throw error;
-        }
-    }
+    async resolveDisputes(){}
 
     // changes the pass_status in the inspection table
-    async inspectItem(id, date, outfit_id){
-        inspect = new Inspection(id, date, outfit_id);
-        inspect.verifyItem();
+    async inspectItem(outfit_id){
+        try{
+            var inspectSQL =
+            `UPDATE inspection
+            SET pass_status = 1
+            WHERE outfit_id = ?`;
+
+            var result = await db.query(inspectSQL, outfit_id);
+
+            return result;
+        
+        } catch (error) {
+            console.error("Error could not inspect item:", error);
+            throw error;
+        }
     }
 
 }

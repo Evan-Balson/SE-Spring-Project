@@ -1,1 +1,34 @@
 extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/order-history.css")
+
+block content
+  .container
+    h1 Your Order History
+    
+    .filter-container
+      label Sort by:
+      select(name="sortOrder")
+        option(value="3") Past three months
+        option(value="6") Past six months
+        option(value="12") Past twelve months
+        option(value="24") Past twenty-four months
+
+    .search-container
+      input(type="search", placeholder="Search all orders")
+      button(type="submit") Search Orders
+
+    if orders.length > 0
+      each order in orders
+        .order-item
+          img(src=order.image alt=order.itemName)
+          .details
+            h2= order.itemName
+            p Description: #{order.description}
+            p Date Ordered: #{order.orderDate}
+            p Dispatch To: #{order.dispatchTo}
+            p Penalty: £#{order.penalty.toFixed(2)}
+            hr
+    else
+      p No orders found.

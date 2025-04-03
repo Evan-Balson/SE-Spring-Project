@@ -1,1 +1,45 @@
 extends default_web_logged-out_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/register.css")
+
+
+
+block content
+
+  .register-page
+
+    .register-container
+        h2 Register For Free!
+        form(action="/register" method="post")
+            .form-group
+                label First Name:
+                input(type="text" name="firstName" required)
+            .form-group
+                label Last Name:
+                input(type="text" name="lastName" required)
+            .form-group
+                label(for="email") Email:
+                input(type="email" name="email" id="email" required)
+            .form-group
+                label Address:
+                input(type="text" name="address" required)
+            .form-group
+                label Phone number
+                input(type="text" name="phone" required)
+            .form-group
+                label Password:
+                input(type="password" name="password" required)
+                small The password must be between 8 and 13 characters long.
+            .form-group
+                label(for="imageUpload") Upload Image(optional):
+                input#imageUpload(type="file", name="image")           
+            .termsAndConditions
+                input(type="checkbox", name="termsofuse")
+                | I agree to the
+                a.termsOfUseLink(href="/terms-and-conditions") Terms and Conditions
+            button(type="submit") Sign Up →
+                      label
+
+  if error
+    p.message(style='color: red;') #{error}

@@ -1,0 +1,135 @@
+.cart-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #eee;
+  }
+  
+  .cart-item {
+    display: grid;
+    grid-template-columns: 40% 2fr;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid #e6e6e6;
+  }
+  
+  .item-info h3 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .item-info p {
+    margin: 5px 0;
+
+    color: #666;
+  }
+
+  
+  
+  .view-product {
+    text-align: right;
+  }
+
+  .remove-item {
+    text-align: left;
+  }
+
+  nav ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    justify-content: space-between;
+  }
+
+  nav ul li {
+    margin-right: 20px;
+  }
+  
+  .item-actions a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  .item-actions a:hover {
+    text-decoration: underline;
+  }
+
+
+  .item-actions2 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .item-actions2 a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  .item-actions2 a:hover {
+    text-decoration: underline;
+  }
+
+
+  .cart-img{
+    width: 100%;
+    height:auto ;
+  }
+  
+  .description {
+    font-size: 18px;
+    color: #333;
+  }
+  ul.buttonlink {
+    list-style-type: none;
+  }
+  .checkout-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #004544;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+
+
+  @media (max-width: 720px) {
+    .cart-item {
+        grid-template-columns:  1fr; /* Stacks image on top of details */
+        text-align: center;
+    }
+
+    .cart-img{
+        width: 100%;
+        height: auto ;
+      }
+
+    .item-info, .item-actions {
+        text-align: left;
+        justify-content: space-between;
+    }
+
+    .item-actions {
+        justify-content: left;
+    }
+
+    .checkout-button {
+        justify-content:center;
+        
+      }
+
+
+}
+  

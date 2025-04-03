@@ -7,6 +7,8 @@ html(lang="en")
     link(rel="icon", href="/images/FitXchange_site-icon.png", type="image/png")
     link(rel="stylesheet", href="/css/site_wide_styles.css")
 
+    block styles
+
   body
     header
       .menu-container
@@ -47,11 +49,8 @@ html(lang="en")
           script(src="/js/features.js")
 
     main
-      .brand-body-container
-        img.bodyheader(src="/images/FitXchange_Text.png", alt="FitXchange Logo")
+      
+      block content  
 
-
-    block content
-
-    footer
-      p © 2025 FitXchange. Shared oppurtunities, Shared Goals, Shared Clothes.
+  footer
+    p © 2025 FitXchange. Shared oppurtunities, Shared Goals, Shared Clothes.

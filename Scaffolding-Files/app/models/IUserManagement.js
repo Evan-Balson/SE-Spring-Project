@@ -1,28 +1,30 @@
 class IUserManagement{
 
-    buy(outfitId){
+    buy(){
         throw new Error('Method "buy" must be implemented');
     }
-    sell(outfitName, outfitColor, outfitSize, outfitDescription, itemCondition, categoryIds){
+    sell(){
         throw new Error('Method "sell" must be implemented');
     }
-
-    writeReview(outfitId, rating, comment){
+    addOutfit(){
+        throw new Error('Method "addOutfit" must be implemented');
+    }
+    writeReview(){
         throw new Error('Method "writeReview" must be implemented');
     }
     
     // there will be a payment method as a mitigation to miscuonduct and damages.
-    addPaymentMethod(paymentDetails){
+    addPaymentMethod(){
         throw new Error('Method "writeReview" must be implemented');
     }
 
-    updatePaymentMethod(paymentId, updatedDetails){
+    updatePaymentMethod(){
         throw new Error('Method "writeReview" must be implemented');
     }
 
     // note a payment method whould only be removed if the use is updating
 
-    removePaymentMethod(paymentID){
+    removePaymentMethod(){
         throw new Error('Method "writeReview" must be implemented');
     }
 

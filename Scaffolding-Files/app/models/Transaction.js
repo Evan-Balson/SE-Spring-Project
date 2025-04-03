@@ -10,6 +10,7 @@ class Transaction {
     total;
     user_id;
 
+
     // Constructor
     constructor(transactionId, date, totalPrice, userID){
         this.transaction_ID = transactionId;
