@@ -47,11 +47,12 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-var activeUser= new User("guest","","","","","","","",false);
+//var activeUser= new User("guest","","","","","","","",false);
 
 //delete this user after testing
 
-//var activeUser= new User("U001","","","","","","","",true);
+//turn on to skip login
+var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
@@ -115,7 +116,9 @@ app.get("/cart", async function(req, res) {
     if (activeUser.login_Status) {
         try {
             // Fetch cart items for the logged-in user
-            const cartItems = await Cart.getCartItems(activeUser.userID); // Assuming activeUser.userID holds the logged-in user's ID
+            const cartItems = await Cart.getCartItems(activeUser.userID);
+
+            //console.log(cartItems);
             
             res.render("cart", { title: 'My Cart', cartItems });
             
@@ -161,9 +164,11 @@ app.get('/remove/:cartId', async (req, res) => {
 });
 
 // Create a route for checkout lising - /
-app.get("/checkout", function(req, res){
+app.get("/checkout", async function(req, res) {
    
-    const cartItems = Cart.getCartItems(activeUser.userID); 
+    const cartItems = await Cart.getCartItems(activeUser.userID); 
+
+    console.log(cartItems);
   
     if(activeUser.login_Status){
         res.render("checkout",{title:'Checkout', cartItems});

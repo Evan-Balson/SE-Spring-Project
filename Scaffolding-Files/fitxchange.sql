@@ -232,7 +232,7 @@ INSERT INTO Payment (Payment_ID, Payment_Type, User_ID) VALUES
 INSERT INTO Transaction (Transaction_ID, Payment_ID, Transaction_Date, Total_Price, User_ID, Inventory_ID) VALUES
 ('T001', 1, '2023-01-10', 120.00, 'U001', 'I001'),
 ('T002', 2, '2023-01-15', 250.00, 'U002', 'I002'),
-('T003', 3, '2023-01-20', 75.00, 'U003', 'I003'),
+('T003', 3, '2023-01-20', 75.00, 'U001', 'I003'),
 ('T004', 4, '2023-01-25', 300.00, 'U004', 'I004'),
 ('T005', 5, '2023-01-30', 150.00, 'U005', 'I005'),
 ('T006', 6, '2023-02-04', 90.00, 'U006', 'I006'),

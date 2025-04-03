@@ -25,6 +25,18 @@ class Cart {
 
     try {
       const result = await db.query(sql, [userId]);
+
+      // Convert dates to a desired format (YYYY-MM-DD)
+      result.forEach(item => {
+        if (item.orderDate) {
+          item.orderDate = new Date(item.orderDate).toISOString().split('T')[0]; // YYYY-MM-DD format
+        }
+        if (item.deliveryDate) {
+          item.deliveryDate = new Date(item.deliveryDate).toISOString().split('T')[0]; // YYYY-MM-DD format
+        }
+      });
+
+      
       return result;
     } catch (error) {
       console.error('Error fetching cart items:', error);
