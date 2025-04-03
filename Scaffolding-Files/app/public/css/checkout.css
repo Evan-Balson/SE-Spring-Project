@@ -18,6 +18,7 @@
     padding: 20px;
     background-color: #fff;
   }
+
   
   h1 {
     font-size: 24px;
@@ -29,6 +30,25 @@
     justify-content: space-between; /* Space out the button and heading */
     align-items: center; /* Vertically align them */
     margin-bottom: 20px; /* Add some space below */
+  }
+
+  ul {
+    display: flex; /* Flexbox for the container */
+    justify-content: space-between; /* Distribute space between the list items */
+    align-items: center; /* Centers items vertically */
+    list-style: none;
+    
+  }
+  
+  li.backLink {
+    flex: 1; /* Takes up available space */
+    text-align: left; /* Centers text inside the li */
+    justify-self: flex-start; /* Align the item to the flex-end */
+  }
+  
+  li.buttonlink {
+    text-align: right; /* Align text to the right */
+    justify-self: flex-end; /* Align the item to the flex-end */
   }
 
   
@@ -67,7 +87,6 @@
   .checkout-button {
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
   }
   
   button.agree-button {

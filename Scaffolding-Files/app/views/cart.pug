@@ -5,8 +5,9 @@ block styles
 
 
 block content
+  h1 My Cart
   .cart-container
-    h1 My Cart
+    
     if cartItems.length > 0
       each item in cartItems
         .cart-item
@@ -29,6 +30,6 @@ block content
                   a(href=`/remove/${item.Cart_ID}`) remove item
 
       .checkout-button
-        a(href="/checkout") Checkout
+        a(href="/checkout") Go To Checkout
     else
       p Your cart is empty!
