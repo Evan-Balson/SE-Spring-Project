@@ -38,6 +38,10 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y docker-compose
 
+                  - name: Create .env file from env-sample
+                  run: |
+                      cp ${{ github.workspace }}/Scaffolding-Files/env-sample ${{ github.workspace }}/Scaffolding-Files/.env
+
             - name: list files in Scaffolding-Files
               run:
                     ls -la ${{ github.workspace }}/Scaffolding-Files
