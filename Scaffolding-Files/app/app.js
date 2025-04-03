@@ -47,11 +47,11 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-//var activeUser= new User("guest","","","","","","","",false);
+var activeUser= new User("guest","","","","","","","",false);
 
 //delete this user after testing
 
-var activeUser= new User("U001","","","","","","","",true);
+//var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
