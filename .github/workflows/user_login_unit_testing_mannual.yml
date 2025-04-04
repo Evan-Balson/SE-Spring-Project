@@ -20,12 +20,10 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        working-directory: ./Scaffolding-Files # Set the working directory to Scaffolding-Files
         run: |
-          npm install
+          npm install --prefix ${{ github.workspace }}/Scaffolding-Files
 
       # Step 4: Run unit tests
       - name: Run User Login Unit Tests
-        working-directory: ./Scaffolding-Files # Set the working directory to Scaffolding-Files
         run: |
-          npm test -- UserLoginController.test.js
+          npm test --prefix ${{ github.workspace }}/Scaffolding-Files -- UserLoginController.test.js
