@@ -18,16 +18,14 @@ jobs:
         with:
           node-version: 16 # Use the Node.js version your project requires
 
-      # Step 3: Change to project directory
-      - name: Change to project directory
-        run: cd Scaffolding-Files # Ensure this matches the correct folder containing package.json
-
-      # Step 4: Install dependencies
+      # Step 3: Install dependencies
       - name: Install dependencies
+        working-directory: ./Scaffolding-Files # Set the working directory to Scaffolding-Files
         run: |
           npm install
 
-      # Step 5: Run unit tests
+      # Step 4: Run unit tests
       - name: Run User Login Unit Tests
+        working-directory: ./Scaffolding-Files # Set the working directory to Scaffolding-Files
         run: |
           npm test -- UserLoginController.test.js
