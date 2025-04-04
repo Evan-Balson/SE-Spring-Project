@@ -22,7 +22,8 @@
     "pug": "^3.0.3",
     "session": "^0.1.0",
     "sqlite3": "^5.0.2",
-    "supervisor": "^0.12.0"
+    "supervisor": "^0.12.0",
+    "chai-http": "^4.3.0"
   },
   "devDependencies": {
     "mocha": "^10.2.0",

@@ -26,4 +26,4 @@ jobs:
       # Step 4: Run unit tests
       - name: Run User Login Unit Tests
         run: |
-          npm test --prefix ${{ github.workspace }}/Scaffolding-Files -- UserLoginController.test.js
+          npm test --prefix ${{ github.workspace }}/Scaffolding-Files
