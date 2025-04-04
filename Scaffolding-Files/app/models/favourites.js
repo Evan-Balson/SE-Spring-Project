@@ -35,11 +35,15 @@ class Favourites {
 
     // Add item to favorites for a user
     async addToFavourites(User_ID, Inventory_ID) {
-        var sql = `
+        const sql = `
             INSERT INTO Favorites (User_ID, Inventory_ID)
             VALUES (?, ?);
         `;
         var params = [User_ID, Inventory_ID];
+
+        console.log("SQL Query:", sql);
+        console.log("Parameters:", params);
+        // Check for undefined values
 
         try {
             var result = await db.query(sql, params);
@@ -130,4 +134,4 @@ async viewSavedItems_oldest(User_ID) {
 
 }
 
-module.exports = {Favourites}
+module.exports = {Favourites};

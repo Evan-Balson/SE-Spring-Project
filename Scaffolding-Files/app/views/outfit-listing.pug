@@ -2,6 +2,7 @@ extends default_web_logged-in_layout.pug
 
 block styles
   link(rel="stylesheet", href="/css/outfit-listing.css")
+  
 
 block content
   .product-div
@@ -30,4 +31,10 @@ block content
         p Availability: #{product.Availability ? 'In Stock' : 'Out of Stock'}
         p Quantity Available: #{product.Quantity}
 
-        button.add-to-cart Add to Cart
+        .button-container
+          button: a(href=`/cart/add?inventoryId=${product.Inventory_ID}`) Add to Cart
+          button: a(href=`/favourites/add?inventoryId=${product.Inventory_ID}`) Add to Favorites
+  script.
+    function setMainImage(src) {
+      document.getElementById('mainImage').src = src;
+    }
