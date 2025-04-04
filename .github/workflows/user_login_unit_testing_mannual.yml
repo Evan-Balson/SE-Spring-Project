@@ -6,6 +6,7 @@ on:
 jobs:
   test-user-login:
     runs-on: ubuntu-latest
+    timeout-minutes: 15 # Set a timeout of 15 minutes for the job
 
     steps:
       # Step 1: Checkout the code
@@ -18,12 +19,21 @@ jobs:
         with:
           node-version: 16 # Use the Node.js version your project requires
 
-      # Step 3: Install dependencies
+      # Step 3: Log environment variables
+      - name: Log environment variables
+        run: env
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
-          npm install
+          npm install --prefix ${{ github.workspace }}/Scaffolding-Files
 
-      # Step 4: Run unit tests
+      # Step 5: Log installed dependencies
+      - name: Log installed dependencies
+        run: |
+          npm list --prefix ${{ github.workspace }}/Scaffolding-Files
+
+      # Step 6: Run unit tests with timeout and verbose logging
       - name: Run User Login Unit Tests
         run: |
-          npm test -- UserLoginController.test.js
+          timeout 300 npm test --prefix ${{ github.workspace }}/Scaffolding-Files -- --verbose
