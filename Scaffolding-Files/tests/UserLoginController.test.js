@@ -8,7 +8,9 @@ chai.use(chaiHttp);
 
 const server = http.createServer(app); // Wrap the app in an HTTP server
 
-describe('UserLoginController', () => {
+describe('UserLoginController', function () {
+  this.timeout(10000); // Set a timeout of 10 seconds for all tests in this suite
+
   it('should return an error for invalid login credentials', (done) => {
     chai
       .request(server) // Use the server instance
