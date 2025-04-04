@@ -1,4 +1,4 @@
-const { Favourites } = require('../models/favourites');
+const {Favourites} = require('../models/favourites');
 
 // Create an instance of Favourites
 const favourites = new Favourites();
@@ -6,22 +6,29 @@ const favourites = new Favourites();
 
 // Controller to handle adding an item to favorites
 const addToFavourites = async (req, res) => {
-    const { User_ID, Inventory_ID } = req.body;  // Assuming you are sending the data in the body of the request
+    const { inventoryId } = req.body;
+    const userId = req.session.activeUser.userID;
 
-    if (!User_ID || !Inventory_ID) {
-        return res.status(400).json({ message: 'User_ID and Inventory_ID are required.' });
+    // Check for undefined values
+    if (userId === undefined || inventoryId === undefined) {
+        let errorMessage = '';
+        if (userId === undefined && inventoryId === undefined) {
+            errorMessage = 'User ID and Inventory ID are missing.';
+        } else if (userId === undefined) {
+            errorMessage = 'User ID is missing.';
+        } else {
+            errorMessage = 'Inventory ID is missing.';
+        }
+
+        return res.status(400).json({ message: errorMessage });
     }
 
     try {
-        const result = await favourites.addToFavourites(User_ID, Inventory_ID);
-
-        if (result) {
-            return res.status(200).json({ message: 'Item added to favorites.' });
-        } else {
-            return res.status(500).json({ message: 'Failed to add item to favorites.' });
-        }
+        await favourites.addToFavourites(userId, inventoryId);
+        res.status(200).json({ message: 'Item added to favorites successfully.' });
     } catch (error) {
-        return res.status(500).json({ message: 'Error adding item to favorites.', error: error.message });
+        console.error('Error adding item to favorites:', error);
+        res.status(500).json({ message: 'Failed to add item to favorites.', error: error.message });
     }
 };
 

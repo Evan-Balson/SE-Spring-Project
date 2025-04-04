@@ -35,11 +35,15 @@ class Favourites {
 
     // Add item to favorites for a user
     async addToFavourites(User_ID, Inventory_ID) {
-        var sql = `
+        const sql = `
             INSERT INTO Favorites (User_ID, Inventory_ID)
             VALUES (?, ?);
         `;
         var params = [User_ID, Inventory_ID];
+
+        console.log("SQL Query:", sql);
+        console.log("Parameters:", params);
+        // Check for undefined values
 
         try {
             var result = await db.query(sql, params);
@@ -71,7 +75,14 @@ class Favourites {
     
         try {
             var result = await db.query(sql, params);
-            //console.log(result);  
+            //console.log(result); 
+            
+            // Convert dates to a desired format (YYYY-MM-DD)
+            result.forEach(item => {
+                if (item.Date_Added) {
+                    item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // YYYY-MM-DD format
+                }
+                });            
     
             if (result && result.length > 0) {
                 return result; // Return the saved items
@@ -101,6 +112,13 @@ async viewSavedItems_oldest(User_ID) {
         var result = await db.query(sql, params);
         console.log(result);
 
+            // Convert dates to a desired format (YYYY-MM-DD)
+            result.forEach(item => {
+            if (item.Date_Added) {
+                item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // YYYY-MM-DD format
+            }
+            });
+
         if (result && result.length > 0) {
             return result; // Return the saved items
         } else {
@@ -116,4 +134,4 @@ async viewSavedItems_oldest(User_ID) {
 
 }
 
-module.exports = {Favourites}
+module.exports = {Favourites};
