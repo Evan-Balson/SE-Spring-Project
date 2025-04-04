@@ -56,6 +56,7 @@ const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
 const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
+const homeFiltersController = require('./controllers/homeFilterController');
 
 // Get the models
 const { User } = require("./models/User");
@@ -64,12 +65,12 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-//var activeUser= new User("guest","","","","","","","",false);
+var activeUser= new User("guest","","","","","","","",false);
 
 //delete this user after testing
 
 //turn on to skip login
-var activeUser= new User("U001","","","","","","","",true);
+//var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
@@ -81,8 +82,8 @@ app.get("/", async function(req, res)
     const itemsPerPage = 4; // Number of items per page
 
     // Get inventory items based on the page
-    const inventoryItems = await Inventory.displayinventory(itemsPerPage, currentPage);
-    //console.log(inventoryItems);
+    const inventoryItems = await homeFiltersController.filterItems();
+    console.log(inventoryItems);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
     //console.log(activeUser);
@@ -107,6 +108,7 @@ app.get("/", async function(req, res)
         });
     }
 });
+app.post("/", homeFiltersController.filterItems);
 
 // create route for outfit listing
 app.get("/outfit-listing/:id", (req, res) => {
