@@ -20,7 +20,7 @@ app.use(session({
 // Configure storage for multer
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './app/public/uploads/');  // Directory where files should be stored
+        cb(null, './app/public/images/');  // Directory where files should be stored
     },
     filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -56,6 +56,7 @@ const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
 const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
+const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
 
 // Get the models
@@ -129,6 +130,7 @@ app.get("/account", function(req, res){
 app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
+app.post("/new-listing", upload.single('image'), listingController.submitListing);
 
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
@@ -151,6 +153,25 @@ app.get("/cart", async function(req, res) {
     }
 });
 
+app.get("/cart", cartController.viewCart);
+app.delete("/cart/:cartId", cartController.deleteCartItem);
+
+app.get('/cart/add', async (req, res) => {
+    const inventoryId = req.query.inventoryId;
+    const userId = req.session.activeUser.userID; // Get the user ID from the session
+  
+    try {
+      await Cart.addToCart(userId, inventoryId); // Add the item to the cart
+      res.redirect('/cart'); // Redirect to the cart page
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      res.status(500).send('Error adding to cart');
+    }
+  });
+
+app.get("/outfit-listing/:id", (req, res)=> {
+    OutfitListingController.showOutfitListing(req, res);
+})
 // Create a route for outfit details -/
 app.get('/Outfit/:orderId', async (req, res) => {
     const orderId = req.params.orderId; // Get the order ID from the URL parameter
@@ -274,33 +295,44 @@ app.get("/inspect-items", function(req, res){
 
 });
 
-
-
 // Route to view saved items for the logged-in user
 app.get("/favourites", async (req, res) => {
-    //console.log(activeUser);
-    if (activeUser.login_Status) {
+    if (req.session.activeUser && req.session.activeUser.login_Status) {
         try {
-            // Get saved items from the database using the controller method
-            const savedItems = await favouritesController.filterSavedItems(req, res);
-            //console.log(savedItems);
-            
+            // Call filterSavedItems, which likely renders the template
+            await favouritesController.filterSavedItems(req, res);
         } catch (error) {
             console.error('Error fetching saved items:', error);
-            //res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
+            res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
         }
     } else {
-        res.render("login", { title: 'Login' });  // If user is not logged in, render login page
+        res.render("login", { title: 'Login' });
     }
 });
-app.post("/favourites",favouritesController.filterSavedItems);
 
+// Route to handle adding items to favorites (POST request)
+app.get("/favourites/add", async (req, res) => {
+    const { inventoryId } = req.body; // Get inventoryId from request body
+    const userId = req.session.activeUser.userID;
+
+    try {
+        await favouritesController.addToFavourites(userId, inventoryId);
+        res.status(200).json({ message: 'Item added to favorites successfully.' }); // Send JSON response
+    } catch (error) {
+        console.error('Error adding to favorites:', error);
+        res.status(500).json({ message: 'Error adding to favorites' }); // Send JSON error response
+    }
+});
+
+// Route to handle filtering saved items (POST request)
+app.post("/favourites", favouritesController.filterSavedItems);
 
 app.get("/remove-outfit/:id", async (req, res) =>  {
     
     await favouritesController.removeFromFavourites(req, res); 
 });
 
+// Route to view terms and conditions
 app.get("/terms-and-conditions", async (req, res) => {
     res.render("termsofuse");
 });
