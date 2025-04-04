@@ -1,5 +1,8 @@
 // Import express.js
 const express = require("express");
+const multer = require('multer');
+const path = require('path');
+const router = express.Router();
 
 // import express-session so that we can track user login status site-wide
 const session = require("express-session");
@@ -13,6 +16,20 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+// Configure storage for multer
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './app/public/uploads/');  // Directory where files should be stored
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+// Initialize multer with the storage configuration
+const upload = multer({ storage: storage });
+
 
 // Static files location
 app.use(express.static("./app/public"));
@@ -205,7 +222,7 @@ app.get("/logout", (req, res) => {
 app.get("/register", async function(req, res){
     res.render("register",{title:'Register'});
 });
-app.post("/register", registrationController.registerUser);
+app.post("/register", upload.single('image'), registrationController.registerUser);
 
 
 // Create a route for add order history - /

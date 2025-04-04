@@ -1,45 +1,93 @@
-extends default_web_logged-out_layout.pug
+extends default_web_logged-in_layout.pug
 
 block styles
-    link(rel="stylesheet", href="/css/register.css")
-
-
+  link(rel='stylesheet', href="/css/register.css")
 
 block content
+  .div
+    h1 Register For Free!
+  .container
+    form(action="/register", method="post", enctype="multipart/form-data").item-details-form
+      .form-layout
+        // Left Section (Image Upload)
+        .left-section
+          label.image-upload-box(for="imageUpload")
+            input#imageUpload(type="file", name="image", accept="image/*", required, hidden)
+            span Upload Image
 
-  .register-page
-
-    .register-container
-        h2 Register For Free!
-        form(action="/register" method="post")
-            .form-group
-                label First Name:
-                input(type="text" name="firstName" required)
-            .form-group
-                label Last Name:
-                input(type="text" name="lastName" required)
-            .form-group
-                label(for="email") Email:
-                input(type="email" name="email" id="email" required)
-            .form-group
-                label Address:
-                input(type="text" name="address" required)
-            .form-group
-                label Phone number
-                input(type="text" name="phone" required)
-            .form-group
-                label Password:
-                input(type="password" name="password" required)
+        // Middle Section (Product Details)
+        .middle-section
+          .form-group
+            label First Name:
+            input(type="text" name="firstName" required)
+          .form-group
+            label Last Name:
+            input(type="text" name="lastName" required)
+          .form-group
+            label(for="email") Email:
+            .email
+              input(type="email" name="email" id="email" required)
+          .form-group
+            label Address:
+            input(type="text" name="address" required)
+          .form-group
+            label Phone number
+            input(type="text" name="phone" required)
+          .form-group
+            label Password:
+            input(type="password" name="password" required)
+            .smallText
                 small The password must be between 8 and 13 characters long.
-            .form-group
-                label(for="imageUpload") Upload Image(optional):
-                input#imageUpload(type="file", name="image")           
-            .termsAndConditions
+
+        // Submit Button
+        .terms-and-conditions
+            label.checkbox(for="termsofuse")
                 input(type="checkbox", name="termsofuse")
                 | I agree to the
                 a.termsOfUseLink(href="/terms-and-conditions") Terms and Conditions
-            button(type="submit") Sign Up →
-                      label
+        button(type="submit") Sign Up →
 
-  if error
-    p.message(style='color: red;') #{error}
+        if error
+            p.message(style='color: red;') #{error}
+
+    // Inline JavaScript for Image Preview
+    script.
+      document.getElementById("imageUpload").addEventListener("change", function (event) {
+        const fileInput = event.target;
+        const uploadBox = document.querySelector(".image-upload-box");
+        const placeholderText = uploadBox.querySelector("span");
+
+        // Check if a file is selected
+        if (fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+
+          // If the file is an image, display it
+          if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              // Remove the placeholder text
+              placeholderText.style.display = "none";
+
+              // Add the image to the upload box
+              let img = uploadBox.querySelector("img");
+              if (!img) {
+                img = document.createElement("img");
+                uploadBox.appendChild(img);
+              }
+              img.src = e.target.result;
+              img.style.display = "block"; // Show the image
+            };
+            reader.readAsDataURL(file);
+          } else {
+            // If the file is not an image, reset the upload box
+            placeholderText.style.display = "block";
+            const img = uploadBox.querySelector("img");
+            if (img) {
+              img.style.display = "none";
+            }
+            alert("Please upload a valid image file.");
+          }
+        }
+      });
+
+

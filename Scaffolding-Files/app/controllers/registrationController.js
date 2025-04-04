@@ -1,17 +1,17 @@
 const { User } = require("../models/User");
 
-    // Controller function to handle user registration
 exports.registerUser = async (req, res) => {
-    const { firstName, lastName, email, address, phone, password, image, termsofuse } = req.body;
+    const { firstName, lastName, email, address, phone, password, termsofuse } = req.body;
+    const image = req.file; // This will contain info about the file if uploaded
 
     console.log(termsofuse);
-    if(termsofuse){
-        const userData = { firstName, lastName, email, address, phone, password, image };
+    if (termsofuse) {
+        const userData = { firstName, lastName, email, address, phone, password, image: image.path };
 
         try {
             // Call the model to register the user
             const result = await User.registerUser(userData);
-            console.log("here is the result from the insert function", result);
+            console.log("Here is the result from the insert function", result);
 
             // If the user was successfully inserted
             res.status(201).redirect('/login');  // Redirect to login page or wherever you'd like
@@ -22,10 +22,8 @@ exports.registerUser = async (req, res) => {
                 error: 'An error occurred during registration. Please try again.'
             });
         }
-    }
-    else{// terms and conditions not accepted
-        res.render("register",{title:'Register', error: 'Agree to Terms & Conditions to continue' });
+    } else { // terms and conditions not accepted
+        res.render("register", { title: 'Register', error: 'Agree to Terms & Conditions to continue' });
     }
 };
-
 
