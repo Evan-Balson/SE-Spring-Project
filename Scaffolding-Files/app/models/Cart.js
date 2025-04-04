@@ -54,6 +54,21 @@ class Cart {
       throw error;
     }
   }
+  static async addToCart(userId, inventoryId, quantity = 1) {
+    const sql = `
+        INSERT INTO Cart (User_ID, Inventory_ID, Quantity)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE Quantity = Quantity + ?;
+    `;
+
+    try {
+        await db.query(sql, [userId, inventoryId, quantity, quantity]);
+        return { success: true };
+    } catch (error) {
+        console.error('Error adding item to cart:', error);
+        throw error;
+    }
+}
 }
 
 module.exports = {Cart};

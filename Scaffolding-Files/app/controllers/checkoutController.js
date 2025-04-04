@@ -1,44 +1,20 @@
 const db = require ('./db')
+const {Cart} = require ('../models/Cart');
 
+// checkoutController.js
 const checkoutController = {
     getCheckout: async (req, res) => {
         try {
-            const userId = req.session.userId;
+            const userId = req.session.activeUser.userID;
+            console.log("Checkout User ID:", userId); // Add this line
+            console.log("Session Data: ", req.session); //Add this line
 
             if (!userId) {
                 return res.redirect('/login');
             }
-            // Fetch cart items for the checkout page from the database
-            const query = `
-            SELECT
-              Outfit.outfit_name AS name,
-              Outfit.outfit_description AS description,
-              Inventory.price AS penalty,
-              Delivery.delivery_date AS deliveryDate,
-              Transaction.transaction_date AS orderDate,
-              Delivery.delivery_address AS dispatchTo,
-              Outfit.outfit_id,
-              Outfit.image_path AS image
-            FROM Outfit
-            JOIN Inventory ON Outfit.outfit_id = Inventory.outfit_id
-            JOIN Transaction ON Transaction.user_id = ?
-            JOIN Delivery ON Delivery.transaction_id = Transaction.transaction_id
-            WHERE Transaction.transaction_id IN (
-              SELECT Transaction.transaction_id
-              FROM Transaction
-              JOIN Delivery ON Transaction.transaction_id = Delivery.transaction_id
-              WHERE Transaction.user_id = ?
-            )
-          `;
-          const cartItems = await db.query(query, [userId, userId]);
-
-          const cartItemsWithQuantity = cartItems.map(item => ({
-            ...item,
-            quantity: 1,
-            image: item.image || '/images/sample.jpg'
-          }));
-          res.render('checkout', {cartItems: cartItemsWithQuantity});
-    
+            const cartItems = await Cart.getCartItems(userId);
+            console.log("Checkout Cart Items: ", cartItems); // add this line.
+            res.render('checkout', { title: 'Checkout', cartItems });
         } catch (error) {
             console.error('Error fetching checkout items: ', error);
             res.status(500).send('Internal Server Error');
@@ -46,7 +22,7 @@ const checkoutController = {
     },
     processCheckout: async (req, res) => {
         try {
-            const userId = req.session.userId;
+            const userId = req.session.activeUser.userID;
             if(!userId) {
                 return res.redirect('/login');
             }

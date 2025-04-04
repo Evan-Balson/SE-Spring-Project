@@ -15,7 +15,7 @@ block content
             h2= item.name
             p Description: #{item.description}
             p Quantity: #{item.quantity}
-            p Misuse Penalty: £#{item.penalty.toFixed(2)}
+            p Misuse Penalty: #{item.penalty !== null && typeof item.penalty === 'number' ? '£' + item.penalty.toFixed(2) : 'N/A'}
             p Order Date: #{item.orderDate}
             p Delivery Date: #{item.deliveryDate}
             p Dispatch To: #{item.dispatchTo}
