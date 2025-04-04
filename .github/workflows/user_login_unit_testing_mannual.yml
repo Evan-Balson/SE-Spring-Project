@@ -33,7 +33,7 @@ jobs:
         run: |
           npm list --prefix ${{ github.workspace }}/Scaffolding-Files
 
-      # Step 6: Run unit tests
+      # Step 6: Run unit tests with timeout and verbose logging
       - name: Run User Login Unit Tests
         run: |
-          npm test --prefix ${{ github.workspace }}/Scaffolding-Files
+          timeout 300 npm test --prefix ${{ github.workspace }}/Scaffolding-Files -- --verbose
