@@ -18,10 +18,10 @@ jobs:
         with:
           node-version: 16 # Use the Node.js version your project requires
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: |
-          npm install --prefix ${{ github.workspace }}/Scaffolding-Files
+      # # Step 3: Install dependencies
+      # - name: Install dependencies
+      #   run: |
+      #     npm install --prefix ${{ github.workspace }}/Scaffolding-Files
 
       # Step 4: Run unit tests
       - name: Run User Login Unit Tests
