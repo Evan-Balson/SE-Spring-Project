@@ -1,5 +1,8 @@
 // Import express.js
 const express = require("express");
+const multer = require('multer');
+const path = require('path');
+const router = express.Router();
 
 // import express-session so that we can track user login status site-wide
 const session = require("express-session");
@@ -13,6 +16,20 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+// Configure storage for multer
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './app/public/images/');  // Directory where files should be stored
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+// Initialize multer with the storage configuration
+const upload = multer({ storage: storage });
+
 
 // Static files location
 app.use(express.static("./app/public"));
@@ -39,6 +56,7 @@ const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
 const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
+const { listingController } = require('./controllers/listingController');
 
 // Get the models
 const { User } = require("./models/User");
@@ -47,11 +65,12 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-var activeUser= new User("guest","","","","","","","",false);
+//var activeUser= new User("guest","","","","","","","",false);
 
 //delete this user after testing
 
-//var activeUser= new User("U001","","","","","","","",true);
+//turn on to skip login
+var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
@@ -109,13 +128,16 @@ app.get("/account", function(req, res){
 app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
+app.post("/new-listing", upload.single('image'), listingController.submitListing);
 
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
     if (activeUser.login_Status) {
         try {
             // Fetch cart items for the logged-in user
-            const cartItems = await Cart.getCartItems(activeUser.userID); // Assuming activeUser.userID holds the logged-in user's ID
+            const cartItems = await Cart.getCartItems(activeUser.userID);
+
+            //console.log(cartItems);
             
             res.render("cart", { title: 'My Cart', cartItems });
             
@@ -180,9 +202,11 @@ app.get('/remove/:cartId', async (req, res) => {
 });
 
 // Create a route for checkout lising - /
-app.get("/checkout", function(req, res){
+app.get("/checkout", async function(req, res) {
    
-    const cartItems = Cart.getCartItems(activeUser.userID); 
+    const cartItems = await Cart.getCartItems(activeUser.userID); 
+
+    console.log(cartItems);
   
     if(activeUser.login_Status){
         res.render("checkout",{title:'Checkout', cartItems});
@@ -219,7 +243,7 @@ app.get("/logout", (req, res) => {
 app.get("/register", async function(req, res){
     res.render("register",{title:'Register'});
 });
-app.post("/register", registrationController.registerUser);
+app.post("/register", upload.single('image'), registrationController.registerUser);
 
 
 // Create a route for add order history - /
