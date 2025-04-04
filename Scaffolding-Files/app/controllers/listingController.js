@@ -1,20 +1,6 @@
-const db = require('./db');
-const multer = require('multer');
+const db = require('../services/db');
 const path = require('path');
 
-// Configure multer to save uploaded images to the public/images folder
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, path.join(__dirname, '../public/images'));
-  },
-  filename(req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const fileExtension = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
-  },
-});
-
-const upload = multer({ storage });
 
 // Revised controller using a single Inventory table
 const listingController = {
@@ -27,7 +13,13 @@ const listingController = {
       const { name, price, size, colors, description, quantity, condition } = req.body;
       const image = req.file;
 
-      if (!name || !price || !description || !quantity || !condition) {
+      const userId = req.session.activeUser ? req.session.activeUser.userID : null;
+
+      if (!req.session.activeUser) {
+        return res.status(401).send('User not authenticated');
+      }
+
+      if (!name || !price || !description || !quantity || !condition || !size || !colors) {
         return res.status(400).send('Missing required fields');
       }
       if (!image) {
@@ -36,13 +28,16 @@ const listingController = {
 
       const imagePath = path.join('/images', image.filename);
 
+      const inventoryId = `I${Date.now()}`;
+
       // Insert into Inventory table with consistent column names
       const inventoryQuery = `
         INSERT INTO Inventory (
-          Price, Availability, Quantity, Name, Color, Size, Description, Condition_Level, User_ID, Product_Image_Path
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          Inventory_ID, Price, Availability, Quantity, Name, Color, Size, Description, Condition_Level, User_ID, Product_Image_Path
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const values = [
+        inventoryId,
         price,
         false, // Availability set by default
         quantity,
@@ -51,11 +46,11 @@ const listingController = {
         size,
         description,
         condition,
-        req.session.userId,
+        userId,
         imagePath
       ];
+
       const result = await db.query(inventoryQuery, values);
-      const inventoryId = result.insertId;
 
       res.render('new-listing', {
         successMessage: `New listing with Inventory ID: ${inventoryId} has been added successfully. See Item Listing.`,
@@ -68,7 +63,4 @@ const listingController = {
   },
 };
 
-module.exports = {
-  listingController,
-  upload,
-};
+module.exports = {listingController};

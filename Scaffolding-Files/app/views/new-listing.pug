@@ -8,14 +8,13 @@ block content
   .container
     h6(class="h6") Add New Listing
 
-    form(action="/account", method="post", enctype="multipart/form-data").item-details-form
+    form(action="/new-listing", method="post", enctype="multipart/form-data").item-details-form
       .form-layout
         // Left Section (Image Upload)
         .left-section
           label.image-upload-box(for="imageUpload")
             input#imageUpload(type="file", name="image", accept="image/*", required)
             span Upload Image
-            //- div#imagePreview(class="image-preview") No image uploaded
 
         // Middle Section (Product Details)
         .middle-section
