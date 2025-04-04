@@ -9,6 +9,7 @@ class Fashion_Advice {
     date_Created;
     userID; 
 
+
     constructor(id,content,date,userId) {
         this.fashion_Advice_ID = id;
         this.fashion_Advice_Content = content;

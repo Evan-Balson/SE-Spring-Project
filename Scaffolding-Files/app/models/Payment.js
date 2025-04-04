@@ -8,7 +8,9 @@ class Payment{
     payment_type;
     transaction_ID
 
+
     // Constructor
+
     constructor(paymentId, paymentType, transactionId) {
         this.payment_ID = paymentId;
         this.payment_type = paymentType;
@@ -33,6 +35,7 @@ class Payment{
             throw error;
         }
     }
+
 }
 
 // needed to  export functions, objects, or other values from a module so they can be imported and used in other files.

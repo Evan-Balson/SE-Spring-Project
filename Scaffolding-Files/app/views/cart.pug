@@ -1,54 +1,38 @@
 extends default_web_logged-in_layout.pug
 
-block content 
-    header 
-        .logo-container 
-            img(src="/images/logo.png", alt="FitXchange Logo")
-            h1 MY CART VIEW 
-        
-        .menu-container
-            nav.main-menu 
-            ul 
+block styles
+    link(rel="stylesheet", href="/css/cart.css")  
+
+
+block content
+  .cartHeader
+    h1 My Cart
+  .cart-container
+    
+    if cartItems.length > 0
+      each item in cartItems
+        .cart-item
+          img.cart-img(src=item.image alt=item.name)
+
+          .item-info
+            h3 #{item.name}
+            p.description #{item.description}
+            p Order Placed: #{item.orderDate}
+            p Misuse Penalty: £#{item.penalty}
+            p Dispatched to: #{item.dispatchTo}
+            p Delivery Date: #{item.deliveryDate}
+
+            hr.line-separater
+            nav 
+              ul
                 li 
-                    a(href="/", aria-label="Go to Home") Menu 
+                  a(href=`/outfit-listing/${item.orderId}`) View product details
                 li 
-                    a(href="/search", aria-label="Search Outfits") Search 
-        
-        .cart-container 
-        h2 My Cart 
-        h3 Items in Cart 
-
-        if cartItems.length === 0
-            p Your cart is empty.
-
-        else 
-            each item in cartItem 
-                .cart-item 
-                    .order-info 
-                        p ORDER PLACED: #{item.transaction_date} 
-                        p £#{item.price}
-                        p SHIPPED TO: #{item.delivery_address}
-                    .product-details 
-                        img(src="/images/sample.jpg", alt=item.outfit_name)
-                        .details 
-                            p Description: #{item.outfit_description} 
-                            p Size: #{item.outfit_size} 
-                            p Quantity: #{item.quantity} 
-                    
-                    .order-actions 
-                        a(href=`/order-details/${item.transaction_id}`) View order details 
-                        form(action="/remove-from-cart", method="POST")
-                            input(type="hidden", name="inventory_id", value=item.inventory_id)
-                            button(type="submit", class="remove-item") Remove Item 
-
-
-        .cart-summary 
-            h3 Order Summary 
-            p Items: £#{subtotal} 
-            p Postage & Packing: £#{deliveryFee} 
-            p Order Total: 
-                strong £#{totalAmount} 
-
-            form(action="/checkout", method="POST")
-                input(type="hidden", name="user_id", value=user.user_id)
-                button(type="submit", class="checkout-btn") Checkout
+                  a(href=`/remove/${item.Cart_ID}`) remove item
+      ul.buttonlink 
+        li    
+          .checkout-button
+          a(href="/checkout")
+            button Go to Checkout
+    else
+      p Your cart is empty!
