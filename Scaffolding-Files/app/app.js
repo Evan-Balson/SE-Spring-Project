@@ -20,7 +20,7 @@ app.use(session({
 // Configure storage for multer
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './app/public/uploads/');  // Directory where files should be stored
+        cb(null, './app/public/images/');  // Directory where files should be stored
     },
     filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -56,6 +56,7 @@ const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
 const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
+const { listingController } = require('./controllers/listingController');
 
 // Get the models
 const { User } = require("./models/User");
@@ -127,6 +128,7 @@ app.get("/account", function(req, res){
 app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
+app.post("/new-listing", upload.single('image'), listingController.submitListing);
 
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {

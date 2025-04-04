@@ -8,12 +8,21 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+.h6 {
+  font: bold 2.5rem 'Palatino', serif;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
 /* --- Three Column Layout --- */
 .form-layout {
   display: grid;
   grid-template-columns: 1fr 2fr; /* Left and middle, description below */
   gap: 20px;
   align-items: start;
+  font: 1rem 'Calibri MS', sans-serif;
 }
 
 /* Image Upload Box */
@@ -25,8 +34,8 @@
 /* Image Upload Box */
 .image-upload-box {
   width: 100%;
-  max-width: 350px;
-  height: 300px;
+  max-width: 360px;
+  height: 400px;
   border: 2px dashed #ccc;
   display: flex;
   justify-content: center;
@@ -43,27 +52,12 @@
 }
 
 .image-upload-box span {
+  font-family: 'Calbri MS', sans-serif;
   font-size: 16px;
   color: #666;
   position: absolute;
   z-index: 1; /* Ensure text is above the input */
 }
-
-/* .image-preview {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #666;
-  text-align: center;
-  overflow: hidden;
-} */
-
-/* .image-preview img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  object-fit: contain;
-} */
 
 .image-upload-box img {
   max-width: 100%;
@@ -91,10 +85,17 @@
 
 input, select, textarea {
   width: 100%;
-  padding: 8px;
+  padding: 8px 0px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+input[type="radio"] {
+  position: absolute; /* Remove from the normal document flow */
+  opacity: 0; /* Make them invisible */
+  pointer-events: none; /* Prevent interaction directly with the radio button */
+}
+
 
 /* Colors & Sizes - Button Styles */
 .color-options, .size-options {
