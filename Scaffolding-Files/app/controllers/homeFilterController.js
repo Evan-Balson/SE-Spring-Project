@@ -1,7 +1,7 @@
 const { Inventory } = require("../models/Inventory");
 
 const filterItems = async (req, res) => {
-
+  
   const { sortOrder, category, price, location } = req.body;
 
   

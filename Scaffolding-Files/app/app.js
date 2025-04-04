@@ -34,7 +34,7 @@ const upload = multer({ storage: storage });
 // Static files location
 app.use(express.static("./app/public"));
 
-
+app.use(express.json());
 /* included the parser so that it can read the page json forms
 For URL-encoded data, we will use express.urlencoded() middleware:
 Usage - landing page */ 
@@ -78,13 +78,10 @@ var activeUser= new User("guest","","","","","","","",false);
 app.get("/", async function(req, res)
  {
     activeUser =  req.session.activeUser || activeUser;
-    //console.log(activeUser)
-    const currentPage = parseInt(req.query.page) || 1; // Get the page number from the query or default to 1
-    const itemsPerPage = 4; // Number of items per page
-
+    
     // Get inventory items based on the page
-    const inventoryItems = await homeFiltersController.filterItems();
-    console.log(inventoryItems);
+    const inventoryItems = await homeFiltersController.filterItems(req, res);
+    //console.log(inventoryItems);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
     //console.log(activeUser);
