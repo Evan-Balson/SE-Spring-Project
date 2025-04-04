@@ -1,0 +1,35 @@
+extends default_web_logged-in_layout.pug 
+
+block styles
+    link(rel="stylesheet", href="/css/redirect.css")  
+
+block content
+  h1 Redirecting to #{redirectLocation}...
+  script.
+    var seconds = 4;  
+    var redirectUrl = "#{redirectUrl}"; 
+    // add an if statement to decide layout based on user login status
+    function displayseconds() { 
+      if (seconds > 0) {
+        seconds -= 1;
+        document.getElementById('secondsdisplay').innerText = "This Page Will Be Redirected In " + seconds + " Seconds ...";
+      } else {
+        document.getElementById('secondsdisplay').innerText = "Redirecting now...";
+        redirectpage();  
+      }
+    }
+
+    setInterval(displayseconds, 1000);  
+
+    function redirectpage() {
+      window.location = redirectUrl;  
+    }
+
+  .container
+    .confirmation
+      img(src='/images/thumbs-up.png', alt='Confirmation', height='100')  
+    // Spinning circle and countdown at the bottom
+    .spinner-container
+      div(id='secondsdisplay') This page will be redirected in 4 seconds ...
+      .spinner
+        img(src='/images/ZZ5H.gif', alt='Loading...', height='15', width='15') 

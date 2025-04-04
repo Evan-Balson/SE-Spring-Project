@@ -337,6 +337,19 @@ app.get("/terms-and-conditions", async (req, res) => {
     res.render("termsofuse");
 });
 
+app.get("/redirect/:redirectLocation", async (req, res) => {
+    // Get the redirect location and remove the leading slash
+    const redirectLocation = req.params.redirectLocation.startsWith('/')
+        ? req.params.redirectLocation.substring(1)
+        : req.params.redirectLocation;
+    console.log(redirectLocation);
+    // Keep the full URL for redirection (with the leading slash)
+    const redirectUrl = `/${req.params.redirectLocation}`;
+    console.log(redirectUrl);
+    // Pass both redirectUrl and redirectLocation to the Pug template
+    res.render("redirect-page", { redirectUrl, redirectLocation });
+});
+
 /*
 //admin controller and admin pages
 app.get("/admin", AdminController.adminDashboard);
