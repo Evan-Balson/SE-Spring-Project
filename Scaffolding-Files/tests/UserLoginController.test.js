@@ -25,7 +25,7 @@ describe('UserLoginController', () => {
     chai
       .request(server) // Use the server instance
       .post('/login')
-      .send({ email: 'valid@example.com', password: 'correctpassword' }) // Replace with valid test credentials
+      .send({ email: 'liam.brown@sky.com', password: 'password123' }) // Replace with valid test credentials
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.redirects[0]).to.include('/');
