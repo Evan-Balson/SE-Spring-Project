@@ -92,8 +92,8 @@ app.get("/", async function(req, res)
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
             prevPage: inventoryItems.prevPage,
-            loginStatus: activeUser.login_Status
-           
+            loginStatus: activeUser.login_Status,
+            userRole: activeUser.userRole
         }); 
         
     } else {
@@ -308,7 +308,7 @@ app.get("/favourites", async (req, res) => {
 });
 
 // Route to handle adding items to favorites (POST request)
-app.get("/favourites/add", async (req, res) => {
+app.post("/favourites/add", async (req, res) => {
     const { inventoryId } = req.body; // Get inventoryId from request body
     const userId = req.session.activeUser.userID;
 
