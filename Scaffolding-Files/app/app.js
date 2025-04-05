@@ -34,7 +34,7 @@ const upload = multer({ storage: storage });
 // Static files location
 app.use(express.static("./app/public"));
 
-
+app.use(express.json());
 /* included the parser so that it can read the page json forms
 For URL-encoded data, we will use express.urlencoded() middleware:
 Usage - landing page */ 
@@ -57,6 +57,7 @@ const registrationController = require('./controllers/registrationController');
 const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
+const homeFiltersController = require('./controllers/homeFilterController');
 
 // Get the models
 const { User } = require("./models/User");
@@ -65,24 +66,21 @@ const {Cart} = require("./models/Cart");
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
-//var activeUser= new User("guest","","","","","","","",false);
+var activeUser= new User("guest","","","","","","","",false);
 
 //delete this user after testing
 
 //turn on to skip login
-var activeUser= new User("U001","","","","","","","",true);
+//var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
 // Create a route for root - /
 app.get("/", async function(req, res)
  {
     activeUser =  req.session.activeUser || activeUser;
-    //console.log(activeUser)
-    const currentPage = parseInt(req.query.page) || 1; // Get the page number from the query or default to 1
-    const itemsPerPage = 4; // Number of items per page
-
+    
     // Get inventory items based on the page
-    const inventoryItems = await Inventory.displayinventory(itemsPerPage, currentPage);
+    const inventoryItems = await homeFiltersController.filterItems(req, res);
     //console.log(inventoryItems);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
@@ -108,6 +106,7 @@ app.get("/", async function(req, res)
         });
     }
 });
+app.post("/", homeFiltersController.filterItems);
 
 // create route for outfit listing
 app.get("/outfit-listing/:id", (req, res) => {
@@ -333,6 +332,19 @@ app.get("/remove-outfit/:id", async (req, res) =>  {
 // Route to view terms and conditions
 app.get("/terms-and-conditions", async (req, res) => {
     res.render("termsofuse");
+});
+
+app.get("/redirect/:redirectLocation", async (req, res) => {
+    // Get the redirect location and remove the leading slash
+    const redirectLocation = req.params.redirectLocation.startsWith('/')
+        ? req.params.redirectLocation.substring(1)
+        : req.params.redirectLocation;
+    console.log(redirectLocation);
+    // Keep the full URL for redirection (with the leading slash)
+    const redirectUrl = `/${req.params.redirectLocation}`;
+    console.log(redirectUrl);
+    // Pass both redirectUrl and redirectLocation to the Pug template
+    res.render("redirect-page", { redirectUrl, redirectLocation });
 });
 
 /*

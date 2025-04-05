@@ -71,6 +71,39 @@ class Inventory {
         }
     }
     
+    static async displayNewestinventory(itemsPerPage, currentPage) {
+        // Calculate the OFFSET for pagination
+        const offset = (currentPage - 1) * itemsPerPage;
+
+        // Query the database *********** inventory does not have a date ************
+        var sql = `SELECT * FROM Inventory 
+            ORDER BY created_at DESC 
+            LIMIT ${itemsPerPage + 1} OFFSET ${offset};`;
+
+        try {
+            var results = await db.query(sql);
+           
+
+            // Determine if there's a next or previous page
+            const nextPage = results.length === itemsPerPage + 1 ? currentPage + 1 : null;
+            const prevPage = currentPage > 1 ? currentPage - 1 : null;
+
+            // If there are more than the itemsPerPage, pop the extra item
+            if (results.length === itemsPerPage + 1) {
+                results.pop();
+            }
+            //console.log(results);
+
+            return {
+                results,
+                nextPage,
+                prevPage
+            };
+        } catch (error) {
+            console.error("Error fetching inventory:", error);
+            throw error;
+        }
+    }
 }
 
 // needed to  export functions, objects, or other values from a module so they can be imported and used in other files.
