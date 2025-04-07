@@ -16,6 +16,9 @@ html(lang="en")
           img.logo(src="/images/FitXchange_logo_horizontal.png", alt="FitXchange Horizontal Logo")
         nav.main-menu
           ul
+            if userRole == "Admin"
+              li
+                a(href="/admin") Admin Dash
             li
               a(href="/") Browse Outfits
             li
@@ -29,11 +32,15 @@ html(lang="en")
             li
               a(href="/logout") Log Out
 
+
         nav.mobile-menu
           ul
             li.dropdown-main-menu
               a.dropdown-toggle(href="#") Menu
               ul.dropdown-list
+                if userRole == "Admin"
+                  li
+                    a(href="/admin") Admin Dashboard
                 li
                   a(href="/") Browse Outfits
                 li

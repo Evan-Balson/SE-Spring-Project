@@ -1,1 +1,39 @@
 extends ../default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/admin.css")
+
+
+block content
+  h1 Inspect Items
+  if items.length > 0
+    table(border="1", class="inspect-table")
+      thead
+        tr
+          th Name
+          th Price
+          th Quantity
+          th Color
+          th Size
+          th Description
+          th Image
+          th Actions
+      tbody
+        each item in items
+          tr
+            td #{item.Name}
+            td $#{item.Price.toFixed(2)}
+            td #{item.Quantity}
+            td #{item.Color}
+            td #{item.Size}
+            td #{item.Description}
+            td
+              img(src=item.Product_Image_Path, alt="Item Image", width="100")
+            td
+              .action-buttons
+                form(action=`/admin/inspect-items/approve/${item.Inventory_ID}`, method="POST", style="display:inline")
+                  button(type="submit", class="approve-btn") Approve
+                form(action=`/admin/inspect-items/reject/${item.Inventory_ID}`, method="POST", style="display:inline")
+                  button(type="submit", class="reject-btn") Reject
+  else
+    p No items pending inspection.

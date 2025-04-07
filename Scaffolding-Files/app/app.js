@@ -54,7 +54,6 @@ const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
-const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
@@ -92,8 +91,8 @@ app.get("/", async function(req, res)
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
             prevPage: inventoryItems.prevPage,
-            loginStatus: activeUser.login_Status
-           
+            loginStatus: activeUser.login_Status,
+            userRole: activeUser.userRole
         }); 
         
     } else {
@@ -308,7 +307,7 @@ app.get("/favourites", async (req, res) => {
 });
 
 // Route to handle adding items to favorites (POST request)
-app.get("/favourites/add", async (req, res) => {
+app.post("/favourites/add", async (req, res) => {
     const { inventoryId } = req.body; // Get inventoryId from request body
     const userId = req.session.activeUser.userID;
 
@@ -347,17 +346,48 @@ app.get("/redirect/:redirectLocation", async (req, res) => {
     res.render("redirect-page", { redirectUrl, redirectLocation });
 });
 
-/*
-//admin controller and admin pages
+
+const AdminController = require('./controllers/AdminController'); // Import the AdminController
+const { Administrator } = require('./models/Administrator'); // Import the Administrator model
+
 app.get("/admin", AdminController.adminDashboard);
 
-
-//admin task routes
+// Admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
+
+app.post("/admin/verify-new-users/remove/:id", AdminController.removeUser);
+
 app.get("/admin/inspect-items", AdminController.inspectItems);
+
+app.post("/admin/inspect-items/approve/:id", async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        await new Administrator().approveItem(inventoryId); // Approve item
+        res.redirect("/admin/inspect-items");
+    } catch (error) {
+        console.error("Error approving item:", error);
+        res.status(500).send("Error approving item.");
+    }
+});
+
+app.post("/admin/inspect-items/reject/:id", async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        await new Administrator().rejectItem(inventoryId); // Reject item
+        res.redirect("/admin/inspect-items");
+    } catch (error) {
+        console.error("Error rejecting item:", error);
+        res.status(500).send("Error rejecting item.");
+    }
+});
+
 app.get("/admin/monitor-listings", AdminController.monitorListings);
+
+app.post("/admin/monitor-listings/remove/:id", AdminController.removeOutfit);
+
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
-*/
+
+app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
 // Start server on port 3000
 app.listen(3000,function(){
