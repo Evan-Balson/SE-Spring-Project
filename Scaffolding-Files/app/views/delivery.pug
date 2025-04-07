@@ -70,7 +70,7 @@ block content
           label.required(for="phone") Phone number
           input(type="tel", id="phone", name="phone", required)
         .form-buttons-container
-          button.back-button(type="button", onclick="window.history.back()") ← Back to Checkout
+          button.back-button(type="button", onclick=`window.location.href='/process-checkout'`) ← Back to Checkout
           a.go-to-payment(href=`/payment/${transactionId}`) Go to Payment
 
     .order-summary-container
