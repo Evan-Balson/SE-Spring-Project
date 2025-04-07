@@ -17,15 +17,12 @@ block content
           option(value="oldest") Oldest to Newest
 
         select(name="category", id="category")
-          option(value="", disabled, selected) Select Category
-          option(value="clothing") Clothing
-          option(value="electronics") Electronics
-          option(value="accessories") Accessories
-
-        select(name="price", id="price")
-          option(value="", disabled, selected) Select Price Range
-          option(value="lowToHigh") Low to High
-          option(value="highToLow") High to Low
+          option(value="", disabled selected) Select Category
+          each category in categories
+            option(value=category.Category_Name)= category.Category_Name
+          
+        input(type='number' id='maxPrice' name='maxPrice' placeholder='Enter maximum charges' )
+        
 
         select(name="location", id="location")
           option(value="", disabled, selected) Select Location

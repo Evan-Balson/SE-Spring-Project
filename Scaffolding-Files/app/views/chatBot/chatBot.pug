@@ -1,0 +1,28 @@
+//extends default_web_logged-in_layout.pug
+
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title Chatbot
+  body
+    h1 Chat with our Bot
+    form#chat-form
+      input(type='text' id='message' placeholder='Type your message here')
+      button(type='submit') Send
+    div#response
+
+    script.
+      document.getElementById('chat-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const message = document.getElementById('message').value;
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message })
+        });
+        const data = await response.json();
+        document.getElementById('response').innerText = data.reply;
+      });

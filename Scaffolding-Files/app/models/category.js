@@ -16,7 +16,17 @@ class category {
 
     // Methods
     
-    async getCategory_Name(){}
+    static async getCategory_Names(){
+        const sql = `SELECT Category_Name FROM Category`;
+        try {
+          const result = await db.query(sql);  // Executes the SQL query
+          console.log(result);
+          return result;  // For PostgreSQL (pg), the data is in result.rows
+        } catch (error) {
+          console.error('Error fetching category names:', error.message);
+          throw new Error('Error fetching category names');
+        }
+    }
 
 }
 

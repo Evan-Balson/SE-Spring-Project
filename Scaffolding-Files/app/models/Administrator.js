@@ -20,7 +20,7 @@ class Administrator extends User {
     // verifying user
     async verifyUser(userID){
         try{
-            verifyUserSQL = `--placeholder text`;
+            verifyUserSQL = `SELECT * FROM User`;
             var result = await db.query(verifyUserSQL, [userID]);
             return result;
         } catch (error) {
@@ -30,26 +30,101 @@ class Administrator extends User {
     
     }
 
-    // monitors the outfit listings, approving them
-    async monitorListingActivity(){}
+    async getAllOutfits() {
+        try {
+            const query = `SELECT Inventory_ID, Name, Price, Quantity, Color, Size, Description FROM Inventory;`;
+            const result = await db.query(query);
+            return result;
+        } catch (error) {
+            console.error("Error fetching outfits:", error);
+            throw error;
+        }
+    }
+    
+    async removeOutfit(outfitId) {
+        try {
+            const query = `DELETE FROM Inventory WHERE Inventory_ID = ?;`;
+            await db.query(query, [outfitId]);
+        } catch (error) {
+            console.error("Error removing outfit:", error);
+            throw error;
+        }
+    }
 
-    // nothing to resolve in the database
-    async resolveDisputes(){}
+    async getAllDisputes() {
+        try {
+            const query = `SELECT Dispute_ID, Dispute_Message, User_ID FROM Dispute;`;
+            const result = await db.query(query);
+            return result;
+        } catch (error) {
+            console.error("Error fetching disputes:", error);
+            throw error;
+        }
+    }
+    
+    async resolveDispute(disputeId) {
+        try {
+            const query = `DELETE FROM Dispute WHERE Dispute_ID = ?;`;
+            await db.query(query, [disputeId]);
+        } catch (error) {
+            console.error("Error resolving dispute:", error);
+            throw error;
+        }
+    }
 
     // changes the pass_status in the inspection table
-    async inspectItem(outfit_id){
-        try{
-            var inspectSQL =
-            `UPDATE inspection
-            SET pass_status = 1
-            WHERE outfit_id = ?`;
-
-            var result = await db.query(inspectSQL, outfit_id);
-
+    async getItemsToInspect() {
+        try {
+            const query = `
+                SELECT i.Inventory_ID, i.Name, i.Description, i.Price, i.Quantity, i.Color, i.Size, i.Product_Image_Path
+                FROM Inventory i
+                JOIN Inspection ins ON i.Inventory_ID = ins.Inventory_ID
+                WHERE ins.Pass_Status = 0;`; // Fetch items with Pass_Status = 0 (not inspected)
+            const result = await db.query(query);
             return result;
-        
         } catch (error) {
-            console.error("Error could not inspect item:", error);
+            console.error("Error fetching items to inspect:", error);
+            throw error;
+        }
+    }
+
+    async approveItem(inventoryId) {
+        try {
+            const query = `UPDATE Inspection SET Pass_Status = 1 WHERE Inventory_ID = ?;`;
+            await db.query(query, [inventoryId]);
+        } catch (error) {
+            console.error("Error approving item:", error);
+            throw error;
+        }
+    }
+    
+    async rejectItem(inventoryId) {
+        try {
+            const query = `DELETE FROM Inspection WHERE Inventory_ID = ?;`;
+            await db.query(query, [inventoryId]);
+        } catch (error) {
+            console.error("Error rejecting item:", error);
+            throw error;
+        }
+    }
+
+    async getAllUsers() {
+        try {
+            const query = `SELECT User_ID, Name, Role, Email_Address, Address FROM User;`;
+            const result = await db.query(query);
+            return result;
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            throw error;
+        }
+    }
+    
+    async removeUser(userId) {
+        try {
+            const query = `DELETE FROM User WHERE User_ID = ?;`;
+            await db.query(query, [userId]);
+        } catch (error) {
+            console.error("Error removing user:", error);
             throw error;
         }
     }

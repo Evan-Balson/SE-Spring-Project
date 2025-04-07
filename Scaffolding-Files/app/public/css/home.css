@@ -15,7 +15,7 @@
     margin-right: 10px;
   }
   
-  .sort-by select {
+  .sort-by select, input {
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;

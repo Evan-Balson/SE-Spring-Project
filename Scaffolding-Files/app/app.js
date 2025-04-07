@@ -2,10 +2,16 @@
 const express = require("express");
 const multer = require('multer');
 const path = require('path');
-const router = express.Router();
+require('dotenv').config();
 
+// For node-nlp
+const { NlpManager } = require('node-nlp');
 // import express-session so that we can track user login status site-wide
 const session = require("express-session");
+
+//our AI modules & Models
+const { getRelevantKeywords, getSQLStatementsFromKeywords,processUserMessage } = require('./chatBot/gptHelper');
+const ChatBot = require('./chatBot/chatBot');
 
 // Create express app
 var app = express();
@@ -49,20 +55,31 @@ app.set('views', './app/views');
 // Get the functions in the db.js file to use
 const db = require('./services/db');
 
+// Initialize node-nlp manager and train model
+const manager = new NlpManager({ languages: ['en'] });
+const myBot = new ChatBot(manager);
+//myBot.trainModel(); -- already trained (if model is updated train again)
+
+
 // get the controllers
 const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
-const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
 
 // Get the models
 const { User } = require("./models/User");
-const { Inventory } = require("./models/Inventory");
+const { category } = require("./models/category");
 const {Cart} = require("./models/Cart");
+
+const about = require("./chatBot/aboutFitxchange");
+
+const aboutCompany = about.aboutCompany;
+const termsAndConditions = about.termsAndConditions;
+
 //----------------------------------------------------------------------------
 
 /*Set guest User*/
@@ -81,7 +98,9 @@ app.get("/", async function(req, res)
     
     // Get inventory items based on the page
     const inventoryItems = await homeFiltersController.filterItems(req, res);
+    const categories = await category.getCategory_Names();
     //console.log(inventoryItems);
+    console.log(categories);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
     //console.log(activeUser);
@@ -92,8 +111,10 @@ app.get("/", async function(req, res)
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
             prevPage: inventoryItems.prevPage,
-            loginStatus: activeUser.login_Status
-           
+            loginStatus: activeUser.login_Status,
+            categories:categories.results,
+            userRole: activeUser.userRole,
+            userRole: activeUser.userRole
         }); 
         
     } else {
@@ -102,7 +123,8 @@ app.get("/", async function(req, res)
             products: inventoryItems.results,
             nextPage: inventoryItems.nextPage,
             prevPage: inventoryItems.prevPage,
-            loginStatus: activeUser.login_Status
+            loginStatus: activeUser.login_Status,
+            categories
         });
     }
 });
@@ -308,7 +330,7 @@ app.get("/favourites", async (req, res) => {
 });
 
 // Route to handle adding items to favorites (POST request)
-app.get("/favourites/add", async (req, res) => {
+app.post("/favourites/add", async (req, res) => {
     const { inventoryId } = req.body; // Get inventoryId from request body
     const userId = req.session.activeUser.userID;
 
@@ -347,19 +369,120 @@ app.get("/redirect/:redirectLocation", async (req, res) => {
     res.render("redirect-page", { redirectUrl, redirectLocation });
 });
 
+app.get('/chat', async (req, res) => {
+    res.render("chatBot/chatBot");
+});
+
+app.post('/chat', async (req, res) => {
+    const userMessage = req.body.message || '';
+  
+    try {
+      // 1) Get the GPT response (text or JSON array) by calling a helper function
+      //    that uses the system prompt logic.
+      const gptReply = await processUserMessage(
+        userMessage,
+        aboutCompany,      // the string describing your platform & user stories
+        termsAndConditions // your T&C string
+      );
+  
+      // 2) Attempt to parse the GPT reply as JSON array => outfit search
+      let categories;
+      let isOutfitSearch = false;
+      try {
+        categories = JSON.parse(gptReply);
+        if (Array.isArray(categories)) {
+          isOutfitSearch = true;
+        }
+      } catch (err) {
+        // If parsing fails, it's probably a text reply (FAQ, greeting, or "don't know")
+      }
+  
+      // 3) If it’s an outfit search, run DB queries to find matching inventory
+      if (isOutfitSearch) {
+        // Build SQL queries from the categories
+        const sqlStatements = getSQLStatementsFromKeywords(categories);
+        console.log(sqlStatements);
+        let inventoryMatches = [];
+  
+        for (const sql of sqlStatements) {
+          try {
+            const rows = await db.query(sql);
+            inventoryMatches = inventoryMatches.concat(
+              rows.map((r) => r.Inventory_ID)
+            );
+            console.log(inventoryMatches);
+          } catch (err) {
+            console.error('SQL error:', err);
+          }
+        }
+  
+        // Remove duplicates
+        //const uniqueMatches = [...new Set(inventoryMatches)];
+  
+        // Return found items
+        return res.json({
+          reply: `Here are matched outfits for your request: ${JSON.stringify(inventoryMatches)}`,
+          outfitIDs: inventoryMatches,
+        });
+      }
+  
+      // 4) Otherwise, just return the text from GPT (greetings, T&C, or "Sorry, I don't know")
+      return res.json({ reply: gptReply });
+    } catch (err) {
+      console.error('Error in /chat route:', err);
+      return res.status(500).json({ error: err.message });
+    }
+  });
+  
+
+
 /*
 //admin controller and admin pages
+
+const AdminController = require('./controllers/AdminController'); // Import the AdminController
+const { Administrator } = require('./models/Administrator'); // Import the Administrator model
+
 app.get("/admin", AdminController.adminDashboard);
 
-
-//admin task routes
+// Admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
+
+app.post("/admin/verify-new-users/remove/:id", AdminController.removeUser);
+
 app.get("/admin/inspect-items", AdminController.inspectItems);
+
+app.post("/admin/inspect-items/approve/:id", async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        await new Administrator().approveItem(inventoryId); // Approve item
+        res.redirect("/admin/inspect-items");
+    } catch (error) {
+        console.error("Error approving item:", error);
+        res.status(500).send("Error approving item.");
+    }
+});
+
+app.post("/admin/inspect-items/reject/:id", async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        await new Administrator().rejectItem(inventoryId); // Reject item
+        res.redirect("/admin/inspect-items");
+    } catch (error) {
+        console.error("Error rejecting item:", error);
+        res.status(500).send("Error rejecting item.");
+    }
+});
+
 app.get("/admin/monitor-listings", AdminController.monitorListings);
+
+app.post("/admin/monitor-listings/remove/:id", AdminController.removeOutfit);
+
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
-*/
+
+app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
 // Start server on port 3000
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });
+*/

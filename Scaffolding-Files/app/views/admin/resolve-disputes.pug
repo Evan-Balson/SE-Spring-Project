@@ -1,1 +1,26 @@
 extends ../default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/admin.css")
+
+block content
+  h1 Resolve Disputes
+  if disputes.length > 0
+    table(border="1", class="resolve-disputes-table")
+      thead
+        tr
+          th Dispute ID
+          th Message
+          th User ID
+          th Actions
+      tbody
+        each dispute in disputes
+          tr
+            td #{dispute.Dispute_ID}
+            td #{dispute.Dispute_Message}
+            td #{dispute.User_ID}
+            td
+              form(action=`/admin/resolve-disputes/resolve/${dispute.Dispute_ID}`, method="POST", style="display:inline")
+                button(type="submit", class="resolve-btn") Resolve
+  else
+    p No disputes found.
