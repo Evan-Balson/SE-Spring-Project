@@ -8,11 +8,11 @@ class AdminController {
         const adminTasks = [
             {
                 id: 'verify-new-users',
-                title: '4 New Users Waiting To Be Verified...'
+                title: 'Manage Users'
             },
             {
                 id: 'inspect-items',
-                title: '2 New Items Waiting To Be Inspected...'
+                title: 'Inspect Items'
             },
             {
                 id: 'monitor-listings',
@@ -43,7 +43,7 @@ class AdminController {
     static async inspectItems(req, res) {
         const admin = new Administrator(); // Create an admin instance
         try {
-            const itemsToInspect = await admin.inspectItem(); // Fetch items pending inspection
+            const itemsToInspect = await admin.getItemsToInspect(); // Fetch items pending inspection
             res.render("admin/inspect-items", { title: 'Inspect Items', items: itemsToInspect });
         } catch (error) {
             console.error("Error inspecting items:", error);

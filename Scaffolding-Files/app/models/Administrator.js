@@ -37,19 +37,37 @@ class Administrator extends User {
     async resolveDisputes(){}
 
     // changes the pass_status in the inspection table
-    async inspectItem(outfit_id){
-        try{
-            var inspectSQL =
-            `UPDATE inspection
-            SET pass_status = 1
-            WHERE outfit_id = ?`;
-
-            var result = await db.query(inspectSQL, outfit_id);
-
+    async getItemsToInspect() {
+        try {
+            const query = `
+                SELECT i.Inventory_ID, i.Name, i.Description, i.Price, i.Quantity, i.Color, i.Size, i.Product_Image_Path
+                FROM Inventory i
+                JOIN Inspection ins ON i.Inventory_ID = ins.Inventory_ID
+                WHERE ins.Pass_Status = 0;`; // Fetch items with Pass_Status = 0 (not inspected)
+            const result = await db.query(query);
             return result;
-        
         } catch (error) {
-            console.error("Error could not inspect item:", error);
+            console.error("Error fetching items to inspect:", error);
+            throw error;
+        }
+    }
+
+    async approveItem(inventoryId) {
+        try {
+            const query = `UPDATE Inspection SET Pass_Status = 1 WHERE Inventory_ID = ?;`;
+            await db.query(query, [inventoryId]);
+        } catch (error) {
+            console.error("Error approving item:", error);
+            throw error;
+        }
+    }
+    
+    async rejectItem(inventoryId) {
+        try {
+            const query = `DELETE FROM Inspection WHERE Inventory_ID = ?;`;
+            await db.query(query, [inventoryId]);
+        } catch (error) {
+            console.error("Error rejecting item:", error);
             throw error;
         }
     }

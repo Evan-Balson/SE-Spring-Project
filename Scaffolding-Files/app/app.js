@@ -348,12 +348,37 @@ app.get("/redirect/:redirectLocation", async (req, res) => {
 
 
 const AdminController = require('./controllers/AdminController'); // Import the AdminController
+const { Administrator } = require('./models/Administrator'); // Import the Administrator model
 
 app.get("/admin", AdminController.adminDashboard);
 
 // Admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
 app.get("/admin/inspect-items", AdminController.inspectItems);
+
+app.post("/admin/inspect-items/approve/:id", async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        await new Administrator().approveItem(inventoryId); // Approve item
+        res.redirect("/admin/inspect-items");
+    } catch (error) {
+        console.error("Error approving item:", error);
+        res.status(500).send("Error approving item.");
+    }
+});
+
+app.post("/admin/inspect-items/reject/:id", async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        await new Administrator().rejectItem(inventoryId); // Reject item
+        res.redirect("/admin/inspect-items");
+    } catch (error) {
+        console.error("Error rejecting item:", error);
+        res.status(500).send("Error rejecting item.");
+    }
+});
+
+
 app.get("/admin/monitor-listings", AdminController.monitorListings);
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 

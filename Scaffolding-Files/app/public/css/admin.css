@@ -122,3 +122,50 @@
         height: auto;
     }
 }
+
+.inspect-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.inspect-table th, .inspect-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.inspect-table th {
+    background-color: #f4f4f4;
+}
+
+.inspect-table img {
+    max-width: 100px;
+    height: auto;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between; /* Push buttons to opposite sides */
+    gap: 10px; /* Add spacing between buttons */
+}
+
+.approve-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+}
+
+.reject-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.approve-btn:hover, .reject-btn:hover {
+    opacity: 0.8;
+}
