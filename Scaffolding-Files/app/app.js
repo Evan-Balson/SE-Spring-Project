@@ -354,6 +354,9 @@ app.get("/admin", AdminController.adminDashboard);
 
 // Admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
+
+app.post("/admin/verify-new-users/remove/:id", AdminController.removeUser);
+
 app.get("/admin/inspect-items", AdminController.inspectItems);
 
 app.post("/admin/inspect-items/approve/:id", async (req, res) => {
@@ -378,10 +381,13 @@ app.post("/admin/inspect-items/reject/:id", async (req, res) => {
     }
 });
 
-
 app.get("/admin/monitor-listings", AdminController.monitorListings);
+
+app.post("/admin/monitor-listings/remove/:id", AdminController.removeOutfit);
+
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
+app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
 // Start server on port 3000
 app.listen(3000,function(){

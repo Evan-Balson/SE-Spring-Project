@@ -1,1 +1,30 @@
 extends ../default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/admin.css")
+
+block content
+  h1 Verify New Users
+  if users.length > 0
+    table(border="1", class="verify-users-table")
+      thead
+        tr
+          th User ID
+          th Name
+          th Role
+          th Email
+          th Address
+          th Actions
+      tbody
+        each user in users
+          tr
+            td #{user.User_ID}
+            td #{user.Name}
+            td #{user.Role}
+            td #{user.Email_Address}
+            td #{user.Address}
+            td
+              form(action=`/admin/verify-new-users/remove/${user.User_ID}`, method="POST", style="display:inline")
+                button(type="submit", class="reject-btn") Remove
+  else
+    p No users found.

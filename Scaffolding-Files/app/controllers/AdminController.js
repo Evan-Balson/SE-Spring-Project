@@ -20,7 +20,7 @@ class AdminController {
             },
             {
                 id: 'resolve-disputes',
-                title: '0 Disputes Pending. View Disputes'
+                title: 'Resolve Disputes'
             }
         ];
 
@@ -31,11 +31,23 @@ class AdminController {
     static async verifyNewUsers(req, res) {
         const admin = new Administrator(); // Create an admin instance
         try {
-            const usersToVerify = await admin.verifyUser(); // Fetch users pending verification
-            res.render("admin/verify-new-users", { title: 'Verify New Users', users: usersToVerify });
+            const users = await admin.getAllUsers(); // Fetch all users
+            res.render("admin/verify-new-users", { title: 'Verify New Users', users });
         } catch (error) {
-            console.error("Error fetching users to verify:", error);
-            res.status(500).send("Error occurred while fetching users to verify.");
+            console.error("Error fetching users:", error);
+            res.status(500).send("Error occurred while fetching users.");
+        }
+    }
+    
+    static async removeUser(req, res) {
+        const userId = req.params.id; // Get the user ID from the request
+        const admin = new Administrator(); // Create an admin instance
+        try {
+            await admin.removeUser(userId); // Remove the user
+            res.redirect("/admin/verify-new-users"); // Redirect back to the verify users page
+        } catch (error) {
+            console.error("Error removing user:", error);
+            res.status(500).send("Error occurred while removing user.");
         }
     }
 
@@ -55,11 +67,23 @@ class AdminController {
     static async monitorListings(req, res) {
         const admin = new Administrator(); // Create an admin instance
         try {
-            const listings = await admin.monitorListingActivity(); // Fetch listing activities
-            res.render("admin/monitor-listings", { title: 'Monitor Listings', listings });
+            const outfits = await admin.getAllOutfits(); // Fetch all outfits
+            res.render("admin/monitor-listings", { title: 'Monitor Listings', outfits });
         } catch (error) {
-            console.error("Error monitoring listings:", error);
-            res.status(500).send("Error occurred while monitoring listings.");
+            console.error("Error fetching outfits:", error);
+            res.status(500).send("Error occurred while fetching outfits.");
+        }
+    }
+    
+    static async removeOutfit(req, res) {
+        const outfitId = req.params.id; // Get the outfit ID from the request
+        const admin = new Administrator(); // Create an admin instance
+        try {
+            await admin.removeOutfit(outfitId); // Remove the outfit
+            res.redirect("/admin/monitor-listings"); // Redirect back to the monitor listings page
+        } catch (error) {
+            console.error("Error removing outfit:", error);
+            res.status(500).send("Error occurred while removing outfit.");
         }
     }
 
@@ -67,11 +91,23 @@ class AdminController {
     static async resolveDisputes(req, res) {
         const admin = new Administrator(); // Create an admin instance
         try {
-            const disputes = await admin.resolveDisputes(); // Fetch disputes pending resolution
+            const disputes = await admin.getAllDisputes(); // Fetch all disputes
             res.render("admin/resolve-disputes", { title: 'Resolve Disputes', disputes });
         } catch (error) {
-            console.error("Error resolving disputes:", error);
-            res.status(500).send("Error occurred while resolving disputes.");
+            console.error("Error fetching disputes:", error);
+            res.status(500).send("Error occurred while fetching disputes.");
+        }
+    }
+    
+    static async resolveDispute(req, res) {
+        const disputeId = req.params.id; // Get the dispute ID from the request
+        const admin = new Administrator(); // Create an admin instance
+        try {
+            await admin.resolveDispute(disputeId); // Resolve the dispute
+            res.redirect("/admin/resolve-disputes"); // Redirect back to the disputes page
+        } catch (error) {
+            console.error("Error resolving dispute:", error);
+            res.status(500).send("Error occurred while resolving dispute.");
         }
     }
 }

@@ -154,7 +154,7 @@
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 5px 5px;
+    padding: 5px 10px;
     cursor: pointer;
 }
 
@@ -167,5 +167,66 @@
 }
 
 .approve-btn:hover, .reject-btn:hover {
+    opacity: 0.8;
+}
+
+.verify-users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.verify-users-table th, .verify-users-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.verify-users-table th {
+    background-color: #f4f4f4;
+}
+
+.monitor-listings-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.monitor-listings-table th, .monitor-listings-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.monitor-listings-table th {
+    background-color: #f4f4f4;
+}
+
+
+.resolve-disputes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.resolve-disputes-table th, .resolve-disputes-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.resolve-disputes-table th {
+    background-color: #f4f4f4;
+}
+
+.resolve-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.resolve-btn:hover {
     opacity: 0.8;
 }
