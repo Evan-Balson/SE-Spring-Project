@@ -21,10 +21,6 @@ class AdminController {
             {
                 id: 'resolve-disputes',
                 title: '0 Disputes Pending. View Disputes'
-            },
-            {
-                id: 'user',
-                title: 'Switch to User View'
             }
         ];
 
@@ -80,4 +76,4 @@ class AdminController {
     }
 }
 
-module.exports = {AdminController};
+module.exports = AdminController;

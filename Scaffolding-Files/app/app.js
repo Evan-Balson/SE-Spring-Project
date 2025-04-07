@@ -54,7 +54,6 @@ const userLoginController = require('./controllers/UserLoginController');
 const OutfitListingController = require('./controllers/OutfitListingController');
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
-const AdminController = require('./controllers/AdminController');
 const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
@@ -347,17 +346,17 @@ app.get("/redirect/:redirectLocation", async (req, res) => {
     res.render("redirect-page", { redirectUrl, redirectLocation });
 });
 
-/*
-//admin controller and admin pages
+
+const AdminController = require('./controllers/AdminController'); // Import the AdminController
+
 app.get("/admin", AdminController.adminDashboard);
 
-
-//admin task routes
+// Admin task routes
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
 app.get("/admin/inspect-items", AdminController.inspectItems);
 app.get("/admin/monitor-listings", AdminController.monitorListings);
 app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
-*/
+
 
 // Start server on port 3000
 app.listen(3000,function(){

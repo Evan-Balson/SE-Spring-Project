@@ -8,13 +8,8 @@ block content
   .admin-container
     if adminTasks.length > 0
       each task in adminTasks
-        if task.id == "user"
-            a(href=`/`, class="admin-task")
-               .task-info
-                 h3 #{task.title}
-        else
-            a(href=`/admin/${task.id}`, class="admin-task") 
-               .task-info
-                 h3 #{task.title}
+        a(href=`/admin/${task.id}`, class="admin-task") 
+           .task-info
+             h3 #{task.title}
     else
       p No tasks available at the moment!
