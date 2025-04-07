@@ -58,7 +58,7 @@ const db = require('./services/db');
 // Initialize node-nlp manager and train model
 const manager = new NlpManager({ languages: ['en'] });
 const myBot = new ChatBot(manager);
-//myBot.trainModel(); -- already trained (if model is updated train again)
+//myBot.trainModel(); //-- already trained (if model is updated train again)
 
 
 // get the controllers
@@ -114,7 +114,6 @@ app.get("/", async function(req, res)
             loginStatus: activeUser.login_Status,
             categories:categories.results,
             userRole: activeUser.userRole,
-            userRole: activeUser.userRole
         }); 
         
     } else {
@@ -432,7 +431,7 @@ app.post('/chat', async (req, res) => {
       console.error('Error in /chat route:', err);
       return res.status(500).json({ error: err.message });
     }
-  });
+});
   
 
 
@@ -481,8 +480,9 @@ app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
+*/
 // Start server on port 3000
+
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });
-*/
