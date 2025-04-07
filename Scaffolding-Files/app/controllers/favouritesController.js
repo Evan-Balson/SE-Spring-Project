@@ -1,99 +1,105 @@
-const {Favourites} = require('../models/favourites');
+const db = require('../services/db');
+const Favourites = require('../models/favourites');
 
 // Create an instance of Favourites
 const favourites = new Favourites();
 
-
-// Controller to handle adding an item to favorites
+// Controller to handle adding an item to favourites
 const addToFavourites = async (req, res) => {
-    const { inventoryId } = req.body;
-    const userId = req.session.activeUser.userID;
+    console.log("addToFavourites called");
+    console.log("req.session.activeUser:", req.session.activeUser);
+    console.log("req.body.inventoryId:", req.body.inventoryId);
+    
+    const { inventoryId } = req.body || req.query;
+    const userId = req.session.activeUser?.userID;
 
-    // Check for undefined values
-    if (userId === undefined || inventoryId === undefined) {
+    // Validate that the user ID and inventory ID are provided
+    if (!userId || !inventoryId) {
         let errorMessage = '';
-        if (userId === undefined && inventoryId === undefined) {
+        if (!userId && !inventoryId) {
             errorMessage = 'User ID and Inventory ID are missing.';
-        } else if (userId === undefined) {
+        } else if (!userId) {
             errorMessage = 'User ID is missing.';
         } else {
             errorMessage = 'Inventory ID is missing.';
         }
-
         return res.status(400).json({ message: errorMessage });
     }
 
     try {
-        await favourites.addToFavourites(userId, inventoryId);
-        res.status(200).json({ message: 'Item added to favorites successfully.' });
+        // Add item to favourites
+        const result = await favourites.addToFavourites(userId, inventoryId);
+
+        // Check the result status and return appropriate message
+        if (result.status === 'exists') {
+            return res.status(400).json({ message: 'Item already in favorites.' });
+        } else if (result.status === 'added') {
+            return res.status(200).json({ message: 'Item added to favorites successfully.' });
+        } else {
+            return res.status(500).json({ message: 'Failed to add item to favorites.' });
+        }
     } catch (error) {
         console.error('Error adding item to favorites:', error);
-        res.status(500).json({ message: 'Failed to add item to favorites.', error: error.message });
+        return res.status(500).json({ message: 'Failed to add item to favorites.', error: error.message });
     }
 };
 
-// Controller to handle removing an item from favorites
+// Controller to handle removing an item from favourites
 const removeFromFavourites = async (req, res) => {
-    const User_ID = req.session.activeUser.userID; // Accessing activeUser from session
-    console.log(User_ID);
-    const Inventory_ID = req.params.id;
-    console.log(Inventory_ID);
-    console.log("The Inventory Item is:", Inventory_ID);
+    const userId = req.session.activeUser?.userID;  // Accessing activeUser from session
+    const inventoryId = req.params.id;
 
-    if (!Inventory_ID) {
-        return res.status(400).json({ message: 'Inventory_ID are required.' });
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required.' });
+    }
+
+    if (!inventoryId) {
+        return res.status(400).json({ message: 'Inventory ID is required.' });
     }
 
     try {
-        const result = await favourites.removeFromFavourites(User_ID, Inventory_ID);
+        // Remove item from favourites
+        const result = await favourites.removeFromFavourites(userId, inventoryId);
 
         if (result) {
-
-            //res.status(200).json({ message: 'Item removed from favorites.' });
+            // Redirect to the favorites page after removing an item
             return res.redirect("/favourites");
         } else {
             return res.status(500).json({ message: 'Failed to remove item from favorites.' });
         }
     } catch (error) {
+        console.error('Error removing item from favorites:', error);
         return res.status(500).json({ message: 'Error removing item from favorites.', error: error.message });
     }
 };
 
-
-
-// Controller to handle filtered viewing saved items for a user
+// Controller to handle filtered viewing of saved items for a user
 const filterSavedItems = async (req, res) => {
+    const userId = req.session.activeUser?.userID;  // Get the user ID from session
+    const { sortOrder } = req.body;
 
-    User_ID = req.session.activeUser.userID;
-    const {sortOrder} = req.body
-    
-    console.log(User_ID);
-    if (!User_ID) {
-        // If User_ID is not provided, just return null or throw an error
-        throw new Error('User_ID is required.');
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required.' });
     }
-
-    let result;
 
     try {
-        // Log User_ID for debugging purposes
-        console.log('Fetching saved items for User_ID:', User_ID);
+        let result;
 
-        if (sortOrder == "oldest") {result = await favourites.viewSavedItems_oldest(User_ID);}
-        else if (sortOrder == "newest") {result = await favourites.viewSavedItems(User_ID);}
-        else if (!sortOrder) {result = await favourites.viewSavedItems(User_ID);}
-        // Call the model's function to get saved items
+        // Fetch saved items based on the sort order
+        if (sortOrder === "oldest") {
+            result = await favourites.viewSavedItems_oldest(userId);
+        } else if (sortOrder === "newest") {
+            result = await favourites.viewSavedItems(userId);
+        } else {
+            result = await favourites.viewSavedItems(userId);  // Default to newest if no sort order is provided
+        }
 
-        console.log(sortOrder);
-        
-        return res.render("favourites", { title: 'Favourites', outfits: result });
-
+        // Render the favourites page with the fetched items
+        res.render("favourites", { title: 'Favourites', outfits: result });
     } catch (error) {
-        // Log and rethrow the error to be handled in the route
-        console.error('Error fetching saved items:', error.message);
-        throw new Error('Error fetching saved items: ' + error.message);
+        console.error('Error fetching saved items:', error);
+        return res.status(500).json({ message: 'Error fetching saved items.', error: error.message });
     }
-    
 };
 
 // Export the controller functions

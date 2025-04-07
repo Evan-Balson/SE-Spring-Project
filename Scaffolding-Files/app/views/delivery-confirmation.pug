@@ -1,0 +1,24 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/delivery.css")
+
+block content
+  .delivery-container
+    h2 DELIVERY CONFIRMATION
+    .delivery-details
+      p
+        strong Delivery Address:
+        span #{deliveryAddress}
+      p
+        strong Delivery Option:
+        span #{deliveryOption}
+      p
+        strong Delivery Date:
+        span #{deliveryDate}
+
+    .navigation-buttons
+      a(href="/checkout")
+        button Back to Checkout
+      a(href=`/complete-delivery/${transactionId}`)
+        button Confirm Delivery

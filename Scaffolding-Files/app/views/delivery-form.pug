@@ -1,0 +1,57 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/delivery.css")
+
+block content
+  .delivery-container
+    if deliveryAddress
+      h2 DELIVERY CONFIRMATION
+      .delivery-details
+        p
+          strong Delivery Address:
+          span #{deliveryAddress}
+        p
+          strong Delivery Option:
+          span #{deliveryOption}
+        p
+          strong Delivery Date:
+          span #{deliveryDate}
+
+      .navigation-buttons
+        a(href="/checkout")
+          button Back to Checkout
+        a(href=`/complete-delivery/${transactionId}`)
+          button Confirm Delivery
+    else
+      h2 ENTER SHIPPING ADDRESS
+      form(action=`/confirm-delivery/${transactionId}`, method="POST")
+        .name-fields
+          .form-group
+            label(for="firstName") First name
+            input(type="text", id="firstName", name="firstName", required)
+          .form-group
+            label(for="lastName") Last name
+            input(type="text", id="lastName", name="lastName", required)
+        .form-group
+          label(for="country") Country / Region
+          select(id="country", name="country", required)
+            option(value="UK") United Kingdom
+            option(value="US") United States
+            option(value="CA") Canada
+            
+        .postcode
+          label(for="postcode") Postcode
+          input(type="text", id="postcode", name="postcode")
+        .contact-details
+          p Contact details:
+          p We will only contact you in case there are issues with your order
+          .form-group
+            label(for="email") Email
+            input(type="email", id="email", name="email", value="ella.morris@outlook.com", required)
+          .form-group
+            label(for="phone") Phone number
+            input(type="tel", id="phone", name="phone", required)
+        .legal-text
+          | The personal data you have entered will be used by FitXchange
+        button(type="submit") Confirm

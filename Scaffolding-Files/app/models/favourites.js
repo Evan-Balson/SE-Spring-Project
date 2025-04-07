@@ -6,19 +6,16 @@ class Favourites {
     inventory_ID;
     user_ID;
 
-    constructor(){}
+    constructor() {}
 
     // Remove item from favorites for a user
     async removeFromFavourites(User_ID, Inventory_ID) {
-        //'SELECT * FROM `User` WHERE `Email_Address` = ? AND `Password` = ?';
-        
-        var sql = 'DELETE FROM `Favorites` WHERE `User_ID` = ? AND `Inventory_ID` = ?;';
-                    
-        var params = [User_ID, Inventory_ID];
+        const sql = 'DELETE FROM Favorites WHERE User_ID = ? AND Inventory_ID = ?';
+        const params = [User_ID, Inventory_ID];
 
         try {
-            var result = await db.query(sql, params);
-            console.log(result);  // Check the result from the database
+            const result = await db.query(sql, params);
+            console.log(result);
 
             if (result.affectedRows > 0) {
                 console.log('Item removed from favorites.');
@@ -33,28 +30,28 @@ class Favourites {
         }
     }
 
-    // Add item to favorites for a user
+    // Add item to favorites for a user using INSERT IGNORE and pre-check
     async addToFavourites(User_ID, Inventory_ID) {
-        const sql = `
-            INSERT INTO Favorites (User_ID, Inventory_ID)
-            VALUES (?, ?);
-        `;
-        var params = [User_ID, Inventory_ID];
-
-        console.log("SQL Query:", sql);
-        console.log("Parameters:", params);
-        // Check for undefined values
+        const checkSql = 'SELECT * FROM Favorites WHERE User_ID = ? AND Inventory_ID = ? LIMIT 1';
+        const insertSql = 'INSERT IGNORE INTO Favorites (User_ID, Inventory_ID) VALUES (?, ?)';
+        const params = [User_ID, Inventory_ID];
 
         try {
-            var result = await db.query(sql, params);
-            console.log(result);  // Check the result from the database
+            const exists = await db.query(checkSql, params);
+            if (exists.length > 0) {
+                console.log('Item already in favorites.');
+                return { status: 'exists' };
+            }
+
+            const result = await db.query(insertSql, params);
+            console.log(result);
 
             if (result.affectedRows > 0) {
                 console.log('Item added to favorites.');
-                return true;
+                return { status: 'added' };
             } else {
-                console.log('Failed to add item to favorites.');
-                return false;
+                console.log('Insert ignored (probably already exists).');
+                return { status: 'ignored' };
             }
         } catch (error) {
             console.error('Error during database operation:', error);
@@ -64,74 +61,58 @@ class Favourites {
 
     // View all saved items for a user
     async viewSavedItems(User_ID) {
-        var sql = `
-        SELECT Inventory.*, Favorites.Date_Added
-        FROM Inventory
-        JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
-        WHERE Favorites.User_ID = ?
-        ORDER BY Favorites.Date_Added DESC;
-    `;
-        var params = [User_ID];
-    
+        const sql = `
+            SELECT Inventory.*, Favorites.Date_Added
+            FROM Inventory
+            JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
+            WHERE Favorites.User_ID = ?
+            ORDER BY Favorites.Date_Added DESC
+        `;
+        const params = [User_ID];
+
         try {
-            var result = await db.query(sql, params);
-            //console.log(result); 
-            
-            // Convert dates to a desired format (YYYY-MM-DD)
+            const result = await db.query(sql, params);
+
             result.forEach(item => {
                 if (item.Date_Added) {
-                    item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // YYYY-MM-DD format
+                    item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // Format: YYYY-MM-DD
                 }
-                });            
-    
-            if (result && result.length > 0) {
-                return result; // Return the saved items
-            } else {
-                console.log('No items found for this user.');
-                return null; // Return an empty array instead of 0
-            }
+            });
+
+            return result.length > 0 ? result : null;
         } catch (error) {
-            console.error('Error during Database search:', error);
+            console.error('Error during database search:', error);
             throw error;
         }
     }
 
+    // View all saved items ordered by oldest
+    async viewSavedItems_oldest(User_ID) {
+        const sql = `
+            SELECT Inventory.*, Favorites.Date_Added
+            FROM Inventory
+            JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
+            WHERE Favorites.User_ID = ?
+            ORDER BY Favorites.Date_Added ASC
+        `;
+        const params = [User_ID];
 
-// View all saved items for a user, ordered by oldest
-async viewSavedItems_oldest(User_ID) {
-    var sql = `
-        SELECT Inventory.*, Favorites.Date_Added
-        FROM Inventory
-        JOIN Favorites ON Favorites.Inventory_ID = Inventory.Inventory_ID
-        WHERE Favorites.User_ID = ?
-        ORDER BY Favorites.Date_Added ASC;
-    `;
-    var params = [User_ID];
+        try {
+            const result = await db.query(sql, params);
 
-    try {
-        var result = await db.query(sql, params);
-        console.log(result);
-
-            // Convert dates to a desired format (YYYY-MM-DD)
             result.forEach(item => {
-            if (item.Date_Added) {
-                item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // YYYY-MM-DD format
-            }
+                if (item.Date_Added) {
+                    item.Date_Added = new Date(item.Date_Added).toISOString().split('T')[0]; // Format: YYYY-MM-DD
+                }
             });
 
-        if (result && result.length > 0) {
-            return result; // Return the saved items
-        } else {
-            console.log('No items found for this user.');
-            return null; // Return null if no items are found
+            return result.length > 0 ? result : null;
+        } catch (error) {
+            console.error('Error during database search:', error);
+            throw error;
         }
-    } catch (error) {
-        console.error('Error during Database search:', error);
-        throw error;
+        console.log(result);
     }
 }
 
-
-}
-
-module.exports = {Favourites};
+module.exports = Favourites ;

@@ -8,14 +8,15 @@ exports.showOutfitListing = async (req, res) => {
         const item = await Inventory.displayinventoryItem(id);
         
         if (item) {
-            // Render the outfit listing page with the fetched product details
-            
+            // Retrieve the user object from res.locals (ensure it's properly set)
             const user = res.locals.activeUser;
-            if(user.login_Status){
+
+            // Check if user exists and has a login status
+            if (user && user.login_Status) {
                 return res.render("outfit-listing", { title: 'Listing', product: item });
+            } else {
+                return res.render("outfit-listing-logged-out", { title: 'Listing', product: item });
             }
-            else{return res.render("outfit-listing-logged-out", { title: 'Listing', product: item });}
-            
         } else {
             // Handle case where the product is not found
             return res.status(404).send("Product not found");

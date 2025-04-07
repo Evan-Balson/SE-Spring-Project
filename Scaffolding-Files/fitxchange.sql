@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 
 --
 -- Database: `fitxchange_db`
---
-
 -- --------------------------------------------------------
 
 -- Creating the User table
@@ -39,7 +37,7 @@ CREATE TABLE User (
 
 -- Creating the Payment table
 CREATE TABLE Payment (
-    Payment_ID INT(20) PRIMARY KEY NOT NULL,
+    Payment_ID INT (20) PRIMARY KEY NOT NULL,
     Payment_Type VARCHAR(25),
     User_ID VARCHAR(20) NOT NULL,
     FOREIGN KEY (User_ID) REFERENCES User(User_ID)
@@ -48,7 +46,7 @@ CREATE TABLE Payment (
 -- Creating the Inventory table
 CREATE TABLE Inventory (
     Inventory_ID VARCHAR(20) PRIMARY KEY NOT NULL,
-    Price DOUBLE(5, 2),
+    Price DECIMAL(10, 2),
     Availability BOOLEAN,
     Quantity INT(5),
     Name VARCHAR(20),
@@ -75,7 +73,7 @@ CREATE TABLE Transaction (
     Transaction_ID VARCHAR(20) PRIMARY KEY NOT NULL,
     Payment_ID INT(20) NOT NULL,
     Transaction_Date DATE,
-    Total_Price DOUBLE(5, 2),
+    Total_Price DECIMAL(10, 2),
     User_ID VARCHAR(20) NOT NULL,
     Inventory_ID VARCHAR(20) NOT NULL,
     FOREIGN KEY (Payment_ID) REFERENCES Payment(Payment_ID),
@@ -158,6 +156,11 @@ CREATE TABLE Cart (
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
     UNIQUE (User_ID, Inventory_ID)
 );
+
+-- Allow NULL values for Payment_ID and Inventory_ID in Transaction table
+-- so that a transaction record can be created before the payment and inventory are finalized.
+--ALTER TABLE Transaction MODIFY Payment_ID INT(20);
+--ALTER TABLE Transaction MODIFY Inventory_ID VARCHAR(20);
 
 -- ----------------------------------------------------------------------------------
 

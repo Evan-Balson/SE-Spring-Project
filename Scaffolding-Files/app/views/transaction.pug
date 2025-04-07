@@ -1,0 +1,40 @@
+extends default_web_logged-in_layout.pug
+
+doctype html
+html(lang="en")
+  head
+    title Transaction Details
+    link(rel="stylesheet", href="/css/transaction.css") 
+  body
+    //- Transaction Information Section
+    h1 Transaction Details
+
+    div.transaction-details
+      p
+        strong Transaction ID: 
+        span= transaction.transaction_ID
+      p
+        strong Transaction Date: 
+        span= transaction.transaction_date
+      p
+        strong Total Price: 
+        span= transaction.total
+      p
+        strong User ID: 
+        span= transaction.user_id
+      p
+        strong Payment ID: 
+        span= transaction.payment_ID
+      p
+        strong Inventory ID: 
+        span= transaction.inventory_ID
+
+    //- Navigation Buttons Section
+    div.navigation-buttons
+      //- Back Button (to Checkout Page)
+      a(href="/checkout") 
+        button Back to Checkout
+
+      //- Forward Button (to Delivery Form Page)
+      a(href=`/delivery-form/${transaction.transaction_ID}`)
+        button Go to Delivery Form

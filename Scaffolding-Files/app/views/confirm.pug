@@ -1,0 +1,13 @@
+extends default_web_logged-in_layout.pug
+
+block content
+  h1 Order Confirmation
+  p Thank you for your order!
+  p Your order details:
+  ul
+    each item in cartItems
+      li #{item.name} - Quantity: #{item.quantity}
+  p Total: $#{total}
+  p Shipping Address: #{shippingAddress}
+  p Delivery Date: #{deliveryDate}
+  p Payment Type: #{paymentType}

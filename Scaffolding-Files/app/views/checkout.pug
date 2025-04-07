@@ -4,31 +4,39 @@ block styles
   link(rel="stylesheet", href="/css/checkout.css")
 
 block content
-  .container
-    .cart-header 
+  .checkout-container
     h1 My Checkout
-    if cartItems.length > 0
+    
+    // Display total amount
+    h2 Total amount: £#{totalAmount}
+    
+    // Check if there are items in the cart
+    if cartItems && cartItems.length > 0
       each item in cartItems
-        .outfit-item
-          img(src=item.image alt=item.name)
-          .details
-            h2= item.name
+        .checkout-item
+          img(src=item.image, alt=item.name)
+          .item-details
+            h3 #{item.name}
             p Description: #{item.description}
-            p Quantity: #{item.quantity}
-            p Misuse Penalty: #{item.penalty !== null && typeof item.penalty === 'number' ? '£' + item.penalty.toFixed(2) : 'N/A'}
-            p Order Date: #{item.orderDate}
-            p Delivery Date: #{item.deliveryDate}
-            p Dispatch To: #{item.dispatchTo}
-            hr
+            p Misuse Penalty: £#{item.penalty !== null && typeof item.penalty === 'number' ? item.penalty.toFixed(2) : 'N/A'}
+            p Transaction ID: #{transactionId}
+          hr
+
+      // Terms and conditions section
       .terms
-        p By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
-          a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
-        
-        ul
-          li.backLink
-            a.goback-link(href="/cart") ← Return to Cart
-          li.buttonlink     
-            .checkout-button
-              button.agree-button(type="button") Agree and Collect
+        p By clicking "Shipping", you accept the terms and potential penalties associated with the items.
+        a(href="/terms-and-conditions") See Terms and Conditions
+
+      .navigation-buttons
+        a(href="/cart") ← Return to Cart
+        button(onclick=`location.href='/delivery/${transactionId}'`) Shipping
     else
       p Your cart is empty.
+      a(href="/") ← Back to Home
+
+  if cartItems
+    script.
+      console.log('Cart Items in Pug:', !{JSON.stringify(cartItems)})
+  else
+    script.
+      console.log('Cart Items is undefined or null.')

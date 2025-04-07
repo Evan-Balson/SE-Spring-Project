@@ -1,0 +1,16 @@
+extends default_web_logged-out_layout.pug
+
+
+h1= title
+
+if products.length > 0
+  .product-list
+    each product in products
+      .product-item
+        img(src=product.Product_Image_Path, alt=product.Name)
+        h3= product.Name
+        p= product.Description
+        p Price: #{product.Price}
+        a(href='/product/' + product.Inventory_ID) View Details
+else
+  p= message

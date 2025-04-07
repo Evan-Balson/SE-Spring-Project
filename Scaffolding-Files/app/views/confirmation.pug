@@ -1,0 +1,34 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/confirmation.css")
+
+block content
+  .confirmation-container
+    h1 Order Confirmation
+
+    // Check if the transaction object is available
+    if transaction
+      .confirmation-details
+        h2 Thank you for your order!
+        p.transaction-info
+          | Transaction ID: #{transaction.Transaction_ID || 'N/A'} 
+        p.transaction-info
+          | Payment Type: #{transaction.Payment_Type || 'N/A'}
+        p.transaction-info
+          | Total Amount: £#{(transaction.Total_Amount ? transaction.Total_Amount.toFixed(2) : '0.00')}
+        p.transaction-info
+          | Order Date: #{transaction.Transaction_Date ? new Date(transaction.Transaction_Date).toLocaleDateString('en-GB') : 'N/A'}
+        p.transaction-info
+          | Delivery Status: Processing
+
+      .success-message
+        i(class="fas fa-check-circle success-icon")
+        p Your order has been successfully placed. A confirmation email will be sent shortly.
+
+      .button-group
+        a.button(href="/") Continue Shopping
+        a.button(href="/orders") View My Orders
+    else
+      p.error-message Sorry, we couldn't find your transaction.
+      a.button(href="/") Go Back Home

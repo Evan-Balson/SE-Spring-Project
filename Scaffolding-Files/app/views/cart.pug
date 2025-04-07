@@ -1,38 +1,36 @@
 extends default_web_logged-in_layout.pug
 
 block styles
-    link(rel="stylesheet", href="/css/cart.css")  
-
+    link(rel="stylesheet", href="/css/cart.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css")
 
 block content
-  .cartHeader
-    h1 My Cart
-  .cart-container
-    
-    if cartItems.length > 0
-      each item in cartItems
-        .cart-item
-          img.cart-img(src=item.image alt=item.name)
-
-          .item-info
-            h3 #{item.name}
-            p.description #{item.description}
-            p Order Placed: #{item.orderDate}
-            p Misuse Penalty: £#{item.penalty}
-            p Dispatched to: #{item.dispatchTo}
-            p Delivery Date: #{item.deliveryDate}
-
-            hr.line-separater
-            nav 
-              ul
-                li 
-                  a(href=`/outfit-listing/${item.orderId}`) View product details
-                li 
-                  a(href=`/remove/${item.Cart_ID}`) remove item
-      ul.buttonlink 
-        li    
-          .checkout-button
-          a(href="/checkout")
-            button Go to Checkout
-    else
-      p Your cart is empty!
+    .cart-container
+        h1 My Cart
+        if cartItems && cartItems.length > 0
+            each item in cartItems
+                .cart-item
+                    img.cart-img(src=item.image, alt=item.name)
+                    .item-info
+                        h3 #{item.name}
+                        p.description #{item.description}
+                        if item.size
+                            p.size Size: #{item.size}
+                        if item.color
+                            p.color Color: #{item.color}
+                        p.price Price: £#{item.price}
+                        if item.Quantity > 0
+                          p.quantity Available
+                        else
+                          p.quantity Unavailable
+                    .cart-actions
+                        button(onclick=`location.href='/outfit-listing/${item.orderId}'`) More Details
+                        form(action=`/remove/${item.Cart_ID}`, method="post")
+                            button(type="submit")
+                                i.fas.fa-trash-alt
+            .checkout-button
+                a(href="/process-checkout") Proceed to Checkout
+            .back-to-cart
+                a(href="/") ← Back
+        else
+            p Your cart is empty!
