@@ -7,47 +7,43 @@ block styles
 block content
 
 
-
   h1.page-title Browse Catalogue
   .sort-container
     div.sort-by
         
       label Filters:
+      form(action="/", method="post" )
+        select(name="sortOrder", id="sortOrder")
+          option(value="", disabled, selected) Select Sort Order
+          option(value="newest") Newest to Oldest
+          option(value="oldest") Oldest to Newest
 
-      select(name="sortOrder", id="sortOrder")
-        option(value="", disabled, selected) Select Sort Order
-        option(value="newest") Newest to Oldest
-        option(value="oldest") Oldest to Newest
+        select(name="category", id="category")
+          option(value="", disabled selected) Select Category
+          each category in categories
+            option(value=category.Category_Name)= category.Category_Name
+          
+        input(type='number' id='maxPrice' name='maxPrice' placeholder='Enter maximum charges' )
+        
 
-      select(name="category", id="category")
-        option(value="", disabled, selected) Select Category
-        option(value="clothing") Clothing
-        option(value="electronics") Electronics
-        option(value="accessories") Accessories
-
-      select(name="price", id="price")
-        option(value="", disabled, selected) Select Price Range
-        option(value="lowToHigh") Low to High
-        option(value="highToLow") High to Low
-
-      select(name="location", id="location")
-        option(value="", disabled, selected) Select Location
-        option(value="city") City
-        option(value="suburbs") Suburbs
-        option(value="rural") Rural
-
-  div.catalog
-    each product in products
-      div.product
-        if(loginStatus)
+        select(name="location", id="location")
+          option(value="", disabled, selected) Select Location
+          option(value="city") City
+          option(value="suburbs") Suburbs
+          option(value="rural") Rural
+        button(type="submit") Go
+      
+  if(products!=0)
+    div.catalog
+      each product in products
+        div.product
           div.product-clickable(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
             img(src=product.Product_Image_Path, alt=product.Name) 
-        else
-          div.product-clickable(onclick=`window.location.href='/outfit-listing-logged-out/${product.Inventory_ID}'`)
-            img(src=product.Product_Image_Path, alt=product.Name) 
-        h2= product.name
-        p Price: $#{product.Price}
-        
+          h2= product.Name
+          p Price: $#{product.Price}
+  else
+     div.container
+      h3 Sorry no products match this search.        
   // Pagination controls
   if prevPage || nextPage
     nav.pagination

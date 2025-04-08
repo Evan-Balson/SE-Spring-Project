@@ -6,13 +6,18 @@ const filterItems = async (req, res) => {
 var minPrice =null;
 var { sortOrder, category, maxPrice, location } = req.body;
 
-if(maxPrice){minPrice=1;}
-if(maxPrice==''){maxPrice=null;}
+if (maxPrice !== '' && maxPrice != null) {
+  minPrice = parseInt('1');;
+  maxPrice = parseInt(maxPrice);
+} else {
+  maxPrice = null;
+}
+
 
 console.log("we are in this function");
 
-console.log('Form data:', req.body); // To see what data you're receiving
-
+console.log('Form price range:', maxPrice, minPrice); // To see what data you're receiving
+console.log('Form data:', req.body)
 // Check if only the sort filter is provided and the others are not
 if (!sortOrder && !category && !location && !minPrice && !maxPrice) {
   console.log('empty room');
@@ -21,77 +26,77 @@ if (!sortOrder && !category && !location && !minPrice && !maxPrice) {
 
 // If there are filters, use a switch case to call the corresponding function
 switch (true) {
-  case !sortOrder && category && !location && !minPrice && !maxPrice:
+  case Boolean (!sortOrder && category && !location && !minPrice && !maxPrice):
     return sortByCategory(req, res, category); // Only category selected (no sort order)
 
-  case !sortOrder && !category && location && !minPrice && !maxPrice:
+  case Boolean (!sortOrder && !category && location && !minPrice && !maxPrice):
     return sortByLocation(req, res, location); // Only location selected (no sort order)
 
-  case !sortOrder && !category && !location && minPrice && maxPrice:
+  case Boolean (!sortOrder && !category && !location && minPrice && maxPrice):
     return sortByPriceRange(req, res, minPrice, maxPrice); // Only price range selected (no sort order)
 
-  case !sortOrder && category && location && !minPrice && !maxPrice:
+  case Boolean (!sortOrder && category && location && !minPrice && !maxPrice):
     return sortByCategoryLocation(req, res, category, location); // Category + Location selected (no sort order)
 
-  case !sortOrder && category && !location && minPrice && maxPrice:
+  case Boolean (!sortOrder && category && !location && minPrice && maxPrice):
     return sortByCategoryPriceRange(req, res, category, minPrice, maxPrice); // Category + Price Range selected (no sort order)
 
-  case !sortOrder && !category && location && minPrice && maxPrice:
+  case Boolean (!sortOrder && !category && location && minPrice && maxPrice):
     return sortByLocationPriceRange(req, res, location, minPrice, maxPrice); // Location + Price Range selected (no sort order)
 
-  case !sortOrder && category && location && minPrice && maxPrice:
+  case Boolean (!sortOrder && category && location && minPrice && maxPrice):
     return sortByCategoryLocationPriceRange(req, res, category, location, minPrice, maxPrice); // Category + Location + Price Range selected (no sort order)
 
 
   // Newest sort order cases
-  case sortOrder === 'newest' && !category && !location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'newest' && !category && !location && !minPrice && !maxPrice):
     return sortByNewest(req, res); // No filters selected
 
-  case sortOrder === 'newest' && category && !location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'newest' && category && !location && !minPrice && !maxPrice):
     return sortByNewestAndCategory(req, res, category); // Only category selected
 
-  case sortOrder === 'newest' && !category && location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'newest' && !category && location && !minPrice && !maxPrice):
     return sortByNewestAndLocation(req, res, location); // Only location selected
 
-  case sortOrder === 'newest' && !category && !location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'newest' && !category && !location && minPrice && maxPrice):
     return sortByNewestAndPriceRange(req, res, minPrice, maxPrice); // Only price range selected (minPrice + maxPrice)
 
-  case sortOrder === 'newest' && category && location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'newest' && category && location && !minPrice && !maxPrice):
     return sortByNewestCategoryLocation(req, res, category, location); // Category + Location selected
 
-  case sortOrder === 'newest' && category && !location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'newest' && category && !location && minPrice && maxPrice):
     return sortByNewestCategoryPriceRange(req, res, category, minPrice, maxPrice); // Category + Price Range selected (minPrice + maxPrice)
 
-  case sortOrder === 'newest' && !category && location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'newest' && !category && location && minPrice && maxPrice):
     return sortByNewestLocationPriceRange(req, res, location, minPrice, maxPrice); // Location + Price Range selected (minPrice + maxPrice)
 
-  case sortOrder === 'newest' && category && location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'newest' && category && location && minPrice && maxPrice):
     return sortByNewestCategoryLocationPriceRange(req, res, category, location, minPrice, maxPrice); // Category + Location + Price Range selected (minPrice + maxPrice)
 
 
   // Oldest sort order cases
-  case sortOrder === 'oldest' && !category && !location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'oldest' && !category && !location && !minPrice && !maxPrice):
     return sortByOldest(req, res); // No filters selected
 
-  case sortOrder === 'oldest' && category && !location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'oldest' && category && !location && !minPrice && !maxPrice):
     return sortByOldestAndCategory(req, res, category); // Only category selected
 
-  case sortOrder === 'oldest' && !category && location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'oldest' && !category && location && !minPrice && !maxPrice):
     return sortByOldestAndLocation(req, res, location); // Only location selected
 
-  case sortOrder === 'oldest' && !category && !location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'oldest' && !category && !location && minPrice && maxPrice):
     return sortByOldestAndPriceRange(req, res, minPrice, maxPrice); // Only price range selected (minPrice + maxPrice)
 
-  case sortOrder === 'oldest' && category && location && !minPrice && !maxPrice:
+  case Boolean (sortOrder === 'oldest' && category && location && !minPrice && !maxPrice):
     return sortByOldestCategoryLocation(req, res, category, location); // Category + Location selected
 
-  case sortOrder === 'oldest' && category && !location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'oldest' && category && !location && minPrice && maxPrice):
     return sortByOldestCategoryPriceRange(req, res, category, minPrice, maxPrice); // Category + Price Range selected (minPrice + maxPrice)
 
-  case sortOrder === 'oldest' && !category && location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'oldest' && !category && location && minPrice && maxPrice):
     return sortByOldestLocationPriceRange(req, res, location, minPrice, maxPrice); // Location + Price Range selected (minPrice + maxPrice)
 
-  case sortOrder === 'oldest' && category && location && minPrice && maxPrice:
+  case Boolean (sortOrder === 'oldest' && category && location && minPrice && maxPrice):
     return sortByOldestCategoryLocationPriceRange(req, res, category, location, minPrice, maxPrice); // Category + Location + Price Range selected (minPrice + maxPrice)
 
   // Default action if no valid filter case is matched

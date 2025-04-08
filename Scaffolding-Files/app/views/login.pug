@@ -10,6 +10,9 @@ block content
     .login-container
       h1 Login
       form(action="/login", method="post")
+        
+        input(type="hidden", name="referencePage", value=referencePage)
+
         .form-group
           input(type="email", name="email", placeholder="Email", required)
         .form-group

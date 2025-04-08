@@ -31,15 +31,17 @@ block content
           option(value="rural") Rural
         button(type="submit") Go
       
-
-  div.catalog
-    each product in products
-      div.product
-        div.product-clickable(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
-          img(src=product.Product_Image_Path, alt=product.Name) 
-        h2= product.Name
-        p Price: $#{product.Price}
-        
+  if(products!=0)
+    div.catalog
+      each product in products
+        div.product
+          div.product-clickable(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
+            img(src=product.Product_Image_Path, alt=product.Name) 
+          h2= product.Name
+          p Price: $#{product.Price}
+  else
+     div.container
+      h3 Sorry no products match this search.        
   // Pagination controls
   if prevPage || nextPage
     nav.pagination

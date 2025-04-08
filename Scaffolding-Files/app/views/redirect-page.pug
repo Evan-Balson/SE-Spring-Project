@@ -4,8 +4,23 @@ block styles
     link(rel="stylesheet", href="/css/redirect.css")  
 
 block content
-  h1 Redirecting to #{redirectLocation}...
-  script.
+  h1 #{msg}
+  if(redirectLocation=="home-logged-in")
+    h2 Redirecting to Home...
+  else
+    h2 Redirecting to #{redirectLocation}
+ 
+  .container
+    .confirmation
+      img(src='/images/thumbs-up.png', alt='Confirmation', height='100')  
+    // Spinning circle and countdown at the bottom
+    .spinner-container
+      div(id='secondsdisplay') This page will be redirected in 4 seconds ...
+      .spinner
+        img(src='/images/ZZ5H.gif', alt='Loading...', height='15', width='15') 
+
+block scripts
+ script.
     var seconds = 4;  
     var redirectUrl = "#{redirectUrl}"; 
     // add an if statement to decide layout based on user login status
@@ -24,12 +39,3 @@ block content
     function redirectpage() {
       window.location = redirectUrl;  
     }
-
-  .container
-    .confirmation
-      img(src='/images/thumbs-up.png', alt='Confirmation', height='100')  
-    // Spinning circle and countdown at the bottom
-    .spinner-container
-      div(id='secondsdisplay') This page will be redirected in 4 seconds ...
-      .spinner
-        img(src='/images/ZZ5H.gif', alt='Loading...', height='15', width='15') 

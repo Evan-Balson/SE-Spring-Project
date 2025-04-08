@@ -88,7 +88,7 @@ static async displayInventory(itemsPerPage, currentPage) {
   
 // Sort by Category
 static async displayByCategory(category, itemsPerPage, currentPage) {
-    console.log(category);
+    //console.log(category);
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
@@ -97,6 +97,7 @@ static async displayByCategory(category, itemsPerPage, currentPage) {
 
     try {
         var results = await db.query(sql,[category]);
+        console.log("this is the sql result: ", results);
         
 
         // Determine if there's a next or previous page
@@ -175,30 +176,14 @@ static async displayByLocation(location, itemsPerPage, currentPage) {
 static async displayByPriceRange(minPrice, maxPrice, itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
             const offset = (currentPage - 1) * itemsPerPage;
+            itemsPerPage = itemsPerPage + 1;
     
-            var sql = `
-            SELECT 
-                Inventory.*, 
-                Inspection.Verification_Date,
-                User.Address
-            FROM 
-                Inventory
-            INNER JOIN 
-                Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-            INNER JOIN 
-                User ON Inventory.User_ID = User.User_ID
-            WHERE 
-                Inspection.Pass_Status = true
-                AND Inventory.Price BETWEEN ? AND ?  -- Include both minPrice and maxPrice
-            ORDER BY 
-                Inspection.Verification_Date DESC
-            LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-        `;
-        
-        
+            var sql = "SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT " + itemsPerPage + " OFFSET " + offset + ";";
+
+            var params = [minPrice, maxPrice];
     
             try {
-                var results = await db.query(sql[minPrice,maxPrice]);
+                var results = await db.query(sql, params);
                
     
                 // Determine if there's a next or previous page
@@ -227,29 +212,8 @@ static async displayByCategoryLocation(category, location, itemsPerPage, current
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ? 
-        AND User.Address = ? 
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND User.Address = ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, location]);
@@ -279,26 +243,8 @@ static async displayByCategoryPriceRange(category, minPrice, maxPrice, itemsPerP
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ? 
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, minPrice, maxPrice]);
@@ -328,25 +274,8 @@ static async displayByLocationPriceRange(location, minPrice, maxPrice, itemsPerP
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND User.Address = ? 
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND User.Address = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [location, minPrice, maxPrice]);
@@ -376,30 +305,8 @@ static async displayByCategoryLocationPriceRange(category, location, minPrice, m
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ? 
-        AND User.Address = ? 
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND User.Address = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, location, minPrice, maxPrice]);
@@ -430,20 +337,7 @@ static async displayNewestInventory(itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    WHERE 
-        Inspection.Pass_Status = true
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID WHERE Inspection.Pass_Status = true ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
 
     try {
         console.log("this is printing the newest entries first.");
@@ -474,25 +368,8 @@ static async displayNewestAndCategory(category, itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ? 
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category]);
@@ -522,24 +399,8 @@ static async displayNewestAndLocation(location, itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND User.Address = ? 
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND User.Address = ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [location]);
@@ -569,21 +430,8 @@ static async displayNewestAndPriceRange(minPrice, maxPrice, itemsPerPage, curren
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID WHERE Inspection.Pass_Status = true AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [minPrice, maxPrice]);
@@ -613,29 +461,8 @@ static async displayNewestCategoryLocation(category, location, itemsPerPage, cur
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ?
-        AND User.Address = ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND User.Address = ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, location]);
@@ -665,26 +492,7 @@ static async displayNewestCategoryPriceRange(category, minPrice, maxPrice, items
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ?
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
 
     try {
         var results = await db.query(sql, [category, minPrice, maxPrice]);
@@ -714,25 +522,7 @@ static async displayNewestLocationPriceRange(location, minPrice, maxPrice, items
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND User.Address = ?
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND User.Address = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
 
     try {
         var results = await db.query(sql, [location, minPrice, maxPrice]);
@@ -762,30 +552,8 @@ static async displayNewestCategoryLocationPriceRange(category, location, minPric
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ?
-        AND User.Address = ?
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date DESC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND User.Address = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date DESC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, location, minPrice, maxPrice]);
@@ -815,20 +583,8 @@ static async displayOldestInventory(itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    WHERE 
-        Inspection.Pass_Status = true
-    ORDER BY 
-        Inspection.Verification_Date ASC 
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID WHERE Inspection.Pass_Status = true ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql);
@@ -858,25 +614,8 @@ static async displayOldestAndCategory(category, itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ?
-    ORDER BY 
-        Inspection.Verification_Date ASC  // Order by oldest first
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category]);
@@ -907,24 +646,7 @@ static async displayOldestAndLocation(location, itemsPerPage, currentPage) {
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND User.Address = ? 
-    ORDER BY 
-        Inspection.Verification_Date ASC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND User.Address = ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
 
     try {
         var results = await db.query(sql, [location]);
@@ -954,21 +676,8 @@ static async displayOldestAndPriceRange(minPrice, maxPrice, itemsPerPage, curren
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date ASC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID WHERE Inspection.Pass_Status = true AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [minPrice, maxPrice]);
@@ -998,30 +707,8 @@ static async displayOldestCategoryLocationPriceRange(category, location, minPric
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.USER_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ? 
-        AND User.Address = ? 
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date ASC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID INNER JOIN User ON Inventory.User_ID = User.USER_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND User.Address = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, location, minPrice, maxPrice]);
@@ -1052,29 +739,7 @@ static async displayOldestCategoryLocation(category, location, itemsPerPage, cur
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ?
-        AND User.Address = ?
-    ORDER BY 
-        Inspection.Verification_Date ASC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND User.Address = ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
 
     try {
         var results = await db.query(sql, [category, location]);
@@ -1104,26 +769,8 @@ static async displayOldestCategoryPriceRange(category, minPrice, maxPrice, items
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID
-    INNER JOIN 
-        Category ON Outfit_and_Categories.Category_ID = Category.Category_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND Category.Category_Name = ?
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date ASC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN Outfit_and_Categories ON Inventory.Inventory_ID = Outfit_and_Categories.Inventory_ID INNER JOIN Category ON Outfit_and_Categories.Category_ID = Category.Category_ID WHERE Inspection.Pass_Status = true AND Category.Category_Name = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [category, minPrice, maxPrice]);
@@ -1153,25 +800,8 @@ static async displayOldestLocationPriceRange(location, minPrice, maxPrice, items
     // Calculate the OFFSET for pagination
     const offset = (currentPage - 1) * itemsPerPage;
 
-    var sql = `
-    SELECT 
-        Inventory.*, 
-        Inspection.Verification_Date,
-        User.Address
-    FROM 
-        Inventory
-    INNER JOIN 
-        Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID
-    INNER JOIN 
-        User ON Inventory.User_ID = User.User_ID
-    WHERE 
-        Inspection.Pass_Status = true
-        AND User.Address = ?
-        AND Inventory.Price BETWEEN ? AND ?
-    ORDER BY 
-        Inspection.Verification_Date ASC
-    LIMIT ${itemsPerPage + 1} OFFSET ${offset}
-`;
+    var sql = `SELECT Inventory.*, Inspection.Verification_Date, User.Address FROM Inventory INNER JOIN Inspection ON Inventory.Inventory_ID = Inspection.Inventory_ID INNER JOIN User ON Inventory.User_ID = User.User_ID WHERE Inspection.Pass_Status = true AND User.Address = ? AND Inventory.Price BETWEEN ? AND ? ORDER BY Inspection.Verification_Date ASC LIMIT ${itemsPerPage + 1} OFFSET ${offset}`;
+
 
     try {
         var results = await db.query(sql, [location, minPrice, maxPrice]);

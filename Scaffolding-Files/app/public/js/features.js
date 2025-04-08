@@ -45,6 +45,41 @@ script
     form.submit();
   }
 
+script
+  // /js/features.js
+  window.addEventListener('DOMContentLoaded', function() {
+  // Get the container that holds redirect information
+  const container = document.getElementById("redirectPageContainer");
+  
+  // If the container doesn't exist on this page, do nothing
+  if (!container) return;
+
+  // Extract our redirect parameters from the data attributes
+  let seconds = parseInt(container.dataset.seconds, 10);
+  let redirectUrl = container.dataset.redirectUrl || "/";
+
+  // Countdown logic
+  function displaySeconds() {
+    if (seconds > 0) {
+      seconds--;
+      document.getElementById("secondsdisplay").innerText =
+        "This Page Will Be Redirected In " + seconds + " Seconds...";
+    } else {
+      document.getElementById("secondsdisplay").innerText = "Redirecting now...";
+      redirectPage();
+    }
+  }
+
+  // Perform the actual redirect
+  function redirectPage() {
+    window.location = redirectUrl;
+  }
+
+  // Kick off the countdown once per second
+  setInterval(displaySeconds, 1000);
+});
+
+
 
 
 

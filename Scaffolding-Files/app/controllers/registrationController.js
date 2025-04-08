@@ -1,7 +1,7 @@
 const { User } = require("../models/User");
 
 exports.registerUser = async (req, res) => {
-    const { firstName, lastName, email, address, phone, password, termsofuse } = req.body;
+    const { referencePage, firstName, lastName, email, address, phone, password, termsofuse } = req.body;
     const image = req.file; // This will contain info about the file if uploaded
 
     console.log(termsofuse);
@@ -13,8 +13,12 @@ exports.registerUser = async (req, res) => {
             const result = await User.registerUser(userData);
             console.log("Here is the result from the insert function", result);
 
-            // If the user was successfully inserted
-            res.status(201).redirect('/login');  // Redirect to login page or wherever you'd like
+            // Check if referencePage is provided, if not, set a default page
+            const redirectTo = referencePage || '/login';
+
+            // Redirect to /redirect/:redirectpage where :redirectpage is the referencePage value
+            return res.redirect(`/redirect/${encodeURIComponent(redirectTo)}/'Registration Successful'`);
+
         } catch (error) {
             console.error('Error during registration:', error);
             res.status(500).render('register', {

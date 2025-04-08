@@ -95,6 +95,33 @@ class User {
             throw error;
         }
     };
+
+
+    static async findById(id) {
+        const sql = 'SELECT * FROM `User` WHERE `User_ID` = ?';
+        try {
+          const result = await db.query(sql, [id]);
+          if (result && result.length > 0) {
+            const user = result[0];
+            return new User(
+              user.User_ID,
+              user.Name,
+              user.Role,
+              user.Email_Address,
+              user.Password,
+              user.Address,
+              user.Contact_Number,
+              user.Profile_Image_Path,
+              user.login_status
+            );
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error("Error in User.findById:", error);
+          throw error;
+        }
+      }
 }
 
 

@@ -2,6 +2,8 @@
 const express = require("express");
 const multer = require('multer');
 const path = require('path');
+const cookieParser = require("cookie-parser");
+const compression = require("compression");
 require('dotenv').config();
 
 // For node-nlp
@@ -45,6 +47,10 @@ app.use(express.json());
 For URL-encoded data, we will use express.urlencoded() middleware:
 Usage - landing page */ 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use(compression());
 
 
 // Use the Pug templating engine
@@ -91,16 +97,30 @@ var activeUser= new User("guest","","","","","","","",false);
 //var activeUser= new User("U001","","","","","","","",true);
 // ---------------------------------------------------------------------------
 
+//checking the cookie in the login
+app.use(async (req, res, next) => {
+    // If user is not in session, try to find 'rememberMe' cookie
+    if (!req.session.activeUser && req.cookies.rememberMe) {
+      const user = await User.findById(req.cookies.rememberMe);
+      if (user) {
+        user.setLoginStatus(true);
+        req.session.activeUser = user;
+      }
+    }
+    next();
+  });
+
 // Create a route for root - /
 app.get("/", async function(req, res)
  {
+    
     activeUser =  req.session.activeUser || activeUser;
     
     // Get inventory items based on the page
     const inventoryItems = await homeFiltersController.filterItems(req, res);
     const categories = await category.getCategory_Names();
     //console.log(inventoryItems);
-    console.log(categories);
+    //console.log(categories);
     // Render appropriate page based on whether the user is logged in
     //console.log(req.session.activeUser);
     //console.log(activeUser);
@@ -112,7 +132,7 @@ app.get("/", async function(req, res)
             nextPage: inventoryItems.nextPage,
             prevPage: inventoryItems.prevPage,
             loginStatus: activeUser.login_Status,
-            categories:categories.results,
+            categories:categories,
             userRole: activeUser.userRole,
         }); 
         
@@ -127,8 +147,37 @@ app.get("/", async function(req, res)
         });
     }
 });
-app.post("/", homeFiltersController.filterItems);
-
+app.post("/", async (req, res) => {
+    try {
+      activeUser = req.session.activeUser || activeUser;
+      const inventoryItems = await homeFiltersController.filterItems(req, res);
+      const categories = await category.getCategory_Names();
+      if (activeUser.login_Status) {
+        return res.render("home-logged-in", {
+          title: "Home",
+          products: inventoryItems.results,
+          nextPage: inventoryItems.nextPage,
+          prevPage: inventoryItems.prevPage,
+          loginStatus: activeUser.login_Status,
+          categories: categories,
+          userRole: activeUser.userRole
+        });
+      } else {
+        return res.render("home", {
+          title: "Home",
+          products: inventoryItems.results,
+          nextPage: inventoryItems.nextPage,
+          prevPage: inventoryItems.prevPage,
+          loginStatus: activeUser.login_Status,
+          categories: categories
+        });
+      }
+    } catch (error) {
+      console.error("Error in POST / route:", error.message);
+      res.status(500).send("Server error: " + error.message);
+    }
+  });
+  
 // create route for outfit listing
 app.get("/outfit-listing/:id", (req, res) => {
     
@@ -152,6 +201,7 @@ app.post("/new-listing", upload.single('image'), listingController.submitListing
 
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
+    activeUser =  req.session.activeUser || activeUser;
     if (activeUser.login_Status) {
         try {
             // Fetch cart items for the logged-in user
@@ -167,7 +217,7 @@ app.get("/cart", async function(req, res) {
         }
     } else {
         // If the user is not logged in, redirect to login page
-        res.render("login", { title: 'Login' });
+        res.render("login", { title: 'Login', referencePage: 'cart' });
     }
 });
 
@@ -223,6 +273,8 @@ app.get('/remove/:cartId', async (req, res) => {
 
 // Create a route for checkout lising - /
 app.get("/checkout", async function(req, res) {
+
+    activeUser =  req.session.activeUser || activeUser;
    
     const cartItems = await Cart.getCartItems(activeUser.userID); 
 
@@ -232,7 +284,7 @@ app.get("/checkout", async function(req, res) {
         res.render("checkout",{title:'Checkout', cartItems});
     }
     else{
-        res.render("login",{title:'Login'});}
+        res.render("login",{title:'Login', referencePage: 'checkout' });}
     
 });
 
@@ -261,13 +313,14 @@ app.get("/logout", (req, res) => {
 
 // Create a route for registration
 app.get("/register", async function(req, res){
-    res.render("register",{title:'Register'});
+    res.render("register",{title:'Register', referencePage: 'login'});
 });
 app.post("/register", upload.single('image'), registrationController.registerUser);
 
 
 // Create a route for add order history - /
 app.get("/order-history", function(req, res){
+    activeUser =  req.session.activeUser || activeUser;
     const orders = [
     {
         itemName: 'Casual Tee',
@@ -291,19 +344,20 @@ app.get("/order-history", function(req, res){
         res.render("order-history",{title:'My Orders', orders});
     }
     else{
-        res.render("login",{title:'Login'});}
+        res.render("login",{title:'Login', referencePage: 'order-history' });}
     
     
 });
 
 // Create a route for add outfit advice - /
 app.get("/outfit-advice", function(req, res){
+    activeUser =  req.session.activeUser || activeUser;
 
     if(activeUser.login_Status){
         res.render("outfit-advice",{title:'Fashion Advice'});
     }
     else{
-        res.render("login",{title:'Login'});}
+        res.render("login",{title:'Login', referencePage: 'outfit-advice' });}
 
 });
 
@@ -324,7 +378,7 @@ app.get("/favourites", async (req, res) => {
             res.status(500).render("error", { message: 'An error occurred while fetching your favorites.' });
         }
     } else {
-        res.render("login", { title: 'Login' });
+        res.render("login", { title: 'Login', referencePage: 'favourites'  });
     }
 });
 
@@ -355,17 +409,22 @@ app.get("/terms-and-conditions", async (req, res) => {
     res.render("termsofuse");
 });
 
-app.get("/redirect/:redirectLocation", async (req, res) => {
+app.get("/redirect/:redirectLocation/:msg", async (req, res) => {
+
+    const msg = req.params.msg;
     // Get the redirect location and remove the leading slash
     const redirectLocation = req.params.redirectLocation.startsWith('/')
         ? req.params.redirectLocation.substring(1)
         : req.params.redirectLocation;
     console.log(redirectLocation);
     // Keep the full URL for redirection (with the leading slash)
-    const redirectUrl = `/${req.params.redirectLocation}`;
+    let redirectUrl = `/${req.params.redirectLocation}`;
+    if(redirectLocation == "home-logged-in" ){
+        redirectUrl = '/'
+    }
     console.log(redirectUrl);
     // Pass both redirectUrl and redirectLocation to the Pug template
-    res.render("redirect-page", { redirectUrl, redirectLocation });
+    res.render("redirect-page", { redirectUrl, redirectLocation,msg });
 });
 
 app.get('/chat', async (req, res) => {
