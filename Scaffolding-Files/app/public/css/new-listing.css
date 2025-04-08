@@ -25,7 +25,7 @@ body::before {
   position: absolute;
   top: 0;
   right: 0;
-  bottom: 0;
+  bottom: 25%;
   left: 0;
   background: linear-gradient(30deg, rgba(211, 211, 211, 0.8), rgba(255, 255, 255, 0.8));
   z-index: -1;
