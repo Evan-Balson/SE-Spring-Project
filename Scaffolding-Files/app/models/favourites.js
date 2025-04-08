@@ -131,6 +131,14 @@ async viewSavedItems_oldest(User_ID) {
     }
 }
 
+static async getRecentFavorites(userID) {
+    const sql = "SELECT Inventory.Inventory_ID AS inventoryID, Inventory.Product_Image_Path AS image, Inventory.Name AS itemName FROM Favorites INNER JOIN Inventory ON Favorites.Inventory_ID = Inventory.Inventory_ID WHERE Favorites.User_ID = ? ORDER BY Favorites.Date_Added DESC LIMIT 3";
+    const results = await db.query(sql, [userID]);
+    return results;
+  }
+  
+  
+
 
 }
 

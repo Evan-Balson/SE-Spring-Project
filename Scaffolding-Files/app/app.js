@@ -75,6 +75,7 @@ const registrationController = require('./controllers/registrationController');
 const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
+const accountController = require('./controllers/accountController');
 
 // Get the models
 const { User } = require("./models/User");
@@ -110,6 +111,16 @@ app.use(async (req, res, next) => {
     next();
   });
 
+  function ensureLoggedIn(req, res, next) {
+    if (req.session.activeUser && req.session.activeUser.login_Status) {
+      next();
+    } else {
+      res.render("login", { title: "Login", referencePage: "account" });
+    }
+  }
+  
+
+  
 // Create a route for root - /
 app.get("/", async function(req, res)
  {
@@ -188,10 +199,8 @@ app.get("/outfit-listing/:id", (req, res) => {
     OutfitListingController.showOutfitListing(req, res);
 });
 
-// Create a route for account - /
-app.get("/account", function(req, res){
-    res.render("account",{title:'My Account'});
-});
+app.get("/account", ensureLoggedIn, accountController.getAccountPage);
+app.post('/account/update', ensureLoggedIn, accountController.updateAccount);
 
 // Create a route for add outfit lising - /
 app.get("/new-listing", function(req, res){

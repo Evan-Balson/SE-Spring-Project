@@ -50,6 +50,13 @@ class Transaction {
         }
     }
 
+    static async getRecentTransactions(userID) {
+        const sql = "SELECT T.Inventory_ID AS inventoryID, I.Product_Image_Path AS image, I.Name AS itemName, T.Transaction_Date AS orderDate, T.Total_Price AS amount FROM Transaction T JOIN Inventory I ON T.Inventory_ID = I.Inventory_ID WHERE T.User_ID = ? ORDER BY T.Transaction_Date DESC LIMIT 3";
+        const results = await db.query(sql, [userID]);
+        return results;
+      }
+      
+
 }
 
 module.exports = {

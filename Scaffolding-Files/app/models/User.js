@@ -97,30 +97,30 @@ class User {
     };
 
 
-    static async findById(id) {
-        const sql = 'SELECT * FROM `User` WHERE `User_ID` = ?';
-        try {
-          const result = await db.query(sql, [id]);
-          if (result && result.length > 0) {
-            const user = result[0];
-            return new User(
-              user.User_ID,
-              user.Name,
-              user.Role,
-              user.Email_Address,
-              user.Password,
-              user.Address,
-              user.Contact_Number,
-              user.Profile_Image_Path,
-              user.login_status
-            );
-          } else {
-            return null;
-          }
-        } catch (error) {
-          console.error("Error in User.findById:", error);
-          throw error;
+    static async updateUser(userID, updatedData) {
+        const sql = "UPDATE User SET Name = ?, Email_Address = ? WHERE User_ID = ?";
+        const params = [updatedData.userName, updatedData.userEmail, userID];
+        return db.query(sql, params);
+      }
+    
+      static async findById(userID) {
+        const sql = "SELECT * FROM User WHERE User_ID = ?";
+        const results = await db.query(sql, [userID]);
+        if (results && results.length > 0) {
+          const user = results[0];
+          return new User(
+            user.User_ID,
+            user.Name,
+            user.Role,
+            user.Email_Address,
+            user.Password,
+            user.Address,
+            user.Contact_Number,
+            user.Profile_Image_Path,
+            user.login_status
+          );
         }
+        return null;
       }
 }
 
