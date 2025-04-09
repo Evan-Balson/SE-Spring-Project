@@ -358,16 +358,78 @@ app.get("/order-history", function(req, res){
     
 });
 
+
 // Create a route for add outfit advice - /
 app.get("/outfit-advice", function(req, res){
     activeUser =  req.session.activeUser || activeUser;
 
     if(activeUser.login_Status){
-        res.render("outfit-advice",{title:'Fashion Advice'});
+        res.render("chatBot/chatBot",{title:'Fashion Advice'});
     }
     else{
         res.render("login",{title:'Login', referencePage: 'outfit-advice' });}
 
+});
+
+app.post('/chat', async (req, res) => {
+    const userMessage = req.body.message || '';
+  
+    try {
+      // 1) Get the GPT response (text or JSON array) by calling a helper function
+      //    that uses the system prompt logic.
+      const gptReply = await processUserMessage(
+        userMessage,
+        aboutCompany,      // the string describing your platform & user stories
+        termsAndConditions // your T&C string
+      );
+  
+      // 2) Attempt to parse the GPT reply as JSON array => outfit search
+      let categories;
+      let isOutfitSearch = false;
+      try {
+        categories = JSON.parse(gptReply);
+        if (Array.isArray(categories)) {
+          isOutfitSearch = true;
+        }
+      } catch (err) {
+        // If parsing fails, it's probably a text reply (FAQ, greeting, or "don't know")
+      }
+  
+      // 3) If it’s an outfit search, run DB queries to find matching inventory
+      if (isOutfitSearch) {
+        // Build SQL queries from the categories
+        const sqlStatements = getSQLStatementsFromKeywords(categories);
+        console.log(sqlStatements);
+        let inventoryMatches = [];
+  
+        for (const sql of sqlStatements) {
+          try {
+            const rows = await db.query(sql);
+            inventoryMatches = inventoryMatches.concat(
+              rows.map((r) => r.Inventory_ID)
+            );
+            console.log(inventoryMatches);
+          } catch (err) {
+            console.error('SQL error:', err);
+          }
+        }
+  
+        // Remove duplicates
+        //const uniqueMatches = [...new Set(inventoryMatches)];
+  
+        // Return found items
+        return res.json({
+          reply: `Here are matched outfits for your request: ${JSON.stringify(inventoryMatches)}`,
+          outfitIDs: inventoryMatches,
+        });
+      }
+  
+      // 4) Otherwise, just return the text from GPT (greetings, T&C, or "Sorry, I don't know")
+      return res.json({ reply: gptReply });
+    } catch (err) {
+      console.error('Error in /chat route:', err);
+      return res.status(500).json({ error: err.message });
+    }
 });
 
 app.get("/inspect-items", function(req, res){
@@ -436,71 +498,7 @@ app.get("/redirect/:redirectLocation/:msg", async (req, res) => {
     res.render("redirect-page", { redirectUrl, redirectLocation,msg });
 });
 
-app.get('/chat', async (req, res) => {
-    res.render("chatBot/chatBot");
-});
-
-app.post('/chat', async (req, res) => {
-    const userMessage = req.body.message || '';
-  
-    try {
-      // 1) Get the GPT response (text or JSON array) by calling a helper function
-      //    that uses the system prompt logic.
-      const gptReply = await processUserMessage(
-        userMessage,
-        aboutCompany,      // the string describing your platform & user stories
-        termsAndConditions // your T&C string
-      );
-  
-      // 2) Attempt to parse the GPT reply as JSON array => outfit search
-      let categories;
-      let isOutfitSearch = false;
-      try {
-        categories = JSON.parse(gptReply);
-        if (Array.isArray(categories)) {
-          isOutfitSearch = true;
-        }
-      } catch (err) {
-        // If parsing fails, it's probably a text reply (FAQ, greeting, or "don't know")
-      }
-  
-      // 3) If it’s an outfit search, run DB queries to find matching inventory
-      if (isOutfitSearch) {
-        // Build SQL queries from the categories
-        const sqlStatements = getSQLStatementsFromKeywords(categories);
-        console.log(sqlStatements);
-        let inventoryMatches = [];
-  
-        for (const sql of sqlStatements) {
-          try {
-            const rows = await db.query(sql);
-            inventoryMatches = inventoryMatches.concat(
-              rows.map((r) => r.Inventory_ID)
-            );
-            console.log(inventoryMatches);
-          } catch (err) {
-            console.error('SQL error:', err);
-          }
-        }
-  
-        // Remove duplicates
-        //const uniqueMatches = [...new Set(inventoryMatches)];
-  
-        // Return found items
-        return res.json({
-          reply: `Here are matched outfits for your request: ${JSON.stringify(inventoryMatches)}`,
-          outfitIDs: inventoryMatches,
-        });
-      }
-  
-      // 4) Otherwise, just return the text from GPT (greetings, T&C, or "Sorry, I don't know")
-      return res.json({ reply: gptReply });
-    } catch (err) {
-      console.error('Error in /chat route:', err);
-      return res.status(500).json({ error: err.message });
-    }
-});
-  
+ 
 
 
 /*
