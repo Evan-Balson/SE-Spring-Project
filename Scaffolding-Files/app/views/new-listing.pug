@@ -1,0 +1,103 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel='stylesheet', href="/css/new-listing.css")
+
+
+block content
+  .container
+    h6(class="h6") Add New Listing
+
+    form(action="/new-listing", method="post", enctype="multipart/form-data").item-details-form
+      .form-layout
+        // Left Section (Image Upload)
+        .left-section
+          label.image-upload-box(for="imageUpload")
+            input#imageUpload(type="file", name="image", accept="image/*", required)
+            span Upload Image
+
+        // Middle Section (Product Details)
+        .middle-section
+          .form-group
+            label(for="name") Name of Product
+            input#name(type="text", name="name", required)
+
+          .form-group
+            label(for="price") Price
+            input#price(type="number", name="price", min="0", required)
+
+          .form-group
+            label(for="colors") Colors
+            .color-options
+              each color in ["red", "blue", "green", "yellow", "black", "white", "pink", "purple", "orange", "gray"]
+                label.color-button(style=`background-color:${color}`)
+                  input(type="radio", name="colors", value=color, required)
+                  span 
+
+          .form-group
+            label(for="size") Size
+            .size-options
+              each size in ["XS", "S", "M", "L", "XL", "XXL", "XXXL"]
+                label.size-button
+                  input(type="radio", name="size", value=size, required)
+                  span= size
+          
+          .form-group
+            label(for="quantity") Quantity
+            input#quantity(type="number", name="quantity", min="0", required)
+
+          .form-group
+            label(for="condition") Condition Level
+            input#condition(type="number", name="condition", min="1", max="10", required)
+
+          .form-groups
+            label(for="categories") Categories / Tags
+            input#categories(type="text", name="categories", placeholder=" Enter categories separated by a comma")
+
+      // Description Field (Below other fields)
+      .form-group.description-box
+        label(for="description") More Description
+        textarea#description(name="description", required, maxlength="250", placeholder=" Max 250 characters")
+
+      .submit-btn-container
+        button(type="submit") Post Item to Store
+  
+    // Inline JavaScript for Image Preview
+    script.
+      document.getElementById("imageUpload").addEventListener("change", function (event) {
+        const fileInput = event.target;
+        const uploadBox = document.querySelector(".image-upload-box");
+        const placeholderText = uploadBox.querySelector("span");
+
+        // Check if a file is selected
+        if (fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+
+          // If the file is an image, display it
+          if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              // Remove the placeholder text
+              placeholderText.style.display = "none";
+
+              // Add the image to the upload box
+              let img = uploadBox.querySelector("img");
+              if (!img) {
+                img = document.createElement("img");
+                uploadBox.appendChild(img);
+              }
+              img.src = e.target.result;
+              img.style.display = "block"; // Show the image
+            };
+            reader.readAsDataURL(file);
+          } else {
+            // If the file is not an image, reset the upload box
+            placeholderText.style.display = "block";
+            const img = uploadBox.querySelector("img");
+            if (img) {
+              img.style.display = "none";
+            }
+            alert("Please upload a valid image file.");
+          }
+        }
+      });

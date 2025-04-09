@@ -1,0 +1,175 @@
+/* Global Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  background: url('/images/FitXChange bg3.png');
+  background-size:auto;
+  background-position: center;
+
+}
+
+/* Create an overlay with a semi-transparent gradient */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: -25%;
+  left: 0;
+  background: linear-gradient(30deg, rgba(211, 211, 211, 0.8), rgba(255, 255, 255, 0.8));
+  z-index: -1; /* Place behind the body content */
+}
+
+/* Cart Header */
+.cartHeader {
+  justify-self: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Cart Container with a soft gradient background */
+.cart-container {
+  width: 80%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #f9f9f9, #eaeaea);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Cart Item Style */
+.cart-item {
+  display: grid;
+  grid-template-columns: 40% 2fr;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid #e6e6e6;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cart-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Image in Cart Item */
+.cart-img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+/* Item Information */
+.item-info h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.item-info p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Action Links */
+.item-actions, .item-actions2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.item-actions a, .item-actions2 a {
+  color: #0056b3;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.item-actions a:hover, .item-actions2 a:hover {
+  color: #003b80;
+  text-decoration: underline;
+}
+
+/* Navigation for any lists, if needed */
+nav ul {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  justify-content: space-between;
+}
+
+nav ul li {
+  margin-right: 20px;
+}
+
+/* Checkout Button: positioned at the bottom */
+.checkout-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+
+button {
+  padding: 10px 20px;
+  background-color: #004544;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.03);
+}
+
+/* Optional: If you have specific classes for product view / removal actions */
+.view-product {
+  text-align: right;
+}
+
+.remove-item {
+  text-align: left;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 720px) {
+  .cart-container {
+    width: 90%;
+    padding: 15px;
+  }
+  
+  .cart-item {
+    grid-template-columns: 1fr; /* Stack image on top of details */
+    text-align: center;
+  }
+  
+  .cart-img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .item-info,
+  .item-actions {
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .checkout-button {
+    justify-content: center;
+  }
+}

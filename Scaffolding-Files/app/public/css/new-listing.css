@@ -1,0 +1,270 @@
+.container {
+  width: 80%;
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: rgba(239, 239, 239, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+
+body {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  /* Using "cover" instead of "fill" and setting min-height to 100vh */
+  background: url('/images/FitXChange bg.png') center center no-repeat;
+  background-size: cover;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Create an overlay with a semi-transparent gradient */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 25%;
+  left: 0;
+  background: linear-gradient(30deg, rgba(211, 211, 211, 0.8), rgba(255, 255, 255, 0.8));
+  z-index: -1;
+}
+
+
+.h6 {
+  font: bold 2.5rem 'Palatino', serif;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* --- Three Column Layout --- */
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Left and middle, description below */
+  gap: 20px;
+  align-items: start;
+  font: 1rem 'Calibri MS', sans-serif;
+}
+
+/* Image Upload Box */
+.left-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* Image Upload Box */
+.image-upload-box {
+  width: 100%;
+  max-width: 360px;
+  height: 400px;
+  border: 2px dashed #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Make the entire box clickable */
+  background-color: #f0f0f0;
+  text-align: center;
+  position: relative;
+  overflow: hidden; /* Prevent overflow of image */
+}
+
+.image-upload-box:hover {
+  background-color: #e0e0e0;
+}
+
+.image-upload-box span {
+  font-family: 'Calbri MS', sans-serif;
+  font-size: 16px;
+  color: #666;
+  position: absolute;
+  z-index: 1; /* Ensure text is above the input */
+}
+
+.image-upload-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Ensure the image fits within the box */
+  border-radius: 3px;
+  position: absolute; /* Position the image inside the box */
+  z-index: 0; /* Ensure it stays below the text */
+  display: none; /* Hide the image by default */
+}
+
+.image-upload-box input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Make the input invisible */
+  cursor: pointer; /* Ensure the cursor changes to pointer */
+}
+
+/* Product Form */
+.form-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px 0px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="radio"] {
+  position: absolute; /* Remove from the normal document flow */
+  opacity: 0; /* Make them invisible */
+  pointer-events: none; /* Prevent interaction directly with the radio button */
+}
+
+
+/* Colors & Sizes - Button Styles */
+.color-options, .size-options {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Color Buttons */
+.color-button {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s, border 0.2s;
+  position: relative; /* Ensure proper positioning for the span */
+  box-sizing: border-box; /* Include padding and border in width/height calculations */
+}
+
+.color-button span {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+  box-sizing: border-box; /* Ensure the span maintains its circular shape */
+}
+
+.color-button:hover span,
+.color-button input:checked + span {
+  transform: scale(1.1);
+  border: 3px solid #ffffffa9; /* White border for better visibility on black */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Optional: Add a shadow for emphasis */
+}
+
+/* Ensure the outline remains circular */
+.color-button input:checked + span {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%; /* Maintain circular shape */
+  box-sizing: border-box; /* Ensure consistent sizing */
+}
+
+/* Size Buttons */
+.size-button {
+  padding: 0; /* Remove default padding */
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: #000;
+  width: 50px; /* Adjust as needed */
+  height: 40px; /* Adjust as needed */
+}
+
+.size-button span {
+  display: flex;
+  border: #bebebe solid 2px;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hover Effect */
+.size-button:hover span {
+  transform: scale(1.1);
+  border: 2px solid #222;
+  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Selected State */
+.size-button input:checked + span {
+  border: 2px solid #222;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+}
+
+/* Remove border from label */
+.size-button {
+  border: none;
+}
+
+  /* Description Box */
+.description-box {
+  width: 100%;
+}
+
+textarea {
+  height: 120px;
+  resize: none;
+}
+
+/* Submit Button */
+.submit-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #004544;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Fixes */
+@media screen and (max-width: 1024px) {
+  .container {
+      width: 90%;
+  }
+
+  .form-layout {
+      grid-template-columns: 1fr; /* Stack sections */
+      gap: 20px;
+  }
+
+  .left-section, .middle-section {
+      width: 100%;
+      align-items: center;
+  }
+
+  .image-upload-box {
+      width: 90%;
+      max-width: 300px;
+  }
+}

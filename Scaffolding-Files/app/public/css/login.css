@@ -1,0 +1,105 @@
+.login-page {
+  justify-content: center;
+  display: flex;
+  margin-top: 3%;
+
+}
+
+body {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  background: url('/images/FitXChange bg3.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Create an overlay with a semi-transparent gradient */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(30deg, rgba(211, 211, 211, 0.8), rgba(255, 255, 255, 0.8));
+  z-index: -1; /* Place behind the body content */
+}
+
+.message {
+  justify-content: center;
+  display: flex;
+
+}
+
+  .login-container {
+    margin-top: 3%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 300px;
+  }
+  
+  h1 {
+    color: #333;
+    text-align: center;
+  }
+  
+  .form-group {
+    position: relative;
+    margin-bottom: 15px;
+  }
+  
+  input[type="email"],
+  input[type="password"] {
+    width: 93%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .form-checkbox {
+    margin: 20px 0;
+  }
+  
+  .login-button {
+    background-color: #004544; /* Pink color */
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    
+  }
+  
+  .login-button:hover {
+    background-color: #00918f; /* Darker pink */
+  }
+
+  .new-account-link {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    font-size: 14px; 
+    color: #004544; 
+    text-decoration: none;
+  }
+  
+  .new-account-Link:hover {
+    text-decoration: underline; /* Underline on hover for clarity */
+    color: #00918f; /* Darker color on hover */
+  }
+
+  .signup{
+    padding-top: 5%;
+  }
+  

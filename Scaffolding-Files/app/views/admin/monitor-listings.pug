@@ -1,0 +1,34 @@
+extends ../default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/admin.css")
+
+block content
+  h1 Monitor Listings
+  if outfits.length > 0
+    table(border="1", class="monitor-listings-table")
+      thead
+        tr
+          th Outfit ID
+          th Name
+          th Price
+          th Quantity
+          th Color
+          th Size
+          th Description
+          th Actions
+      tbody
+        each outfit in outfits
+          tr
+            td #{outfit.Inventory_ID}
+            td #{outfit.Name}
+            td $#{outfit.Price.toFixed(2)}
+            td #{outfit.Quantity}
+            td #{outfit.Color}
+            td #{outfit.Size}
+            td #{outfit.Description}
+            td
+              form(action=`/admin/monitor-listings/remove/${outfit.Inventory_ID}`, method="POST", style="display:inline")
+                button(type="submit", class="reject-btn") Remove
+  else
+    p No outfits found.

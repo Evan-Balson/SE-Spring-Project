@@ -1,0 +1,38 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/favourites.css")
+
+block content
+  .favourites-container
+    if (outfits && outfits.length > 0)
+      h1 You have #{outfits.length} Saved Outfits
+      .sort-by
+        form(method="POST", action="/favourites")
+          select(name="sortOrder")
+            option(value=null) Filter
+            option(value="newest") Newest to Oldest
+            option(value="oldest") Oldest to Newest
+          button(type="submit") Go
+
+      .outfits-grid
+        each outfit in outfits
+          .outfit-card
+            .card-image(onclick=`window.location.href='/outfit-listing/${outfit.Inventory_ID}'`)
+              img(src=outfit.Product_Image_Path alt=outfit.Name)
+            .card-content(onclick=`window.location.href='/outfit-listing/${outfit.Inventory_ID}'`)
+              h3= outfit.Name
+              p.date-saved Date saved: #{outfit.Date_Added}
+              p.description= outfit.Description
+            .card-actions
+              a(href=`/remove-outfit/${outfit.Inventory_ID}`)
+                button.remove Remove
+    else
+      h1 You don't have any Saved Outfits
+      .sort-by
+        form(method="POST", action="/favourites")
+          select(name="sortOrder")
+            option(value=null) Filter
+            option(value="newest") Newest to Oldest
+            option(value="oldest") Oldest to Newest
+          button(type="submit") Go
