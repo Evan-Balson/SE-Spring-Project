@@ -343,6 +343,16 @@ table.inventory-table button.remove:hover {
   background: #cc0000;
 }
 
+.admin-link {
+  margin-left: 10px; /* space between email and link */
+  color: #007bff; /* link color */
+  text-decoration: none; /* no underline */
+}
+
+.admin-link:hover {
+  text-decoration: underline; /* underline on hover */
+}
+
 
 /* Responsive Adjustments */
 @media (max-width: 900px) {

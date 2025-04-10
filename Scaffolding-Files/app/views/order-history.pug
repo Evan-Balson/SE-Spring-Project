@@ -7,17 +7,18 @@ block content
   .container
     h1 Your Order History
     
-    .filter-container
-      label Sort by:
-      select(name="sortOrder")
-        option(value="3") Past three months
-        option(value="6") Past six months
-        option(value="12") Past twelve months
-        option(value="24") Past twenty-four months
-
-    .search-container
-      input(type="search", placeholder="Search all orders")
-      button(type="submit") Search Orders
+    form(method="POST", action="/order-history")
+      .filter-container
+        label Sort by:
+        select(name="sortOrder")
+          option(value="*" selected=(!sortOrder || sortOrder=='*')) All
+          option(value="3" selected=sortOrder=='3') Past three months
+          option(value="6" selected=sortOrder=='6') Past six months
+          option(value="12" selected=sortOrder=='12') Past twelve months
+          option(value="24" selected=sortOrder=='24') Past twenty-four months
+      .search-container
+        input(type="search", name="search", placeholder="Search all orders", value=searchQuery)
+        button(type="submit") Search Orders
 
     if orders.length > 0
       each order in orders
