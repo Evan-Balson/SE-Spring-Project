@@ -1,37 +1,39 @@
-const db = require ('./db')
-const {Cart} = require ('../models/Cart');
+const db = require('../services/db');
+const { Cart } = require('../models/Cart');
+const { Transaction } = require('../models/Transaction');
+confirmDeliveryPage: async (req, res) => {
+    try {
+        const transactionId = req.session.transactionId;
+        const userId = req.session.activeUser?.userID;
 
-// checkoutController.js
-const checkoutController = {
-    getCheckout: async (req, res) => {
-        try {
-            const userId = req.session.activeUser.userID;
-            console.log("Checkout User ID:", userId); // Add this line
-            console.log("Session Data: ", req.session); //Add this line
+        if (!transactionId || !userId) return res.redirect('/checkout');
 
-            if (!userId) {
-                return res.redirect('/login');
-            }
-            const cartItems = await Cart.getCartItems(userId);
-            console.log("Checkout Cart Items: ", cartItems); // add this line.
-            res.render('checkout', { title: 'Checkout', cartItems });
-        } catch (error) {
-            console.error('Error fetching checkout items: ', error);
-            res.status(500).send('Internal Server Error');
-        }
-    },
-    processCheckout: async (req, res) => {
-        try {
-            const userId = req.session.activeUser.userID;
-            if(!userId) {
-                return res.redirect('/login');
-            }
-            res.send('Checkout processed successfully!');
-        } catch (error) {
-            console.error('Error processing checkout:', error);
-            res.status(500).send('Internal Server Error');
-        }
-    },
-     
-};
-module.exports = checkoutController;
+        // Get cart items and ensure values are numeric
+        const cartItems = req.session.cartItems || [];
+        let deliveryCost = parseFloat(req.session.deliveryCost || 5);  // Ensure deliveryCost is a number
+        let totalAmount = parseFloat(req.session.totalAmount);  // Ensure totalAmount is a number
+        let subtotal = parseFloat(req.session.subtotal);  // Ensure subtotal is a number
+
+        // Log the values to check their types
+        console.log("Delivery Cost:", deliveryCost);  // Should be a number
+        console.log("Total Amount:", totalAmount);  // Should be a number
+        console.log("Subtotal:", subtotal);  // Should be a number
+
+        // Handle case where one or more values may be NaN or invalid
+        if (isNaN(deliveryCost)) deliveryCost = 0;
+        if (isNaN(totalAmount)) totalAmount = 0;
+        if (isNaN(subtotal)) subtotal = 0;
+
+        res.render('delivery', {
+            title: 'Confirm Delivery',
+            transactionId,
+            cartItems,
+            deliveryCost,
+            totalAmount,
+            subtotal,
+        });
+    } catch (error) {
+        console.error('Error showing delivery page:', error);
+        res.status(500).send('Internal server error.');
+    }
+}
