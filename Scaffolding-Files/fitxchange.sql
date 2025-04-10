@@ -203,11 +203,11 @@ INSERT INTO Category (Category_ID, Category_Name) VALUES
 
 -- Insert data into Inventory table with product image path
 INSERT INTO Inventory (Inventory_ID, Price, Availability, Quantity, Name, Color, Size, Description, Condition_Level, User_ID, Product_Image_Path) VALUES
-('I001', 120.00, TRUE, 10, 'Blazer', 'Grey', '16', 'Neat structured fit, soft cotton fabric and single button fastening', 10, 'U001', '../images/dress.jpeg'),
-('I002', 250.00, FALSE, 0, 'Suit', 'Beige', '12', 'Front pocket', 10, 'U002', '../images/dress.jpeg'),
-('I003', 75.00, TRUE, 5, 'Jacket', 'Grey', '10 UK', 'There is a small cut in the left bottom corner of jacket. It’s hardly visible', 5, 'U003', '../images/dress.jpeg'),
-('I004', 300.00, TRUE, 3, 'Coat', 'Green', '46_R UK', 'Graphic design and dynamic elegance, two side welt pockets', 5, 'U004', '../images/dress.jpeg'),
-('I005', 150.00, TRUE, 4, 'Jacket', 'Green', '12 UK', 'One-button single-breasted closure. Two front welt pockets. Decorative striped detail on sleeves', 10, 'U005', '../images/dress.jpeg'),
+('I001', 120.00, TRUE, 10, 'Blazer', 'Grey', '16', 'Neat structured fit, soft cotton fabric and single button fastening', 10, 'U001', '../images/blazer1.jpg'),
+('I002', 250.00, FALSE, 0, 'Suit', 'Beige', '12', 'Front pocket', 10, 'U002', '../images/suit1.jpg'),
+('I003', 75.00, TRUE, 5, 'Jacket', 'Grey', '10 UK', 'There is a small cut in the left bottom corner of jacket. It’s hardly visible', 5, 'U003', '../images/jacket1.jpg'),
+('I004', 300.00, TRUE, 3, 'Coat', 'Green', '46_R UK', 'Graphic design and dynamic elegance, two side welt pockets', 5, 'U004', '../images/coat1.jpeg'),
+('I005', 150.00, TRUE, 4, 'Jacket', 'Green', '12 UK', 'One-button single-breasted closure. Two front welt pockets. Decorative striped detail on sleeves', 10, 'U005', '../images/jacket2.jpg'),
 ('I006', 90.00, TRUE, 7, 'Cardigan', 'Navy blue', '44 UK', 'Fabric: 100% cashmere', 5, 'U006', '../images/dress.jpeg'),
 ('I007', 110.00, TRUE, 6, 'Jacket', 'Blue', '44_R UK', 'Two-buttoned jacket, two patch pockets', 5, 'U007', '../images/dress.jpeg'),
 ('I008', 50.00, TRUE, 8, 'Trousers', 'Blue', '40_R UK', 'Elasticated waist, two side pockets, zip closure', 5, 'U008', '../images/dress.jpeg'),

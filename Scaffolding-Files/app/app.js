@@ -208,7 +208,7 @@ app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
 app.post("/new-listing", upload.single('image'), listingController.submitListing);
-/*
+
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
     activeUser =  req.session.activeUser || activeUser;
@@ -230,7 +230,7 @@ app.get("/cart", async function(req, res) {
         res.render("login", { title: 'Login', referencePage: 'cart' });
     }
 });
-*/
+
 
 // View cart page
 app.get('/cart', ensureLoggedIn, cartController.viewCart);
@@ -283,7 +283,7 @@ app.get('/remove/:cartId', async (req, res) => {
 });
 
 // Create a route for checkout listing - /checkout
-app.get("/checkout", checkoutController.getCheckoutPage);
+app.get("/checkout", checkoutController.getCheckout);
 
 
 // app.post("/checkout", checkoutController.processCheckout);
