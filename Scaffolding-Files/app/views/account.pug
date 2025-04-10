@@ -16,7 +16,10 @@ block content
               img(src='/images/default-profile.png', alt=user.userName)
           .basic-info
             h1= user.userName
-            p.small-info User ID: #{user.userID} | Email: #{user.userEmail}
+             p.small-info
+              | User ID: #{user.userID} | Email: #{user.userEmail}
+              if user.userRole === 'admin'
+                a(href='/admin/admin', class='admin-link') Admin Dashboard
         .profile-image-update
           form(action="/account/update-profile-image", method="post", enctype="multipart/form-data")
             label.upload-label(for="profilePhoto") Upload Profile Photo
@@ -61,7 +64,7 @@ block content
 
       // Column 3: Watch List
       .dashboard-column.watchlist
-        h2 Watch List
+        h2 Wish List
         .favorites-grid
           each fav in favorites || []
             .favorite-card(onclick=`window.location.href='/outfit-listing/${fav.inventoryID}'`)

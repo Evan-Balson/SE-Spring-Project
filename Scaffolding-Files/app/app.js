@@ -76,11 +76,14 @@ const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
 const accountController = require('./controllers/accountController');
+const checkoutController = require('./controllers/checkoutController');
 
 // Get the models
 const { User } = require("./models/User");
 const { category } = require("./models/category");
-const {Cart} = require("./models/Cart");
+const Cart = require("./models/Cart");
+const {Inventory} = require("./models/Inventory");
+const {Transaction} = require("./models/Transaction");
 
 const about = require("./chatBot/aboutFitxchange");
 
@@ -207,7 +210,7 @@ app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
 app.post("/new-listing", upload.single('image'), listingController.submitListing);
-
+/*
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
     activeUser =  req.session.activeUser || activeUser;
@@ -229,26 +232,27 @@ app.get("/cart", async function(req, res) {
         res.render("login", { title: 'Login', referencePage: 'cart' });
     }
 });
+*/
 
-app.get("/cart", cartController.viewCart);
-app.delete("/cart/:cartId", cartController.deleteCartItem);
+// View cart page
+app.get('/cart', ensureLoggedIn, cartController.viewCart);
 
-app.get('/cart/add', async (req, res) => {
-    const inventoryId = req.query.inventoryId;
-    const userId = req.session.activeUser.userID; // Get the user ID from the session
-  
-    try {
-      await Cart.addToCart(userId, inventoryId); // Add the item to the cart
-      res.redirect('/cart'); // Redirect to the cart page
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      res.status(500).send('Error adding to cart');
-    }
-  });
+// Delete a single item from the cart
+app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.deleteCartItem);
 
-app.get("/outfit-listing/:id", (req, res)=> {
-    OutfitListingController.showOutfitListing(req, res);
-})
+// Add item to cart
+app.post('/cart/add', ensureLoggedIn, cartController.addToCart);
+
+// Route for adding to favorites (POST request)
+app.post('/favourites/add', ensureLoggedIn, favouritesController.addToFavourites);
+
+// Route for viewing favorites (GET request)
+app.get('/favourites', ensureLoggedIn, favouritesController.filterSavedItems);
+
+// Route for removing from favorites (GET or DELETE request, depending on your preference)
+app.get('/favourites/remove/:id', ensureLoggedIn, favouritesController.removeFromFavourites);
+// app.delete('/favourites/remove/:id', ensureLoggedIn, favouritesController.removeFromFavourites);
+
 // Create a route for outfit details -/
 app.get('/Outfit/:orderId', async (req, res) => {
     const orderId = req.params.orderId; // Get the order ID from the URL parameter
@@ -280,24 +284,11 @@ app.get('/remove/:cartId', async (req, res) => {
     }
 });
 
-// Create a route for checkout lising - /
-app.get("/checkout", async function(req, res) {
+// Create a route for checkout listing - /checkout
+app.get("/checkout", checkoutController.getCheckoutPage);
 
-    activeUser =  req.session.activeUser || activeUser;
-   
-    const cartItems = await Cart.getCartItems(activeUser.userID); 
 
-    console.log(cartItems);
-  
-    if(activeUser.login_Status){
-        res.render("checkout",{title:'Checkout', cartItems});
-    }
-    else{
-        res.render("login",{title:'Login', referencePage: 'checkout' });}
-    
-});
-
-//app.post("/checkout", cartController.processCheckout);
+// app.post("/checkout", checkoutController.processCheckout);
 
 
 
@@ -327,111 +318,166 @@ app.get("/register", async function(req, res){
 app.post("/register", upload.single('image'), registrationController.registerUser);
 
 
-// Create a route for add order history - /
-app.get("/order-history", function(req, res){
-    activeUser =  req.session.activeUser || activeUser;
-    const orders = [
-    {
-        itemName: 'Casual Tee',
-        image: '/images/dress.jpeg',
-        description: 'Comfortable and stylish',
-        orderDate: '2023-09-01',
-        dispatchTo: 'User Address',
-        penalty: 5.00
-    },
-    {
-        itemName: 'Summer Dress',
-        image: '/images/dress.jpeg',
-        description: 'Perfect for summer outings',
-        orderDate: '2023-09-02',
-        dispatchTo: 'User Address',
-        penalty: 10.00
-    }
-];
-
-    if(activeUser.login_Status){
-        res.render("order-history",{title:'My Orders', orders});
-    }
-    else{
-        res.render("login",{title:'Login', referencePage: 'order-history' });}
-    
-    
+// Create a route for order history (GET)
+app.get("/order-history", async function(req, res) {  
+  activeUser = req.session.activeUser || activeUser
+  if (activeUser.login_Status) {
+    console.log(activeUser);
+      // Use "*" as default sort order, which the model converts to a default period (e.g., 12 months)
+      const orders = await Transaction.getAllTransactions(activeUser.userID, "*");
+      console.log(orders);
+      res.render("order-history", { title: 'My Orders', orders, sortOrder: "*", searchQuery: "" });
+  } else {
+      res.render("login", { title: 'Login', referencePage: 'order-history' });
+  }
 });
+
+// Create a route for order history filtering/search (POST)
+app.post("/order-history", async function(req, res) {
+  // Get filter parameters from form; default sortOrder is "*"
+  const sortOrder = req.body.sortOrder || "*";
+  const searchString = req.body.search || "";
+  
+  let orders;
+  if (searchString.trim() === "") {
+      // No search string; show all orders for the period, using the provided sortOrder
+      orders = await Transaction.getAllTransactions(activeUser.userID, sortOrder);
+  } else {
+      // Perform a search on description and category name
+      orders = await Transaction.searchTransactions(activeUser.userID, sortOrder, searchString);
+  }
+
+  res.render("order-history", { title: 'My Orders', orders, sortOrder, searchQuery: searchString });
+});
+
 
 
 // Create a route for add outfit advice - /
 app.get("/outfit-advice", function(req, res){
-    activeUser =  req.session.activeUser || activeUser;
+    activeUser = req.session.activeUser || activeUser;
+  
+    if(activeUser.login_Status) {
+      const history = req.session.chatHistory || [];
+      const now = new Date();
+      const lastSeen = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    if(activeUser.login_Status){
-        res.render("chatBot/chatBot",{title:'Fashion Advice'});
+      res.render("chatBot/chatBot", {
+        title: 'Fashion Advice',
+        conversation: history,
+        activeUser: activeUser,
+        lastSeen: lastSeen
+      });
     }
-    else{
-        res.render("login",{title:'Login', referencePage: 'outfit-advice' });}
-
-});
-
+    else {
+      res.render("login", {
+        title:'Login',
+        referencePage: 'outfit-advice'
+      });
+    }
+  });
+  
+// POST route for the chat bot (outfit advice)
 app.post('/chat', async (req, res) => {
-    const userMessage = req.body.message || '';
-  
+  const userMessage = req.body.message || '';
+
+  // Ensure we have a chatHistory array in session
+  if (!req.session.chatHistory) {
+    req.session.chatHistory = [];
+  }
+
+  // Store user's message in session with a timestamp
+  req.session.chatHistory.push({
+    speaker: 'user',
+    text: userMessage,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  });
+
+  try {
+    // Get GPT or NLP response
+    const gptReply = await processUserMessage(userMessage, aboutCompany, termsAndConditions);
+
+    // Attempt to parse GPT reply as JSON (for outfit search)
+    let categories;
+    let isOutfitSearch = false;
     try {
-      // 1) Get the GPT response (text or JSON array) by calling a helper function
-      //    that uses the system prompt logic.
-      const gptReply = await processUserMessage(
-        userMessage,
-        aboutCompany,      // the string describing your platform & user stories
-        termsAndConditions // your T&C string
-      );
-  
-      // 2) Attempt to parse the GPT reply as JSON array => outfit search
-      let categories;
-      let isOutfitSearch = false;
-      try {
-        categories = JSON.parse(gptReply);
-        if (Array.isArray(categories)) {
-          isOutfitSearch = true;
-        }
-      } catch (err) {
-        // If parsing fails, it's probably a text reply (FAQ, greeting, or "don't know")
+      categories = JSON.parse(gptReply);
+      if (Array.isArray(categories)) {
+        isOutfitSearch = true;
       }
-  
-      // 3) If it’s an outfit search, run DB queries to find matching inventory
-      if (isOutfitSearch) {
-        // Build SQL queries from the categories
-        const sqlStatements = getSQLStatementsFromKeywords(categories);
-        console.log(sqlStatements);
-        let inventoryMatches = [];
-  
-        for (const sql of sqlStatements) {
-          try {
-            const rows = await db.query(sql);
-            inventoryMatches = inventoryMatches.concat(
-              rows.map((r) => r.Inventory_ID)
-            );
-            console.log(inventoryMatches);
-          } catch (err) {
-            console.error('SQL error:', err);
-          }
-        }
-  
-        // Remove duplicates
-        //const uniqueMatches = [...new Set(inventoryMatches)];
-  
-        // Return found items
-        return res.json({
-          reply: `Here are matched outfits for your request: ${JSON.stringify(inventoryMatches)}`,
-          outfitIDs: inventoryMatches,
-        });
-      }
-  
-      // 4) Otherwise, just return the text from GPT (greetings, T&C, or "Sorry, I don't know")
-      return res.json({ reply: gptReply });
     } catch (err) {
-      console.error('Error in /chat route:', err);
-      return res.status(500).json({ error: err.message });
+      // If parsing fails, we assume it is a normal text response.
     }
+
+    let botReply;
+    let outfitIDs = [];  // This will hold the unique outfit IDs
+
+    if (isOutfitSearch) {
+      // Outfit search: construct SQL queries based on the categories
+      const sqlStatements = getSQLStatementsFromKeywords(categories);
+      let inventoryMatches = [];
+
+      for (const sql of sqlStatements) {
+        const rows = await db.query(sql);
+        inventoryMatches = inventoryMatches.concat(rows.map((r) => r.Inventory_ID));
+      }
+
+      // Remove potential duplicates
+      outfitIDs = [...new Set(inventoryMatches)];
+
+      // Create a friendly bot reply
+      botReply = "Good news! I've found something special for you:";
+
+      // Fetch detailed item info for each matching Inventory_ID
+      let itemDetails = [];
+      for (const id of outfitIDs) {
+        const detailRows = await db.query(`
+          SELECT 
+            Inventory_ID, 
+            Name,
+            Description,
+            Product_Image_Path,
+            Price
+          FROM Inventory
+          WHERE Inventory_ID = '${id}'
+        `);
+        if (detailRows.length > 0) {
+          itemDetails.push(detailRows[0]);  // Grab the first (and assuming only) row
+        }
+      }
+
+      // Store the bot's response (including item details) into session
+      req.session.chatHistory.push({
+        speaker: 'bot',
+        text: botReply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        items: itemDetails  // Attach detailed item info for the client to display
+      });
+
+      // Return the JSON response with the friendly text, outfit IDs, and item details
+      return res.json({
+        reply: botReply,
+        outfitIDs: outfitIDs,
+        items: itemDetails
+      });
+    } else {
+      // Normal text response (non-outfit search)
+      botReply = gptReply;
+      req.session.chatHistory.push({
+        speaker: 'bot',
+        text: botReply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+
+      return res.json({ reply: botReply });
+    }
+  } catch (err) {
+    console.error('Error in /chat route:', err);
+    return res.status(500).json({ error: err.message });
+  }
 });
 
+  
+  
 app.get("/inspect-items", function(req, res){
 
     res.render("admin/inspect-items",{title:'Login'});
@@ -501,7 +547,7 @@ app.get("/redirect/:redirectLocation/:msg", async (req, res) => {
  
 
 
-/*
+
 //admin controller and admin pages
 
 const AdminController = require('./controllers/AdminController'); // Import the AdminController
@@ -546,7 +592,7 @@ app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
-*/
+
 // Start server on port 3000
 
 app.listen(3000,function(){
