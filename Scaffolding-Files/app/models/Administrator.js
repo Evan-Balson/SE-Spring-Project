@@ -121,10 +121,24 @@ class Administrator extends User {
     
     async removeUser(userId) {
         try {
+            // Delete from dependent tables in the correct order
+            await db.query(`DELETE FROM Delivery WHERE Transaction_ID IN (SELECT Transaction_ID FROM Transaction WHERE User_ID = ?);`, [userId]);
+            await db.query(`DELETE FROM Transaction WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Favorites WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Review WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Dispute WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Cart WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Inventory WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Fashion_Advice WHERE User_ID = ?;`, [userId]);
+            await db.query(`DELETE FROM Payment WHERE User_ID = ?;`, [userId]);
+    
+            // Finally, delete the user
             const query = `DELETE FROM User WHERE User_ID = ?;`;
             await db.query(query, [userId]);
+    
+            console.log(`User with ID ${userId} and all related data have been successfully deleted.`);
         } catch (error) {
-            console.error("Error removing user:", error);
+            console.error("Error removing user and related data:", error);
             throw error;
         }
     }
