@@ -1,7 +1,6 @@
+const db = require('./services/db');
 
-
-
-const { Transaction } = require('../models/transaction');
+const { Transaction } = require('../models/Transaction');
 
 
 const transactionController = {
