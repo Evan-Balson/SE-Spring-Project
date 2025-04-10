@@ -52,6 +52,18 @@ const listingController = {
 
       const result = await db.query(inventoryQuery, values);
 
+      // Insert into Inspection table
+      const inspectionQuery = `
+        INSERT INTO Inspection (AUTH_ID, Inventory_ID, Verification_Date, Pass_Status)
+        VALUES (?, ?, ?, ?)
+       `;
+
+      const authId = `A${Date.now()}`; // Generate a unique AUTH_ID
+      const verificationDate = new Date().toISOString().split('T')[0]; // Current date
+      
+      await db.query(inspectionQuery, [authId, inventoryId, verificationDate, 0]);
+
+
       res.render('new-listing', {
         successMessage: `New listing with Inventory ID: ${inventoryId} has been added successfully. See Item Listing.`,
         inventoryId
