@@ -592,7 +592,7 @@ app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
-*/
+
 // Start server on port 3000
 
 app.listen(3000,function(){
