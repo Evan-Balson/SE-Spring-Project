@@ -2,7 +2,6 @@ extends default_web_logged-in_layout.pug
 
 block styles
   link(rel="stylesheet", href="/css/outfit-listing.css")
-  
 
 block content
   .product-div
@@ -13,7 +12,7 @@ block content
           img.thumbnail(src=product.Product_Image_Path, alt=product.Name, onclick='setMainImage(this.src)')
           img.thumbnail(src=product.Product_Image_Path, alt=product.Name, onclick='setMainImage(this.src)')
         img.main-image#mainImage(src=product.Product_Image_Path, alt=product.Name)
-      
+
       .product-info
         h1= product.Name
         h2= product.Inventory_ID
@@ -32,9 +31,68 @@ block content
         p Quantity Available: #{product.Quantity}
 
         .button-container
-          button: a(href=`/cart/add?inventoryId=${product.Inventory_ID}`) Add to Cart
-          button: a(href=`/favourites/add?inventoryId=${product.Inventory_ID}`) Add to Favorites
+          button.add-to-cart-btn(data-inventory-id=product.Inventory_ID) Add to Cart
+          button.add-to-favorites-btn(data-inventory-id=product.Inventory_ID) Add to Favorites
+
   script.
+    async function addItemToCart(inventoryId) {
+      try {
+        const response = await fetch('/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ inventoryId: inventoryId }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          window.alert(data.message);
+        } else {
+          console.error('Error adding to cart:', data.message);
+          // Optionally display an error message in the UI
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+      }
+    }
+
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const inventoryId = button.dataset.inventoryId;
+        addItemToCart(inventoryId);
+      });
+    });
+
+    async function addToFavorites(inventoryId) {
+      try {
+        const response = await fetch('/favourites/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ inventoryId: inventoryId }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          window.alert(data.message); // Display the success message for favorites
+        } else {
+          console.error('Error adding to favorites:', data.message);
+          // Optionally display an error message in the UI
+        }
+      } catch (error) {
+        console.error('Error adding to favorites:', error);
+      }
+    }
+
+    const addToFavoritesButtons = document.querySelectorAll('.add-to-favorites-btn');
+    addToFavoritesButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const inventoryId = button.dataset.inventoryId;
+        addToFavorites(inventoryId);
+      });
+    });
+
     function setMainImage(src) {
       document.getElementById('mainImage').src = src;
     }

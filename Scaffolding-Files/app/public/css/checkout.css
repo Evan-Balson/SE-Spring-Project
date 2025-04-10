@@ -1,101 +1,169 @@
-  .container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background-color: #fff;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f7f6; 
+}
+
+.checkout-container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #083736; 
+}
+
+.checkout-header h1 {
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+
+.checkout-header h2 {
+  font-size: 1.2em;
+  color: #555;
+}
+
+.checkout-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.checkout-item .item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+.checkout-item .item-details {
+  flex-grow: 1;
+}
+
+.checkout-item .item-details h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #083736; 
+  font-size: 1.1em;
+}
+
+.checkout-item .item-details p {
+  margin-bottom: 5px;
+  color: #777;
+  font-size: 0.9em;
+}
+
+.checkout-item hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 15px 0;
+}
+
+.checkout-terms {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  text-align: center;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.checkout-terms .termsOfUseLink {
+  color: #083736;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.checkout-terms .termsOfUseLink:hover {
+  text-decoration: underline;
+}
+
+.checkout-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.checkout-navigation a {
+  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.checkout-navigation .back-button {
+  background-color: #f8f8f8;
+  color: #083736;
+  border: 1px solid #ccc;
+}
+
+.checkout-navigation .back-button:hover {
+  background-color: #eee;
+  border-color: #bbb;
+}
+
+.checkout-navigation .forward-button {
+  background-color: #083736; 
+  color: white;
+  border: 1px solid #083736;
+}
+
+.checkout-navigation .forward-button:hover {
+  background-color: #062a29; 
+  border-color: #062a29;
+}
+
+.checkout-container p {
+  text-align: center;
+  color: #888;
+  font-size: 1em;
+}
+
+
+@media (max-width: 600px) {
+  .checkout-container {
+    margin: 20px;
+    padding: 15px;
   }
 
-  
-  h1 {
-    font-size: 24px;
-    color: #333;
+  .checkout-item {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
   }
-  .cart-header {
-    display: flex;
-    justify-content: space-between; /* Space out the button and heading */
-    align-items: center; /* Vertically align them */
-    margin-bottom: 20px; /* Add some space below */
+
+  .checkout-item .item-image {
+    width: 80px;
+    height: 80px;
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 
-  ul {
-    display: flex; /* Flexbox for the container */
-    align-items: center; /* Centers items vertically */
-    list-style: none;
-    padding: 0px;
-       
-  }
-  
-  li.backLink {
-    text-align: left; 
-    margin-right: auto;
-   }
-   
-  
-  li.buttonlink {
-    text-align: right; /* Align text to the right */
-    justify-self: flex-end; /* Align the item to the flex-end */
+  .checkout-navigation {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  
-  .outfit-item {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+  .checkout-navigation a {
+    margin-bottom: 10px;
   }
-  
-  .outfit-item img {
-    width: 150px;
-    height: auto;
-    border-radius: 4px;
-    margin-right: 20px;
-  }
-  
-  .details {
-    flex-grow: 1;
-  }
-  
-  .details h2, .details p {
-    color: #0056b3;
-    font-size: 16px;
-    margin: 0;
-    color: #666;
-  }
-  
-  .terms {
-    margin-top: 20px;
-    font-size: 13px;
-    color: #666;
-  }
-
-  .termsOfUseLink{
-    margin-left: 7px;
-  }
-  
-  .checkout-button {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  button.agree-button {
-    padding: 10px 20px;
-    background-color: #004544;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button.agree-button:hover {
-    background-color: #0056b3;
-  }
-  
-  @media (max-width: 768px) {
-    .checkout-button{
-      justify-content: center;
-    }
-
-  }
-  
+}

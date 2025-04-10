@@ -1,38 +1,30 @@
 extends default_web_logged-in_layout.pug
 
 block styles
-    link(rel="stylesheet", href="/css/cart.css")  
-
+  link(rel="stylesheet", href="/css/cart.css")
 
 block content
-  .cartHeader
+  .container
     h1 My Cart
-  .cart-container
-    
     if cartItems.length > 0
-      each item in cartItems
-        .cart-item
-          img.cart-img(src=item.image alt=item.name)
+      .cart-items
+        each item in cartItems
+          .cart-item
+            img(src=item.Product_Image_Path, alt=item.name).item-image
+            .item-details
+              h2= item.name
+              p Quantity: #{item.Quantity}
+              p Price: £#{item.price}
+              p Total: £#{(item.price * item.Quantity).toFixed(2)}
+              h3 Total: £#{typeof totalPrice !== 'undefined' ? totalPrice.toFixed(2) : '0.00'}
+              form(action="/cart/borrow", method="POST")
+                input(type="hidden", name="cartId", value=item.Cart_ID)
+                button(type="submit") Borrow One
+              form(action=`/cart/delete/${item.Cart_ID}`, method="POST")
+                button(type="submit") Remove
 
-          .item-info
-            h3 #{item.name}
-            p.description #{item.description}
-            p Order Placed: #{item.orderDate}
-            p Misuse Penalty: £#{item.penalty}
-            p Dispatched to: #{item.dispatchTo}
-            p Delivery Date: #{item.deliveryDate}
-
-            hr.line-separater
-            nav 
-              ul
-                li 
-                  a(href=`/outfit-listing/${item.orderId}`) View product details
-                li 
-                  a(href=`/remove/${item.Cart_ID}`) remove item
-      ul.buttonlink 
-        li    
-          .checkout-button
-          a(href="/checkout")
-            button Go to Checkout
+      .cart-total
+        h3 Total: £#{totalPrice.toFixed(2)}
+        a.checkout-button(href="/checkout") Proceed to Checkout →
     else
-      p Your cart is empty!
+      p Your cart is empty.

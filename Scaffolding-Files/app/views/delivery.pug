@@ -1,0 +1,94 @@
+default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/delivery.css")
+
+block content
+  .delivery-page-container
+    h2 Shipping Information
+
+    .delivery-info
+      p.delivery-charge Please note that a £5.50 delivery charge will be added to your total.
+
+    .delivery-form-container
+      form(action=/payment/${transactionId}, method="POST")
+        .form-group
+          label.required(for="firstName") First name
+          input(type="text", id="firstName", name="firstName", required)
+        .form-group
+          label.required(for="lastName") Last name
+          input(type="text", id="lastName", name="lastName", required)
+        .form-group
+          label.required(for="addressLine1") Address Line 1
+          input(type="text", id="addressLine1", name="addressLine1", required)
+        .form-group
+          label(for="borough") London Borough
+          select(id="borough", name="borough", required)
+            option(value="Barking_and_Dagenham") Barking and Dagenham
+            option(value="Barnet") Barnet
+            option(value="Bexley") Bexley
+            option(value="Brent") Brent
+            option(value="Bromley") Bromley
+            option(value="Camden") Camden
+            option(value="Croydon") Croydon
+            option(value="Ealing") Ealing
+            option(value="Enfield") Enfield
+            option(value="Greenwich") Greenwich
+            option(value="Hackney") Hackney
+            option(value="Hammersmith_and_Fulham") Hammersmith and Fulham
+            option(value="Haringey") Haringey
+            option(value="Harrow") Harrow
+            option(value="Havering") Havering
+            option(value="Hillingdon") Hillingdon
+            option(value="Hounslow") Hounslow
+            option(value="Islington") Islington
+            option(value="Kensington_and_Chelsea") Kensington and Chelsea
+            option(value="Kingston_upon_Thames") Kingston upon Thames
+            option(value="Lambeth") Lambeth
+            option(value="Lewisham") Lewisham
+            option(value="Merton") Merton
+            option(value="Newham") Newham
+            option(value="Redbridge") Redbridge
+            option(value="Richmond_upon_Thames") Richmond upon Thames
+            option(value="Southwark") Southwark
+            option(value="Sutton") Sutton
+            option(value="Tower_Hamlets") Tower Hamlets
+            option(value="Waltham_Forest") Waltham Forest
+            option(value="Wandsworth") Wandsworth
+            option(value="Westminster") Westminster
+        .form-group
+          label(for="postcode") Postcode
+          input(type="text", id="postcode", name="postcode", required)
+        .form-group
+          label(for="preferredDeliveryDate") Preferred Delivery Date
+          input(type="date", id="preferredDeliveryDate", name="preferredDeliveryDate")
+        .form-group
+          label(for="userEmail") Email:
+          input(type="email", name="userEmail", id="userEmail", value=userEmail, readonly)
+        .form-group
+          label.required(for="phone") Phone number
+          input(type="tel", id="phone", name="phone", required)
+        .form-buttons-container
+          button.back-button(type="button", onclick="window.history.back()") ← Back to Checkout
+          a.go-to-payment(href=/payment/${transactionId}) Go to Payment
+
+    .order-summary-container
+      h3 Order Summary
+      .order-items
+        if cartItems && cartItems.length > 0
+          each item in cartItems
+            .item-summary
+              span.item-name #{item.name}
+              span.item-price £#{item.price.toFixed(2)}
+        else
+          p No items in cart.
+      .summary-totals
+        .total-item
+          span Subtotal:
+          span £#{subtotal.toFixed(2)}
+        .total-item
+          span Delivery:
+          span £#{deliveryCost.toFixed(2)}
+        .total-item
+          span Total:
+          span £#{(subtotal + deliveryCost).toFixed(2)}
