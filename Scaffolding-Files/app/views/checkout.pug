@@ -4,28 +4,31 @@ block styles
   link(rel="stylesheet", href="/css/checkout.css")
 
 block content
-  .checkout-container
-    .checkout-header
-      h1 Checkout
-      h2 Total Cost: £#{totalPrice.toFixed(2)}
-
+  .container
+    .cart-header 
+    h1 My Checkout
     if cartItems.length > 0
       each item in cartItems
-        .checkout-item
-          img(src=item.image, alt=item.name).item-image
-          .item-details
-            h3= item.name
-
-            p Price: £#{item.price}
+        .outfit-item
+          img(src=item.image alt=item.name)
+          .details
+            h2= item.name
+            p Description: #{item.description}
+            p Quantity: #{item.quantity}
+            p Misuse Penalty: #{item.penalty !== null && typeof item.penalty === 'number' ? '£' + item.penalty.toFixed(2) : 'N/A'}
             p Order Date: #{item.orderDate}
-          hr
-
-      .checkout-terms
-        p By clicking "Confirm Borrowing", you accept the terms and potential penalties associated with the items.
-        a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
-
-      .checkout-navigation
-        a.back-button(href="/cart") ← Go to Cart
-        a.forward-button(href="/shipping") Shippings →
+            p Delivery Date: #{item.deliveryDate}
+            p Dispatch To: #{item.dispatchTo}
+            hr
+      .terms
+        p By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
+          a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
+        
+        ul
+          li.backLink
+            a.goback-link(href="/cart") ← Return to Cart
+          li.buttonlink     
+            .checkout-button
+              button.agree-button(type="button") Agree and Collect
     else
       p Your cart is empty.

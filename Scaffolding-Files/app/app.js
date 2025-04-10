@@ -76,14 +76,17 @@ const cartController =  require('./controllers/cartController');
 const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
 const accountController = require('./controllers/accountController');
-const checkoutController = require('./controllers/checkoutController');
 
 // Get the models
 const { User } = require("./models/User");
 const { category } = require("./models/category");
+<<<<<<< HEAD
 const Cart = require("./models/Cart");
 const {Inventory} = require("./models/Inventory");
 const {Transaction} = require("./models/Transaction");
+=======
+const {Cart} = require("./models/Cart");
+>>>>>>> parent of 582fe58 (update payment, favourite)
 
 const about = require("./chatBot/aboutFitxchange");
 
@@ -210,7 +213,7 @@ app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
 app.post("/new-listing", upload.single('image'), listingController.submitListing);
-/*
+
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
     activeUser =  req.session.activeUser || activeUser;
@@ -232,27 +235,26 @@ app.get("/cart", async function(req, res) {
         res.render("login", { title: 'Login', referencePage: 'cart' });
     }
 });
-*/
 
-// View cart page
-app.get('/cart', ensureLoggedIn, cartController.viewCart);
+app.get("/cart", cartController.viewCart);
+app.delete("/cart/:cartId", cartController.deleteCartItem);
 
-// Delete a single item from the cart
-app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.deleteCartItem);
+app.get('/cart/add', async (req, res) => {
+    const inventoryId = req.query.inventoryId;
+    const userId = req.session.activeUser.userID; // Get the user ID from the session
+  
+    try {
+      await Cart.addToCart(userId, inventoryId); // Add the item to the cart
+      res.redirect('/cart'); // Redirect to the cart page
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      res.status(500).send('Error adding to cart');
+    }
+  });
 
-// Add item to cart
-app.post('/cart/add', ensureLoggedIn, cartController.addToCart);
-
-// Route for adding to favorites (POST request)
-app.post('/favourites/add', ensureLoggedIn, favouritesController.addToFavourites);
-
-// Route for viewing favorites (GET request)
-app.get('/favourites', ensureLoggedIn, favouritesController.filterSavedItems);
-
-// Route for removing from favorites (GET or DELETE request, depending on your preference)
-app.get('/favourites/remove/:id', ensureLoggedIn, favouritesController.removeFromFavourites);
-// app.delete('/favourites/remove/:id', ensureLoggedIn, favouritesController.removeFromFavourites);
-
+app.get("/outfit-listing/:id", (req, res)=> {
+    OutfitListingController.showOutfitListing(req, res);
+})
 // Create a route for outfit details -/
 app.get('/Outfit/:orderId', async (req, res) => {
     const orderId = req.params.orderId; // Get the order ID from the URL parameter
@@ -284,11 +286,24 @@ app.get('/remove/:cartId', async (req, res) => {
     }
 });
 
-// Create a route for checkout listing - /checkout
-app.get("/checkout", checkoutController.getCheckoutPage);
+// Create a route for checkout lising - /
+app.get("/checkout", async function(req, res) {
 
+    activeUser =  req.session.activeUser || activeUser;
+   
+    const cartItems = await Cart.getCartItems(activeUser.userID); 
 
-// app.post("/checkout", checkoutController.processCheckout);
+    console.log(cartItems);
+  
+    if(activeUser.login_Status){
+        res.render("checkout",{title:'Checkout', cartItems});
+    }
+    else{
+        res.render("login",{title:'Login', referencePage: 'checkout' });}
+    
+});
+
+//app.post("/checkout", cartController.processCheckout);
 
 
 

@@ -19,22 +19,16 @@ const addToFavourites = async (req, res) => {
         } else {
             errorMessage = 'Inventory ID is missing.';
         }
-        return res.status(400).json({ success: false, message: errorMessage });
+
+        return res.status(400).json({ message: errorMessage });
     }
 
     try {
-        // Check if the item is already in favorites for the user
-        const existingFavourite = await favourites.getFavouriteByUserAndInventory(userId, inventoryId);
-
-        if (existingFavourite) {
-            return res.status(409).json({ success: false, message: 'Item is already in your favorites.' });
-        }
-
         await favourites.addToFavourites(userId, inventoryId);
-        res.status(200).json({ success: true, message: 'Item added to favorites successfully.' });
+        res.status(200).json({ message: 'Item added to favorites successfully.' });
     } catch (error) {
         console.error('Error adding item to favorites:', error);
-        res.status(500).json({ success: false, message: 'Failed to add item to favorites.', error: error.message });
+        res.status(500).json({ message: 'Failed to add item to favorites.', error: error.message });
     }
 };
 
@@ -54,6 +48,8 @@ const removeFromFavourites = async (req, res) => {
         const result = await favourites.removeFromFavourites(User_ID, Inventory_ID);
 
         if (result) {
+
+            //res.status(200).json({ message: 'Item removed from favorites.' });
             return res.redirect("/favourites");
         } else {
             return res.status(500).json({ message: 'Failed to remove item from favorites.' });
@@ -63,11 +59,14 @@ const removeFromFavourites = async (req, res) => {
     }
 };
 
+
+
 // Controller to handle filtered viewing saved items for a user
 const filterSavedItems = async (req, res) => {
+
     User_ID = req.session.activeUser.userID;
     const {sortOrder} = req.body
-
+    
     console.log(User_ID);
     if (!User_ID) {
         // If User_ID is not provided, just return null or throw an error
@@ -86,7 +85,7 @@ const filterSavedItems = async (req, res) => {
         // Call the model's function to get saved items
 
         console.log(sortOrder);
-
+        
         return res.render("favourites", { title: 'Favourites', outfits: result });
 
     } catch (error) {
@@ -94,6 +93,7 @@ const filterSavedItems = async (req, res) => {
         console.error('Error fetching saved items:', error.message);
         throw new Error('Error fetching saved items: ' + error.message);
     }
+    
 };
 
 // Export the controller functions
