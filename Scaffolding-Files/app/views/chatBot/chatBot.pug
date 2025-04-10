@@ -1,69 +1,216 @@
 extends ../default_web_logged-in_layout.pug
 
-// Include the external stylesheet in the head block.
-block head
-  link(rel="stylesheet", href="/styles/chat.css")
+block styles
+  link(rel="stylesheet", href="css/chat.css")
 
 block content
-  .chat-container
-    h1 Chat with our Bot
-    // Conversation History Container
-    #chat-history
-      // Messages will be appended here
+  .chat-wrapper
+    // Top bar
+    .chat-header
+      .chat-header-info
+        h2= activeUser.userName
+        p Last seen: #{lastSeen}
+      // Some icons or settings if you'd like
+      .chat-header-actions
+        i.fas.fa-ellipsis-h  Hi I'm HelperBot! 'Not a Robot'
 
-    // Chat Input Form
-    form#chat-form
-      input(type='text', id='message', placeholder='Type your message here', autocomplete='off')
-      button(type='submit') Send
+    // Conversation window
+    .chat-body
+      #chat-history
+        - var chatHistory = history || []
+        each msg in chatHistory
+          .chat-message(class=(msg.speaker === 'user' ? 'user-message' : 'bot-message'))
+            // Avatar
+            .avatar
+              if msg.speaker === 'user'
+                if activeUser.Profile_Image_Path === ''
+                  img(src='/images/user_avatar.png' alt='User')
+                else
+                  img(src=activeUser.Profile_Image_Path, alt='User')
+              else
+                img(src='/images/bot_avatar.png' alt='Bot')
+            // Message content
+            .bubble
+              .bubble-header
+                span.sender-name= (msg.speaker === 'user' ? 'You' : 'Bot')
+                span.timestamp= msg.timestamp
+              p= msg.text
+      // Chat input area
+      form#chat-form
+        input(type='text', id='message', placeholder='Say something...')
+        button(type='submit') Send
 
-  // Client-side JavaScript for handling chat interactions
-  script.
-    // Helper function to append a message to the conversation container.
-    function appendMessage(text, className, includeLink, outfitLinkHTML) {
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('chat-message', className);
-      // If a link should be included along with the text (for outfit IDs).
-      if (includeLink && outfitLinkHTML) {
-        messageDiv.innerHTML = text + ' ' + outfitLinkHTML;
-      } else {
-        messageDiv.textContent = text;
-      }
-      document.getElementById('chat-history').appendChild(messageDiv);
-      // Auto-scroll to the latest message.
-      const chatHistory = document.getElementById('chat-history');
-      chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
+    script.
+      // In your fetch response handling:
+      document.getElementById('chat-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const messageInput = document.getElementById('message');
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
 
-    document.getElementById('chat-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const messageInput = document.getElementById('message');
-      const userMessage = messageInput.value.trim();
-      if (!userMessage) return;
-      
-      // Append user's message to chat history.
-      appendMessage('User: ' + userMessage, 'user-message');
+        // Append user message...
+        appendMessage({ speaker: 'user', text: userMessage });
 
-      // Clear the input for the next message.
-      messageInput.value = '';
+        messageInput.value = '';
 
-      try {
-        const response = await fetch('/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMessage })
-        });
-        const data = await response.json();
+        try {
+          const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+          });
+          const data = await response.json();
 
-        // If the reply includes outfit IDs, add a link to the outfit listing page.
-        if (data.outfitIDs) {
-          const outfitLink = '<a href="/outfit-listing" style="text-decoration:underline;">View Full Outfit Details</a>';
-          appendMessage('Bot: ' + data.reply, 'bot-message', true, outfitLink);
-        } else {
-          // Append normal text response.
-          appendMessage('Bot: ' + data.reply, 'bot-message');
+          // If no items => normal text
+          if (!data.items) {
+            appendMessage({ speaker: 'bot', text: data.reply });
+          } 
+          else {
+            // 1) Append the main reply text
+            appendMessage({ speaker: 'bot', text: data.reply });
+
+            // 2) For each item, create a 'catalog card'
+            data.items.forEach(item => {
+              const itemCard = buildItemCard(item);
+              // This function returns a small DIV or HTML snippet
+              appendHTMLSnippet(itemCard);
+            });
+          }
+        } catch (err) {
+          console.error('Error fetching chat response:', err);
+          appendMessage({ speaker: 'bot', text: 'Oops, something went wrong.' });
         }
-      } catch (error) {
-        console.error('Error fetching chat response:', error);
-        appendMessage('Bot: Sorry, something went wrong.', 'bot-message');
+      });
+
+      // Helper: create the item’s card HTML
+      function buildItemCard(item) {
+        // Example: item = { Inventory_ID, Name, Description, Product_Image_Path, ... }
+
+        return `
+          <div class="catalog-card">
+            <img src="${item.Product_Image_Path}" alt="${item.Name}"/>
+            <h4>${item.Name}</h4>
+            <!-- If your DB has a date field, show it here. E.g. item.Date_Saved -->
+            <p>Date saved: 2024-01-12</p>
+            <p>${item.Description}</p>
+          </div>
+        `;
       }
-    });
+
+      // Helper: append a raw HTML snippet to #chat-history
+      function appendHTMLSnippet(html) {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('bot-catalog-snippet');
+        wrapper.innerHTML = html;
+        document.getElementById('chat-history').appendChild(wrapper);
+
+        // Scroll to bottom
+        const chatHistory = document.getElementById('chat-history');
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      }
+
+      // Example appendMessage function
+      function appendMessage({ speaker, text }) {
+        // Create a new chat bubble for either user or bot
+        const container = document.createElement('div');
+        container.className = 'chat-message ' + (speaker === 'user' ? 'user-message' : 'bot-message');
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = text;
+
+        container.appendChild(bubble);
+        document.getElementById('chat-history').appendChild(container);
+        document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
+      }
+
+    script.
+      
+
+      // Helper function to append message to #chat-history
+      function appendMessage(msg) {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('chat-message', (msg.speaker === 'user' ? 'user-message' : 'bot-message'));
+
+        // Avatar
+        const avatarDiv = document.createElement('div');
+        avatarDiv.classList.add('avatar');
+        const avatarImg = document.createElement('img');
+        avatarImg.src = (msg.speaker === 'user') ? '/images/user_avatar.png' : '/images/bot_avatar.png';
+        avatarDiv.appendChild(avatarImg);
+
+        // Bubble
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.classList.add('bubble');
+
+        // Header
+        const bubbleHeader = document.createElement('div');
+        bubbleHeader.classList.add('bubble-header');
+        const senderNameSpan = document.createElement('span');
+        senderNameSpan.classList.add('sender-name');
+        senderNameSpan.textContent = (msg.speaker === 'user') ? 'You' : 'Bot';
+        const timestampSpan = document.createElement('span');
+        timestampSpan.classList.add('timestamp');
+        timestampSpan.textContent = msg.timestamp || '';
+        bubbleHeader.appendChild(senderNameSpan);
+        bubbleHeader.appendChild(timestampSpan);
+
+        // Message content
+        const messageP = document.createElement('p');
+        messageP.textContent = msg.text;
+
+        bubbleDiv.appendChild(bubbleHeader);
+        bubbleDiv.appendChild(messageP);
+
+        wrapper.appendChild(avatarDiv);
+        wrapper.appendChild(bubbleDiv);
+
+        document.getElementById('chat-history').appendChild(wrapper);
+        // Scroll to bottom
+        document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
+      }
+
+      // Handle form submission
+      document.getElementById('chat-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const messageInput = document.getElementById('message');
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
+
+        // 1) Append user message to UI
+        const userMsgObj = {
+          speaker: 'user',
+          text: userMessage,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        appendMessage(userMsgObj);
+        messageInput.value = '';
+
+        // 2) Send to server
+        try {
+          const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+          });
+          const data = await response.json();
+
+          // 3) Append bot reply to UI
+          const botMsgObj = {
+            speaker: 'bot',
+            text: data.reply,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+
+          // If outfitIDs exist, you can modify the text or add a link:
+          if (data.outfitIDs) {
+            botMsgObj.text += " ";
+            botMsgObj.text += "[View Outfit Details Here]";
+            // or you can do advanced HTML insertion
+          }
+
+          appendMessage(botMsgObj);
+        } catch (err) {
+          console.error('Error sending message:', err);
+        }
+      });
