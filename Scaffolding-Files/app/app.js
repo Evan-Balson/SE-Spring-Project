@@ -80,13 +80,9 @@ const accountController = require('./controllers/accountController');
 // Get the models
 const { User } = require("./models/User");
 const { category } = require("./models/category");
-<<<<<<< HEAD
-const Cart = require("./models/Cart");
+const {Cart} = require("./models/Cart");
 const {Inventory} = require("./models/Inventory");
 const {Transaction} = require("./models/Transaction");
-=======
-const {Cart} = require("./models/Cart");
->>>>>>> parent of 582fe58 (update payment, favourite)
 
 const about = require("./chatBot/aboutFitxchange");
 
@@ -236,8 +232,11 @@ app.get("/cart", async function(req, res) {
     }
 });
 
-app.get("/cart", cartController.viewCart);
-app.delete("/cart/:cartId", cartController.deleteCartItem);
+// View cart page
+app.get('/cart', ensureLoggedIn, cartController.viewCart);
+
+// Delete a single item from the cart
+app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.deleteCartItem);
 
 app.get('/cart/add', async (req, res) => {
     const inventoryId = req.query.inventoryId;
@@ -286,24 +285,11 @@ app.get('/remove/:cartId', async (req, res) => {
     }
 });
 
-// Create a route for checkout lising - /
-app.get("/checkout", async function(req, res) {
+// Create a route for checkout listing - /checkout//
+//app.get("/checkout", checkoutController.getCheckoutPage);
 
-    activeUser =  req.session.activeUser || activeUser;
-   
-    const cartItems = await Cart.getCartItems(activeUser.userID); 
 
-    console.log(cartItems);
-  
-    if(activeUser.login_Status){
-        res.render("checkout",{title:'Checkout', cartItems});
-    }
-    else{
-        res.render("login",{title:'Login', referencePage: 'checkout' });}
-    
-});
-
-//app.post("/checkout", cartController.processCheckout);
+// app.post("/checkout", checkoutController.processCheckout);
 
 
 
@@ -560,9 +546,7 @@ app.get("/redirect/:redirectLocation/:msg", async (req, res) => {
 });
 
  
-
-
-
+/*
 //admin controller and admin pages
 
 const AdminController = require('./controllers/AdminController'); // Import the AdminController
@@ -607,9 +591,10 @@ app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
-
+*/
 // Start server on port 3000
 
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });
+

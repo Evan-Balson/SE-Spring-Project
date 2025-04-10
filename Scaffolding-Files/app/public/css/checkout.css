@@ -1,101 +1,100 @@
-  .container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background-color: #fff;
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+}
+
+
+h1 {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+.cart-header {
+  display: flex;
+  justify-content: space-between; /* Space out the button and heading */
+  align-items: center; /* Vertically align them */
+  margin-bottom: 20px; /* Add some space below */
+}
+
+ul {
+  display: flex; /* Flexbox for the container */
+  align-items: center; /* Centers items vertically */
+  list-style: none;
+  padding: 0px;
+     
+}
+
+li.backLink {
+  text-align: left; 
+  margin-right: auto;
+ }
+ 
+
+li.buttonlink {
+  text-align: right; /* Align text to the right */
+  justify-self: flex-end; /* Align the item to the flex-end */
+}
+
+
+.outfit-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.outfit-item img {
+  width: 150px;
+  height: auto;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.details {
+  flex-grow: 1;
+}
+
+.details h2, .details p {
+  color: #0056b3;
+  font-size: 16px;
+  margin: 0;
+  color: #666;
+}
+
+.terms {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.termsOfUseLink{
+  margin-left: 7px;
+}
+
+.checkout-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button.agree-button {
+  padding: 10px 20px;
+  background-color: #004544;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.agree-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .checkout-button{
+    justify-content: center;
   }
 
-  
-  h1 {
-    font-size: 24px;
-    color: #333;
-    text-align: center;
-  }
-  .cart-header {
-    display: flex;
-    justify-content: space-between; /* Space out the button and heading */
-    align-items: center; /* Vertically align them */
-    margin-bottom: 20px; /* Add some space below */
-  }
-
-  ul {
-    display: flex; /* Flexbox for the container */
-    align-items: center; /* Centers items vertically */
-    list-style: none;
-    padding: 0px;
-       
-  }
-  
-  li.backLink {
-    text-align: left; 
-    margin-right: auto;
-   }
-   
-  
-  li.buttonlink {
-    text-align: right; /* Align text to the right */
-    justify-self: flex-end; /* Align the item to the flex-end */
-  }
-
-  
-  .outfit-item {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .outfit-item img {
-    width: 150px;
-    height: auto;
-    border-radius: 4px;
-    margin-right: 20px;
-  }
-  
-  .details {
-    flex-grow: 1;
-  }
-  
-  .details h2, .details p {
-    color: #0056b3;
-    font-size: 16px;
-    margin: 0;
-    color: #666;
-  }
-  
-  .terms {
-    margin-top: 20px;
-    font-size: 13px;
-    color: #666;
-  }
-
-  .termsOfUseLink{
-    margin-left: 7px;
-  }
-  
-  .checkout-button {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  button.agree-button {
-    padding: 10px 20px;
-    background-color: #004544;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button.agree-button:hover {
-    background-color: #0056b3;
-  }
-  
-  @media (max-width: 768px) {
-    .checkout-button{
-      justify-content: center;
-    }
-
-  }
-  
+}
