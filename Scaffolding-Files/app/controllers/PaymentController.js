@@ -1,5 +1,5 @@
 const { Payment } = require('../models/Payment');
-const { updatePaymentId } = require('../models/transaction');
+const { updatePaymentId } = require('../models/Transaction');
 
 const paymentController = {
     processPayment: async (req, res) => {

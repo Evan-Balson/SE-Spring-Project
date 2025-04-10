@@ -1,0 +1,138 @@
+.delivery-page-container {
+    width: 98%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.delivery-content {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start;
+    width: 100%;
+}
+.required::after {
+    content: " *";
+    color: red;
+  }
+
+form {
+    width: calc(100% - 340px); /* Account for order summary width + spacing */
+    margin-right: 20px;
+}
+
+.order-summary-container {
+    position: absolute;
+    top: 200px;
+    right: 20px;
+    width: 300px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.order-items {
+    margin-bottom: 10px; 
+}
+
+.item-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #eee; 
+}
+
+.summary-totals {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.delivery-info {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border-left: 5px solid #083736;
+}
+
+.delivery-charge {
+    color: #083736;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.back-button {
+    background-color: transparent;
+    color: #083736;
+    padding: 0;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.go-to-payment {
+    background-color: #083736;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.back-button:hover,
+.go-to-payment:hover {
+    text-decoration: underline;
+    background-color: #e6ecec;
+}
+@media (max-width: 768px) {
+    .delivery-content {
+        flex-direction: column;
+    }
+
+    form {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .order-summary-container {
+        width: 100%;
+    }
+}

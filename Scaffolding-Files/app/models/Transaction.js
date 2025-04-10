@@ -1,64 +1,47 @@
-
-// Get the functions in the db.js file to use
-const db = require('./../services/db');
+const db = require('../services/db');
 
 class Transaction {
-
-    // Attributes
-    transaction_ID;
-    transaction_date;
-    total;
-    user_id;
-
-
-    // Constructor
-    constructor(transactionId, date, totalPrice, userID){
-        this.transaction_ID = transactionId;
-        this.transaction_date = date;
-        this.total = totalPrice;
-        this.user_id = userID;
+    constructor( Transaction_ID, Transaction_Date, Total_Price, User_ID, Inventory_ID, Payment_ID) {
+        this.Transaction_ID = Transaction_ID;
+        this.Transaction_Date = Transaction_Date;
+        this.Total_Price = parseFloat(Total_Price).toFixed(2);
+        this.User_ID = User_ID;
+        this.Inventory_ID = Inventory_ID;
+        this.Payment_ID = Payment_ID;
     }
-
-    // methods
     async newTransaction() {
+        console.log("Payment_ID being inserted:", this.Payment_ID);
+        console.log("TOTAL PRICE: ", this.Total_Price)
+        const sql = `
+            INSERT INTO Transaction (transaction_id, transaction_date, total_price, user_id, inventory_id, payment_id)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+
+        const values = [this.Transaction_ID, this.Transaction_Date, this.Total_Price, this.User_ID, this.Inventory_ID, this.Payment_ID];
         try {
-            // insert into transaction table
-            const transactionSQL =
-            `INSERT INTO Transaction (
-                transaction_id,
-                transaction_date,
-                total,
-                user_id)
-            VALUES (?, ?, ?, ?)`;
-
-            var result = await db.query(transactionSQL, [this.transactionID, this.date, this.totalPrice, this.userID]);
-
+            const result = await db.query(sql, values);
             return result;
-    
         } catch (error) {
-            console.error("Error adding transaction to database:", error);
+            console.error('Error creating transaction: ', error);
             throw error;
         }
     }
+    async updatePaymentId(transactionId, paymentId) {
+        const sql = `
+            UPDATE Transaction
+            SET Payment_ID = ?
+            WHERE Transaction_ID = ?
+        `;
+        const values = [paymentId, transactionId];
 
-    async checkInventory(){
         try {
-            // no inventory linked in database code - but in ERD deliberate or ??
+            const [result] = await db.query(sql, values);
+            return result;
         } catch (error) {
-            console.error("Error checking inventory:", error);
+            console.error('Error updating Payment_ID:', error);
             throw error;
         }
     }
-
-    static async getRecentTransactions(userID) {
-        const sql = "SELECT T.Inventory_ID AS inventoryID, I.Product_Image_Path AS image, I.Name AS itemName, T.Transaction_Date AS orderDate, T.Total_Price AS amount FROM Transaction T JOIN Inventory I ON T.Inventory_ID = I.Inventory_ID WHERE T.User_ID = ? ORDER BY T.Transaction_Date DESC LIMIT 3";
-        const results = await db.query(sql, [userID]);
-        return results;
-      }
-      
-
 }
 
-module.exports = {
-    Transaction
-}
+module.exports = { Transaction };
