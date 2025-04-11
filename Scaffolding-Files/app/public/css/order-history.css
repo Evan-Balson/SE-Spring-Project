@@ -125,6 +125,46 @@ h1 {
   margin-top: 20px;
 }
 
+
+/* Basic container and form styles */
+.container {
+  padding: 20px;
+}
+
+.filter-container,
+.search-container {
+  margin-bottom: 15px;
+}
+
+/* Order item styles */
+.order-item {
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+.order-item img {
+  width: 100px;
+  height: auto;
+  margin-right: 15px;
+}
+.details {
+  flex: 1;
+}
+
+/* Rating element styles */
+.rating {
+  margin-top: 10px;
+  font-size: 1.5em;
+  cursor: pointer;
+  user-select: none;
+}
+.rating .star {
+  margin-right: 5px;
+  color: #FFD700; /* Gold color for filled stars */
+}
+
 @media (max-width: 690px) {
   .filter-container, .search-container {
       display: flex;

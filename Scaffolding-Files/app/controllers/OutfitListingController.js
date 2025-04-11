@@ -1,21 +1,22 @@
 const { Inventory } = require("../models/Inventory");
 
-exports.showOutfitListing = async (req, res) => {
+const showOutfitListing = async (req, res) => {
     try {
-        const { id } = req.params;  // Get product_id from the route parameter
+        const { id } = req.params;  // Get Inventory ID from the route parameter
         
         // Fetch product details using the provided Inventory_ID
         const item = await Inventory.displayinventoryItem(id);
         
         if (item) {
-            // Render the outfit listing page with the fetched product details
-            
+            // Retrieve the active user from locals
             const user = res.locals.activeUser;
-            if(user.login_Status){
+            // Render different views based on whether the user is logged in
+            console.log(user);
+            if (user && user.login_Status) {
                 return res.render("outfit-listing", { title: 'Listing', product: item });
+            } else {
+                return res.render("outfit-listing-logged-out", { title: 'Listing', product: item });
             }
-            else{return res.render("outfit-listing-logged-out", { title: 'Listing', product: item });}
-            
         } else {
             // Handle case where the product is not found
             return res.status(404).send("Product not found");
@@ -26,3 +27,5 @@ exports.showOutfitListing = async (req, res) => {
         return res.status(500).send('Internal Server Error');
     }
 };
+
+module.exports = { showOutfitListing };

@@ -26,7 +26,12 @@ class Inventory {
     async return(){}
 
 
-    
+    static async getMyInventoryItems(userID) {
+        const query = "SELECT Inventory_ID, Price, Availability, Quantity, Name, Color, Size, Description, Condition_Level, User_ID, Product_Image_Path FROM Inventory WHERE User_ID = ? ORDER BY Name ASC;";
+        const results = await db.query(query, [userID]);
+        return results;
+      }
+
 
 static async displayinventoryItem(id) {
     // Use parameterized queries to prevent SQL injection

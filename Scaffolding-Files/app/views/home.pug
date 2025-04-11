@@ -37,7 +37,8 @@ block content
         .product(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
           img(src=product.Product_Image_Path, alt=product.Name)
           h2= product.Name
-          p Price: $#{product.Price}
+          p Price: FREE
+          samller.penalty Misuse Penalty: £#{product.Price}
 
     // Arrows for pagination (left/right) instead of next/prev at the bottom
     if prevPage || nextPage

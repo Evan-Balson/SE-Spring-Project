@@ -1,6 +1,7 @@
 const { User } = require("../models/User");
 const { Transaction } = require("../models/Transaction");
 const { Favourites } = require("../models/favourites");
+const { Inventory} = require("../models/Inventory");
 
 const getAccountPage = async (req, res) => {
   try {
@@ -9,9 +10,11 @@ const getAccountPage = async (req, res) => {
     // Ensure these functions always return an array, even if empty.
     const transactions = await Transaction.getRecentTransactions(user.userID) || [];
     const favorites = await Favourites.getRecentFavorites(user.userID) || [];
+    const inventoryItems = await Inventory.getMyInventoryItems(user.userID) || [];
+    console.log(inventoryItems);
     
     // Render the account view with user, transactions, and favorites data.
-    res.render("account", { title: "My Account", user, transactions, favorites });
+    res.render("account", { title: "My Account", user, transactions, favorites, inventoryItems });
   } catch (error) {
     console.error("Error loading account page:", error);
     res.status(500).send("Internal Server Error");

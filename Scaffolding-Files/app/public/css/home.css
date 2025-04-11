@@ -17,6 +17,10 @@ body {
   min-height: 100vh;
 }
 
+.penalty{
+  color: red;
+}
+
 /* Create an overlay with a semi-transparent gradient */
 body::before {
   content: '';

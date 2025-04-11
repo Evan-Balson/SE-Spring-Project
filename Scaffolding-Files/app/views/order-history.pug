@@ -6,7 +6,7 @@ block styles
 block content
   .container
     h1 Your Order History
-    
+
     form(method="POST", action="/order-history")
       .filter-container
         label Sort by:
@@ -22,14 +22,65 @@ block content
 
     if orders.length > 0
       each order in orders
-        .order-item
-          img(src=order.image alt=order.itemName)
+        // Set data attributes from the order object
+        .order-item(data-orderid=order.Transaction_ID, data-inventoryid=order.inventoryID)
+          img(src=order.image, alt=order.itemName)
           .details
             h2= order.itemName
             p Description: #{order.description}
             p Date Ordered: #{order.orderDate}
             p Dispatch To: #{order.dispatchTo}
             p Penalty: £#{order.penalty.toFixed(2)}
-            hr
+            // Interactive 5-star rating element; 
+            // data attributes hold the orderID and inventoryID.
+            .rating(data-orderid=order.Transaction_ID, data-inventoryid=order.inventoryID)
+              span.star(data-value="1") &#9734;
+              span.star(data-value="2") &#9734;
+              span.star(data-value="3") &#9734;
+              span.star(data-value="4") &#9734;
+              span.star(data-value="5") &#9734;
+          hr
     else
       p No orders found.
+
+block scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // Attach a click handler to each rating element.
+      document.querySelectorAll('.rating').forEach(function(ratingEl) {
+        ratingEl.addEventListener('click', function(e) {
+          if (e.target && e.target.classList.contains('star')) {
+            // Get the clicked star's value.
+            const clickedStarValue = parseInt(e.target.dataset.value);
+            const orderID = ratingEl.dataset.orderid;
+            const inventoryID = ratingEl.dataset.inventoryid;
+
+            // Update star display:
+            ratingEl.querySelectorAll('.star').forEach(function(star) {
+              const starValue = parseInt(star.dataset.value);
+              star.innerHTML = starValue <= clickedStarValue ? '&#9733;' : '&#9734;';
+            });
+
+            // Send rating via AJAX:
+            fetch('/order-rating', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderID: orderID,
+                inventoryID: inventoryID,
+                rating: clickedStarValue
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                console.log('Rating submitted successfully:', data.rating);
+              } else {
+                console.error('Error updating rating:', data.error);
+              }
+            })
+            .catch(error => console.error('Error submitting rating:', error));
+          }
+        });
+      });
+    });

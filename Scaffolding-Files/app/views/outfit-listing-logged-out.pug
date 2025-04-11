@@ -1,4 +1,4 @@
-extends default_web_logged-in_layout.pug
+extends default_web_logged-out_layout.pug
 
 block styles
   link(rel="stylesheet", href="/css/outfit-listing.css")
@@ -17,9 +17,10 @@ block content
       .product-info
         h1= product.Name
         h2= product.Inventory_ID
-        .price-container
-          span.current-price $#{product.Price}
-        p= product.Description
+        .price-container          
+          span.current-price Price: FREE
+        small.penalty Misuse Penalty £#{product.Price}
+        p.description= product.Description
 
         .size-options
           span Size:

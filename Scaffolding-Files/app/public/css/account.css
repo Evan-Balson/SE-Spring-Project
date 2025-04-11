@@ -353,6 +353,20 @@ table.inventory-table button.remove:hover {
   text-decoration: underline; /* underline on hover */
 }
 
+/* Make the listing images smaller */
+.inventory-table td img {
+  width: 100px;      /* Adjust width as needed */
+  height: 100px;     /* Adjust height as needed */
+  object-fit: cover; /* Ensures the image covers the space without distortion */
+}
+
+/* Fix the width of the description column and add ellipsis for overflow */
+.inventory-table td.description {
+  width: 400px;            /* Fixed width for the description column */
+  white-space: wrap;     /* Keep the text on one line */
+ text-overflow: ellipsis; /* Use ellipsis (...) to indicate text has been truncated */
+}
+
 
 /* Responsive Adjustments */
 @media (max-width: 900px) {

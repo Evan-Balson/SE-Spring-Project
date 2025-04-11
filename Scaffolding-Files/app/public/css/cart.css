@@ -107,7 +107,7 @@ nav ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 nav ul li {
@@ -118,7 +118,12 @@ nav ul li {
 .checkout-button {
   display: flex;
   justify-content: flex-end;
+  align-self: flex-end;
   margin-top: 20px;
+}
+
+.buttonlink {
+  list-style: none;
 }
 
 

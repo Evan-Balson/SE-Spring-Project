@@ -58,7 +58,17 @@
   border: none;
   cursor: pointer;
 }
+.penalty{
+  color: red;
+}
 
+p.description {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-height: none;
+  display: block;
+}
 
 .button-container {
     display: flex;

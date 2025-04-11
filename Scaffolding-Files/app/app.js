@@ -73,18 +73,21 @@ const OutfitListingController = require('./controllers/OutfitListingController')
 const favouritesController = require('./controllers/favouritesController');
 const registrationController = require('./controllers/registrationController');
 const cartController =  require('./controllers/cartController');
-const { listingController } = require('./controllers/listingController');
+const listingController = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
 const accountController = require('./controllers/accountController');
+const checkoutController = require('./controllers/checkoutController');
+const outfitRatingController = require('./controllers/outfitRatingController');
+
 
 // Get the models
 const { User } = require("./models/User");
 const { category } = require("./models/category");
 const {Cart} = require("./models/Cart");
-const {Inventory} = require("./models/Inventory");
 const {Transaction} = require("./models/Transaction");
 
 const about = require("./chatBot/aboutFitxchange");
+
 
 const aboutCompany = about.aboutCompany;
 const termsAndConditions = about.termsAndConditions;
@@ -121,6 +124,7 @@ app.use(async (req, res, next) => {
     }
   }
   
+
 
   
 // Create a route for root - /
@@ -193,13 +197,11 @@ app.post("/", async (req, res) => {
   
 // create route for outfit listing
 app.get("/outfit-listing/:id", (req, res) => {
-    
-   
-    res.locals.activeUser = activeUser;
-
-    
+       
+    res.locals.activeUser = activeUser;    
     OutfitListingController.showOutfitListing(req, res);
 });
+
 
 app.get("/account", ensureLoggedIn, accountController.getAccountPage);
 app.post('/account/update', ensureLoggedIn, accountController.updateAccount);
@@ -208,6 +210,7 @@ app.post('/account/update', ensureLoggedIn, accountController.updateAccount);
 app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
+
 app.post("/new-listing", upload.single('image'), listingController.submitListing);
 
 // Create a route for cart lising
@@ -218,9 +221,9 @@ app.get("/cart", async function(req, res) {
             // Fetch cart items for the logged-in user
             const cartItems = await Cart.getCartItems(activeUser.userID);
 
-            //console.log(cartItems);
+            console.log(cartItems);
             
-            res.render("cart", { title: 'My Cart', cartItems });
+            res.render("cart", { title: 'My Cart', cartItems:cartItems });
             
         } catch (error) {
             console.error('Error fetching cart items:', error);
@@ -233,7 +236,7 @@ app.get("/cart", async function(req, res) {
 });
 
 // View cart page
-app.get('/cart', ensureLoggedIn, cartController.viewCart);
+//app.get('/cart', ensureLoggedIn, cartController.viewCart);
 
 // Delete a single item from the cart
 app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.deleteCartItem);
@@ -251,9 +254,6 @@ app.get('/cart/add', async (req, res) => {
     }
   });
 
-app.get("/outfit-listing/:id", (req, res)=> {
-    OutfitListingController.showOutfitListing(req, res);
-})
 // Create a route for outfit details -/
 app.get('/Outfit/:orderId', async (req, res) => {
     const orderId = req.params.orderId; // Get the order ID from the URL parameter
@@ -285,11 +285,25 @@ app.get('/remove/:cartId', async (req, res) => {
     }
 });
 
-// Create a route for checkout listing - /checkout//
-//app.get("/checkout", checkoutController.getCheckoutPage);
+// Create a route for checkout lising - /
+app.get("/checkout", async function(req, res) {
+
+  activeUser =  req.session.activeUser || activeUser;
+ 
+  const cartItems = await Cart.getCartItems(activeUser.userID); 
+
+  console.log(cartItems);
+
+  if(activeUser.login_Status){
+      res.render("checkout",{title:'Checkout', cartItems});
+  }
+  else{
+      res.render("login",{title:'Login', referencePage: 'checkout' });}
+  
+});
 
 
-// app.post("/checkout", checkoutController.processCheckout);
+app.post("/checkout", checkoutController.processCheckout);
 
 
 
@@ -335,6 +349,11 @@ app.get("/order-history", async function(req, res) {
 
 // Create a route for order history filtering/search (POST)
 app.post("/order-history", async function(req, res) {
+  activeUser = req.session.activeUser || activeUser
+  if (!activeUser || !activeUser.login_Status) {
+      return res.render("login", { title: 'Login', referencePage: 'order-history' });
+  }
+  
   // Get filter parameters from form; default sortOrder is "*"
   const sortOrder = req.body.sortOrder || "*";
   const searchString = req.body.search || "";
@@ -351,7 +370,8 @@ app.post("/order-history", async function(req, res) {
   res.render("order-history", { title: 'My Orders', orders, sortOrder, searchQuery: searchString });
 });
 
-
+// New POST route for order rating submission
+app.post("/order-rating", outfitRatingController.submitRating);
 
 // Create a route for add outfit advice - /
 app.get("/outfit-advice", function(req, res){
@@ -476,7 +496,6 @@ app.post('/chat', async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 });
-
   
   
 app.get("/inspect-items", function(req, res){
@@ -497,20 +516,6 @@ app.get("/favourites", async (req, res) => {
         }
     } else {
         res.render("login", { title: 'Login', referencePage: 'favourites'  });
-    }
-});
-
-// Route to handle adding items to favorites (POST request)
-app.post("/favourites/add", async (req, res) => {
-    const { inventoryId } = req.body; // Get inventoryId from request body
-    const userId = req.session.activeUser.userID;
-
-    try {
-        await favouritesController.addToFavourites(userId, inventoryId);
-        res.status(200).json({ message: 'Item added to favorites successfully.' }); // Send JSON response
-    } catch (error) {
-        console.error('Error adding to favorites:', error);
-        res.status(500).json({ message: 'Error adding to favorites' }); // Send JSON error response
     }
 });
 
@@ -546,7 +551,7 @@ app.get("/redirect/:redirectLocation/:msg", async (req, res) => {
 });
 
  
-/*
+
 //admin controller and admin pages
 
 const AdminController = require('./controllers/AdminController'); // Import the AdminController
@@ -591,7 +596,7 @@ app.get("/admin/resolve-disputes", AdminController.resolveDisputes);
 
 app.post("/admin/resolve-disputes/resolve/:id", AdminController.resolveDispute);
 
-*/
+
 // Start server on port 3000
 
 app.listen(3000,function(){

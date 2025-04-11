@@ -1,24 +1,23 @@
 extends default_web_logged-in_layout.pug
 
 block styles
-    link(rel="stylesheet", href="/css/cart.css")  
-
+  link(rel="stylesheet", href="/css/cart.css")  
 
 block content
   .cartHeader
     h1 My Cart
   .cart-container
-    
-    if cartItems.length > 0
+
+    if cartItems
       each item in cartItems
         .cart-item
-          img.cart-img(src=item.image alt=item.name)
+          img.cart-img(src=item.image, alt=item.Name)
 
           .item-info
             h3 #{item.name}
             p.description #{item.description}
-            p Order Placed: #{item.orderDate}
-            p Misuse Penalty: £#{item.penalty}
+            p Order Placed: #{item.orderDate}  
+            p Misuse Penalty: £#{item.penalty} 
             p Dispatched to: #{item.dispatchTo}
             p Delivery Date: #{item.deliveryDate}
 
@@ -26,7 +25,7 @@ block content
             nav 
               ul
                 li 
-                  a(href=`/outfit-listing/${item.orderId}`) View product details
+                  a(href=`/outfit-listing/${item.Inventory_ID}`) View product details
                 li 
                   a(href=`/remove/${item.Cart_ID}`) remove item
       ul.buttonlink 

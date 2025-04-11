@@ -17,9 +17,10 @@ block content
       .product-info
         h1= product.Name
         h2= product.Inventory_ID
-        .price-container
-          span.current-price $#{product.Price}
-        p= product.Description
+        .price-container          
+          span.current-price Price: FREE
+        small.penalty Misuse Penalty £#{product.Price}
+        p.description= product.Description
 
         .size-options
           span Size:
@@ -27,7 +28,7 @@ block content
             button.size-option= size
 
         p Color: #{product.Color}
-        p Condition Level: #{product.Condition_Level}
+        p Condition Level: #{product.Condition_Level}/10
         p Availability: #{product.Availability ? 'In Stock' : 'Out of Stock'}
         p Quantity Available: #{product.Quantity}
 

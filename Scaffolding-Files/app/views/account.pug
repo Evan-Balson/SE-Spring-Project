@@ -91,10 +91,10 @@ block content
           each item in inventoryItems || []
             tr
               td
-                img(src=item.image, alt=item.name)
-              td= item.name
-              td= item.description
-              td= item.status
+                img(src=item.Product_Image_Path, alt=item.Name)
+              td= item.Name
+              td.description= item.Description
+              td= item.Availability
               td
-                button.update(onclick=`window.location.href='/inventory/update/${item.inventoryID}'`) Update
-                button.remove(onclick=`window.location.href='/inventory/remove/${item.inventoryID}'`) Remove
+                button.update(onclick=`window.location.href='/inventory/update/${item.inventory_ID}'`) Update
+                button.remove(onclick=`window.location.href='/inventory/remove/${item.inventory_ID}'`) Remove
