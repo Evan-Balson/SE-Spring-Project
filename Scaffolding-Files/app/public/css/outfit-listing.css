@@ -70,6 +70,14 @@ p.description {
   display: block;
 }
 
+.buttonhere{
+  background-color: #004544;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 30px;
+  
+}
+
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -79,10 +87,23 @@ p.description {
     padding: 10px 20px;
     cursor: pointer;
     text-decoration: none; 
-    background-color: #f0f0f0; 
-    border: 1px solid #ccc; 
-    color: #333; 
+    color: #e2e2e2;
 }
+
+.star-rating {
+  display: inline-block;
+  margin-top: 10px;
+}
+.star-rating .star {
+  margin-right: 3px;
+  cursor: default;
+}
+.rating-info {
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #555;
+}
+
 
 /* Responsive adjustments for screens smaller than 1024px */
 @media (max-width: 1024px) {

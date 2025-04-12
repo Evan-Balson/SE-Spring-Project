@@ -44,6 +44,11 @@ class Cart {
     }
   }
 
+  static async getCartDetails(userID) {
+    const sql = "SELECT c.Cart_ID, c.Quantity, c.Inventory_ID AS inventoryID, i.Price, i.Name, i.Product_Image_Path AS image, i.Description FROM Cart c JOIN Inventory i ON c.Inventory_ID = i.Inventory_ID WHERE c.User_ID = ?;";
+    const results = await db.query(sql, [userID]);
+    return results;}
+
   static async deleteCartItem(cartId) {
     const sql = 'DELETE FROM Cart WHERE Cart_ID = ?';
     try {

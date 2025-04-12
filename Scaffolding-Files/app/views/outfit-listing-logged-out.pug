@@ -3,7 +3,6 @@ extends default_web_logged-out_layout.pug
 block styles
   link(rel="stylesheet", href="/css/outfit-listing.css")
   
-
 block content
   .product-div
     .product-detail-container
@@ -13,7 +12,7 @@ block content
           img.thumbnail(src=product.Product_Image_Path, alt=product.Name, onclick='setMainImage(this.src)')
           img.thumbnail(src=product.Product_Image_Path, alt=product.Name, onclick='setMainImage(this.src)')
         img.main-image#mainImage(src=product.Product_Image_Path, alt=product.Name)
-
+      
       .product-info
         h1= product.Name
         h2= product.Inventory_ID
@@ -22,16 +21,30 @@ block content
         small.penalty Misuse Penalty £#{product.Price}
         p.description= product.Description
 
+        // Seller Rating: show star icons based on avgRating.
+        - var ratingVal = Math.round(avgRating) || 0
+        .star-rating
+          each starIndex in [1,2,3,4,5]
+            if starIndex <= ratingVal
+              span.star(style="color: gold; font-size: 1.5em;") &#9733;
+            else
+              span.star(style="color: gold; font-size: 1.5em;") &#9734;
+        p.rating-info Seller Rating: #{avgRating.toFixed(1)} out of 5 (based on #{totalReviews} reviews)
+
         .size-options
           span Size:
           each size in product.Size.split(',')
             button.size-option= size
 
         p Color: #{product.Color}
-        p Condition Level: #{product.Condition_Level}
+        p Condition Level: #{product.Condition_Level}/10
         p Availability: #{product.Availability ? 'In Stock' : 'Out of Stock'}
         p Quantity Available: #{product.Quantity}
 
-        .product-actions
-          button.add-to-cart(onclick=`checkLoginAndAddToCart('${product.Inventory_ID}')`) Add to Cart
-          button.add-to-favorites(onclick=`checkLoginAndAddToFavorites('${product.Inventory_ID}')`) Add to Favorites
+        .button-container
+          button.buttonhere: a(href='/login') Login to Manage Cart or Favourites 
+
+  script.
+    function setMainImage(src) {
+      document.getElementById('mainImage').src = src;
+    }

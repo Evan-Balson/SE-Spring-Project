@@ -35,12 +35,13 @@ block content
   if products != 0
     .catalog
       each product in products
-        // Each product card, clickable to outfit-listing
-        .product(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
-          img(src=product.Product_Image_Path, alt=product.Name)
-          h2= product.Name
-          p Price: FREE
-          samller.penalty Misuse Penalty: £#{product.Price}
+        if product.Quantity > 0
+          // Each product card, clickable to outfit-listing
+          .product(onclick=`window.location.href='/outfit-listing/${product.Inventory_ID}'`)
+            img(src=product.Product_Image_Path, alt=product.Name)
+            h2= product.Name
+            p Price: FREE
+            samller.penalty Misuse Penalty: £#{product.Price}
 
     // Arrows for pagination (left/right) instead of next/prev at the bottom
     if prevPage || nextPage

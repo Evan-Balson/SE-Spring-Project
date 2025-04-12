@@ -10,8 +10,8 @@ block content
       .user-flex
         .profile-and-info
           .profile-image
-            if user.Profile_Image_Path
-              img(src=user.Profile_Image_Path, alt=user.userName)
+            if user.Profile_Image
+              img(src=user.Profile_Image, alt=user.userName)
             else
               img(src='/images/default-profile.png', alt=user.userName)
           .basic-info
@@ -59,7 +59,7 @@ block content
               .transaction-details
                 h3= transaction.itemName
                 p Order Date: #{transaction.orderDate}
-                p Amount: £#{transaction.amount}
+                p Item Misuse Penalty: £#{transaction.amount}
         a.see-more(href="/order-history") See More Transactions
 
       // Column 3: Watch List
@@ -96,5 +96,5 @@ block content
               td.description= item.Description
               td= item.Availability
               td
-                button.update(onclick=`window.location.href='/inventory/update/${item.inventory_ID}'`) Update
-                button.remove(onclick=`window.location.href='/inventory/remove/${item.inventory_ID}'`) Remove
+                button.update(onclick=`window.location.href='/inventory/update/${item.Inventory_ID}'`) Update
+                button.remove(onclick=`window.location.href='/inventory/remove/${item.Inventory_ID}'`) Remove

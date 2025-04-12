@@ -25,6 +25,56 @@ class Inventory {
     async rent(){}
     async return(){}
 
+    static async updateListing(inventoryID, data) {
+        try {
+          let query = "UPDATE Inventory SET Name = ?, Price = ?, Color = ?, Size = ?, Quantity = ?, Condition_Level = ?, Description = ?, Categories = ?";
+          const params = [data.name, data.price, data.colors, data.size, data.quantity, data.condition, data.description, data.categories];
+          if (data.imagePath) {
+            query += ", Product_Image_Path = ?";
+            params.push(data.imagePath);
+          }
+          query += " WHERE Inventory_ID = ?";
+          params.push(inventoryID);
+          const result = await db.query(query, params);
+          return result;
+        } catch (error) {
+          console.error("Error updating listing in Inventory model:", error);
+          throw error;
+        }
+      }
+
+      static async removeItemFromInventory(Inventoryid) {
+        try {
+          // Delete dependent rows in child tables.
+          await db.query("DELETE FROM Cart WHERE Inventory_ID = ?", [Inventoryid]);
+          await db.query("DELETE FROM Outfit_and_Categories WHERE Inventory_ID = ?", [Inventoryid]);
+          await db.query("DELETE FROM Review WHERE Inventory_ID = ?", [Inventoryid]);
+          await db.query("DELETE FROM Inspection WHERE Inventory_ID = ?", [Inventoryid]);
+          await db.query("DELETE FROM Favorites WHERE Inventory_ID = ?", [Inventoryid]);
+      
+          // Get related Transaction IDs for this inventory item.
+          const transRes = await db.query("SELECT Transaction_ID FROM Transaction WHERE Inventory_ID = ?", [Inventoryid]);
+          const transIDs = transRes.map(row => row.Transaction_ID);
+          if (transIDs.length > 0) {
+            // Delete Delivery records for these transactions.
+            // (Some drivers may require you to format the IN clause differently.)
+            await db.query("DELETE FROM Delivery WHERE Transaction_ID IN (?)", [transIDs]);
+            
+            // Delete Transaction records for this inventory item.
+            await db.query("DELETE FROM Transaction WHERE Inventory_ID = ?", [Inventoryid]);
+          }
+          
+          // Finally, delete the inventory item.
+          const results = await db.query("DELETE FROM Inventory WHERE Inventory_ID = ?", [Inventoryid]);
+          return results;
+        } catch (error) {
+          console.error("Error in removeItemFromInventory:", error);
+          throw error;
+        }
+      }
+      
+      
+
 
     static async getMyInventoryItems(userID) {
         const query = "SELECT Inventory_ID, Price, Availability, Quantity, Name, Color, Size, Description, Condition_Level, User_ID, Product_Image_Path FROM Inventory WHERE User_ID = ? ORDER BY Name ASC;";
@@ -39,7 +89,7 @@ static async displayinventoryItem(id) {
 
     try {
         const result = await db.query(sql, [id]);  // Pass `id` as an array to avoid direct interpolation
-        console.log(result);  // Check the result object structure
+        //console.log(result);  // Check the result object structure
         return result[0];  // Return the first row (product) if found
     } catch (error) {
         console.error("Error fetching inventory item:", error);

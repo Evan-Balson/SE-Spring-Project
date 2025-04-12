@@ -36,6 +36,21 @@ class Payment{
         }
     }
 
+        // Methods
+        static async getUserPayment(userID){
+            try {
+                
+                const paymentQuery = "SELECT Payment_ID FROM Payment WHERE User_ID = ? LIMIT 1";
+                const paymentResults = await db.query(paymentQuery, [userID]);
+    
+                return paymentResults;
+                
+            } catch (error) {
+                console.error("Error finding payment method:", error);
+                throw error;
+            }
+        }
+
 }
 
 // needed to  export functions, objects, or other values from a module so they can be imported and used in other files.

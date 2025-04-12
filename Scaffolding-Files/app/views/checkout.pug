@@ -6,29 +6,31 @@ block styles
 block content
   .container
     .cart-header 
-    h1 My Checkout
+      h1 My Checkout
     if cartItems.length > 0
-      each item in cartItems
-        .outfit-item
-          img(src=item.image alt=item.name)
-          .details
-            h2= item.name
-            p Description: #{item.description}
-            p Quantity: #{item.quantity}
-            p Misuse Penalty: #{item.penalty !== null && typeof item.penalty === 'number' ? '£' + item.penalty.toFixed(2) : 'N/A'}
-            p Order Date: #{item.orderDate}
-            p Delivery Date: #{item.deliveryDate}
-            p Dispatch To: #{item.dispatchTo}
-            hr
-      .terms
-        p By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
-          a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
-        
-        ul
-          li.backLink
-            a.goback-link(href="/cart") ← Return to Cart
-          li.buttonlink     
-            .checkout-button
-              button.agree-button(type="button") Agree and Collect
+      form(method="POST", action="/checkout")
+        each item in cartItems
+          .outfit-item
+            img(src=item.image, alt=item.name)
+            .details
+              h2= item.name
+              p Description: #{item.description}
+              p Quantity: #{item.quantity}
+              p Misuse Penalty: #{item.penalty} 
+              p Order Date: #{item.orderDate}
+              p Delivery Date: #{item.deliveryDate}
+              p Dispatch To: #{item.dispatchTo}
+              hr
+        .terms
+          p 
+            | By clicking "Agree and Collect", you accept the terms and potential penalties associated with the items.
+            a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
+          ul
+            li.backLink
+              a.goback-link(href="/cart") ← Return to Cart
+            li.buttonlink     
+              .checkout-button
+                button.agree-button(type="submit") Agree and Collect
     else
       p Your cart is empty.
+

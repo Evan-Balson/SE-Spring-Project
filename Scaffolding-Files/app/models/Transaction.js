@@ -46,25 +46,25 @@ class Transaction {
             throw new Error('Unable to fetch recent transactions');
           }
         }
-
-    async newTransaction() {
-    try {
-      // Insert into Transaction table:
-      const transactionSQL =
-        `INSERT INTO Transaction (
-          transaction_id,
-          transaction_date,
-          total,
-          user_id
-        )
-        VALUES (?, ?, ?, ?)`;
-      const result = await db.query(transactionSQL, [this.transaction_ID, this.transaction_date, this.total, this.user_id]);
-      return result;
-    } catch (error) {
-      console.error("Error adding transaction to database:", error);
-      throw error;
-    }
-  }
+        static async newTransaction(data) {
+          console.log("using this funtion to print new transaction:",data);
+          try {
+            const sql = "INSERT INTO Transaction (Transaction_ID, Payment_ID, Transaction_Date, Total_Price, User_ID, Inventory_ID) VALUES (?, ?, ?, ?, ?, ?)";
+            const params = [
+              data.transactionID,
+              data.Payment_ID,
+              data.transactionDate,
+              data.totalPrice,
+              data.userID,
+              data.inventoryID
+            ];
+            const result = await db.query(sql, params);
+            return result;
+          } catch (error) {
+            console.error("Error adding transaction to database:", error);
+            throw error;
+          }
+        }
 
   static async getTransactions(userID) {
     try {
@@ -97,6 +97,7 @@ class Transaction {
     const results = await db.query(query, [userID, months, likeString, likeString]);
     return results;
   }
+
 }
 
 module.exports = {

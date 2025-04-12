@@ -34,6 +34,7 @@ const addToCart = async (req, res) => {
         const userId = req.session.activeUser.userID;
         const { inventoryId, quantity } = req.body;
         await Cart.addToCart(userId, inventoryId, quantity);
+        toastr.success("Item successfully added to cart");
         return res.status(200).json({ message: 'Item added to cart successfully.' });
     } catch (error) {
         console.error('Error adding item to cart:', error);

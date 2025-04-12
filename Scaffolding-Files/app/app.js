@@ -199,12 +199,25 @@ app.post("/", async (req, res) => {
 app.get("/outfit-listing/:id", (req, res) => {
        
     res.locals.activeUser = activeUser;    
-    OutfitListingController.showOutfitListing(req, res);
+    listingController.showOutfitListing(req, res);
 });
 
 
 app.get("/account", ensureLoggedIn, accountController.getAccountPage);
 app.post('/account/update', ensureLoggedIn, accountController.updateAccount);
+
+app.get("/inventory/remove/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Inventory.removeItemFromInventory(id);
+    res.redirect(`/redirect/account/Removing Item From Inventory`);
+  } catch (err) {
+    console.error("Error removing inventory item:", err);
+    res.status(500).send("Error removing inventory item.");
+  }
+});
+
+
 
 // Create a route for add outfit lising - /
 app.get("/new-listing", function(req, res){
@@ -212,6 +225,12 @@ app.get("/new-listing", function(req, res){
 });
 
 app.post("/new-listing", upload.single('image'), listingController.submitListing);
+
+// Route to display the update listing page
+app.get("/inventory/update/:id", listingController.showUpdateListingPage);
+
+// Route to process the update form submission
+app.post("/inventory/update/:id", upload.single('image'), listingController.updateListing);
 
 // Create a route for cart lising
 app.get("/cart", async function(req, res) {
@@ -522,6 +541,22 @@ app.get("/favourites", async (req, res) => {
 // Route to handle filtering saved items (POST request)
 app.post("/favourites", favouritesController.filterSavedItems);
 
+// Route to handle adding items to favorites (POST request)
+app.get("/favourites/add", async (req, res) => {
+  const {inventoryId} = req.query; // Get inventoryId from request body
+  const userId = req.session.activeUser.userID;
+  console.log("getting ready to add: ", inventoryId, userId);
+
+  try {
+      await favouritesController.addToFavourites(userId, inventoryId);
+    
+  } catch (error) {
+      console.error('Error adding to favorites:', error);
+      res.status(500).json({ message: 'Error adding to favorites' }); // Send JSON error response
+  }
+});
+
+
 app.get("/remove-outfit/:id", async (req, res) =>  {
     
     await favouritesController.removeFromFavourites(req, res); 
@@ -556,6 +591,7 @@ app.get("/redirect/:redirectLocation/:msg", async (req, res) => {
 
 const AdminController = require('./controllers/AdminController'); // Import the AdminController
 const { Administrator } = require('./models/Administrator'); // Import the Administrator model
+const { Inventory } = require("./models/Inventory");
 
 app.get("/admin", AdminController.adminDashboard);
 

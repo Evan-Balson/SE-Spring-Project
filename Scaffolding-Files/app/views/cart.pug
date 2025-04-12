@@ -8,7 +8,7 @@ block content
     h1 My Cart
   .cart-container
 
-    if cartItems
+    if cartItems && cartItems.length > 0
       each item in cartItems
         .cart-item
           img.cart-img(src=item.image, alt=item.Name)
@@ -25,7 +25,7 @@ block content
             nav 
               ul
                 li 
-                  a(href=`/outfit-listing/${item.Inventory_ID}`) View product details
+                  a(href=`/outfit-listing/${item.orderId}`) View product details
                 li 
                   a(href=`/remove/${item.Cart_ID}`) remove item
       ul.buttonlink 

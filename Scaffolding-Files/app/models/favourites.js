@@ -32,35 +32,42 @@ class Favourites {
             throw error;
         }
     }
+// Add item to favorites for a user
+async addToFavourites(User_ID, Inventory_ID) {
+    // First, check if a record already exists to avoid duplicate entry
+    const checkQuery = `SELECT * FROM Favorites WHERE User_ID = ? AND Inventory_ID = ?`;
+    try {
+      const existing = await db.query(checkQuery, [User_ID, Inventory_ID]);
+      if (existing.length > 0) {
+        console.log("Favorite entry already exists for", User_ID, Inventory_ID);
 
-    // Add item to favorites for a user
-    async addToFavourites(User_ID, Inventory_ID) {
-        const sql = `
-            INSERT INTO Favorites (User_ID, Inventory_ID)
-            VALUES (?, ?);
-        `;
-        var params = [User_ID, Inventory_ID];
-
-        console.log("SQL Query:", sql);
-        console.log("Parameters:", params);
-        // Check for undefined values
-
-        try {
-            var result = await db.query(sql, params);
-            console.log(result);  // Check the result from the database
-
-            if (result.affectedRows > 0) {
-                console.log('Item added to favorites.');
-                return true;
-            } else {
-                console.log('Failed to add item to favorites.');
-                return false;
-            }
-        } catch (error) {
-            console.error('Error during database operation:', error);
-            throw error;
-        }
+        return true;
+      }
+    } catch (error) {
+      console.error("Error checking for existing favorites:", error);
+      throw error;
     }
+
+    // If no record exists, perform the insert.
+    const sql = `INSERT INTO Favorites (User_ID, Inventory_ID, Date_Added) VALUES (?, ?, NOW());`;
+    const params = [User_ID, Inventory_ID];
+    console.log("Inserting favorite for:", User_ID, Inventory_ID);
+    try {
+      const result = await db.query(sql, params);
+      console.log("Insert result:", result);
+      if (result.affectedRows > 0) {
+        console.log('Item added to favorites.');
+        return true;
+      } else {
+        console.log('Failed to add item to favorites.');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error during database operation:', error);
+      throw error;
+    }
+  }
+
 
     // View all saved items for a user
     async viewSavedItems(User_ID) {
