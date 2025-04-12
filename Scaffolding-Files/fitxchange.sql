@@ -86,7 +86,7 @@ CREATE TABLE Transaction (
 -- Creating the Delivery table
 CREATE TABLE Delivery (
     Delivery_ID INT(20) PRIMARY KEY NOT NULL,
-    Delivery_Address VARCHAR(25),
+    Delivery_Address VARCHAR(225),
     Delivery_Option VARCHAR(25),
     Delivery_Date DATE,
     Transaction_ID VARCHAR(20) NOT NULL,
@@ -158,6 +158,7 @@ CREATE TABLE Cart (
     FOREIGN KEY (Inventory_ID) REFERENCES Inventory(Inventory_ID),
     UNIQUE (User_ID, Inventory_ID)
 );
+
 
 -- ----------------------------------------------------------------------------------
 

@@ -1,85 +1,83 @@
-const db = require('./../services/db');
-const { Inventory } = require('./Inventory');
+const db = require('../services/db');
 
-class Cart {
-  static async getCartItems(userId) {
-    const sql = `
-        SELECT
-            c.Cart_ID,
-            c.Quantity,
-            i.Inventory_ID AS orderId,
-            i.Name AS name,
-            i.Product_Image_Path AS image, -- Changed to 'image'
-            i.Description AS description,
-            i.Price AS price
-        FROM Cart c
-        JOIN Inventory i ON c.Inventory_ID = i.Inventory_ID
-        WHERE c.User_ID = ?
-    `;
+const Cart = {
+  getCartItems: async (userId) => {
     try {
-        const [rows] = await db.query(sql, [userId]);
-        return rows;
+        const query = `
+            SELECT
+                c.Cart_ID AS Cart_ID,
+                c.Quantity,
+                i.Inventory_ID AS orderId,
+                i.Name AS name,
+                i.Product_Image_Path AS image,
+                i.Description AS description,
+                i.Price AS price
+            FROM Cart c
+            JOIN Inventory i ON c.Inventory_ID = i.Inventory_ID
+            WHERE c.User_ID = ?
+        `;
+        console.log('SQL Query (getCartItems):', query, [userId]); // Log the query and parameters
+        const [rows] = await db.query(query, [userId]);
+        return { cartItems: Array.isArray(rows) ? rows : [] };
     } catch (error) {
         console.error('Error fetching cart items:', error);
         throw error;
     }
-}
+  },
 
-    static async deleteCartItem(cartId) {
-        const sql = 'DELETE FROM Cart WHERE Cart_ID = ?';
+    addToCart: async (userId, inventoryId, quantity = 1) => {
         try {
-            await db.query(sql, [cartId]);
+            await db.query(`
+                INSERT INTO Cart (User_ID, Inventory_ID, Quantity)
+                VALUES (?, ?, ?)
+                ON DUPLICATE KEY UPDATE Quantity = Quantity + ?
+            `, [userId, inventoryId, quantity, quantity]);
+            return true;
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+            return false;
+        }
+    },
+
+    removeFromCart: async (userId, cartId) => {
+        try {
+            await db.query(`
+                DELETE FROM Cart
+                WHERE User_ID = ? AND Cart_ID = ?
+            `, [userId, cartId]);
+            return true;
+        } catch (err) {
+            console.error('Error removing from cart:', err);
+            return false;
+        }
+    },
+
+    clearCart: async (userId, connection) => {
+        try {
+            await connection.query('DELETE FROM Cart WHERE User_ID = ?', [userId]);
+            return true;
         } catch (error) {
-            console.error('Error deleting cart item:', error);
+            console.error('Error clearing cart:', error);
             throw error;
         }
-    }
+    },
 
-    static async getCartItemByUserAndInventory(userId, inventoryId) {
-      const sql = 'SELECT * FROM Cart WHERE User_ID = ? AND Inventory_ID = ?';
-      try {
-          const [rows] = await db.query(sql, [userId, inventoryId]);
-          if (rows && rows.length > 0) {
-              return rows[0];
-          } else {
-              return null;
-          }
-      } catch (error) {
-          console.error('Error fetching cart item by user and inventory:', error);
-          throw error;
-      }
-  }
-
-    static async addToCart(userId, inventoryId, quantity) {
-        const sql = 'INSERT INTO Cart (User_ID, Inventory_ID, Quantity) VALUES (?, ?, ?)';
+    getCartItemByUserAndInventory: async (userId, inventoryId) => {
         try {
-            await db.query(sql, [userId, inventoryId, quantity]);
+            const [rows] = await db.query(`
+                SELECT * FROM Cart
+                WHERE User_ID = ? AND Inventory_ID = ?
+            `, [userId, inventoryId]);
+            if (Array.isArray(rows) && rows.length > 0) {
+                return rows[0];
+            } else {
+                return null;
+            }
         } catch (error) {
-            console.error('Error adding item to cart:', error);
-            throw error;
+            console.error('Error checking existing cart item:', error);
+            return null;
         }
     }
-
-    static async getCartItemById(cartId) {
-        const sql = 'SELECT * FROM Cart WHERE Cart_ID = ?';
-        try {
-            const [rows] = await db.query(sql, [cartId]);
-            return rows[0];
-        } catch (error) {
-            console.error('Error fetching cart item by ID:', error);
-            throw error;
-        }
-    }
-
-    static async decrementQuantity(cartId) {
-        const sql = 'UPDATE Cart SET Quantity = Quantity - 1 WHERE Cart_ID = ? AND Quantity > 0';
-        try {
-            await db.query(sql, [cartId]);
-        } catch (error) {
-            console.error('Error decrementing cart item quantity:', error);
-            throw error;
-        }
-    }
-}
+};
 
 module.exports = Cart;

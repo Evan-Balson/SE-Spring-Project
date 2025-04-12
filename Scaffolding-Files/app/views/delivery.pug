@@ -1,57 +1,97 @@
 extends default_web_logged-in_layout.pug
 
 block styles
-  link(rel="stylesheet", href="/css/delivery.css")
+    link(rel="stylesheet", href="/css/delivery.css")
 
 block content
-  .delivery-container
-    if deliveryAddress
-      h2 DELIVERY CONFIRMATION
-      .delivery-details
-        p
-          strong Delivery Address:
-          span #{deliveryAddress}
-        p
-          strong Delivery Option:
-          span #{deliveryOption}
-        p
-          strong Delivery Date:
-          span #{deliveryDate}
+    .delivery-container
+        .delivery-form
+            if showConfirmation && deliveryAddress && deliveryOption
+                h2 DELIVERY CONFIRMATION
+                .delivery-details
+                    p
+                        strong Delivery Address:
+                        span #{deliveryAddress}
+                    p
+                        strong Delivery Option:
+                        span #{deliveryOption}
+                    if deliveryDate
+                        p
+                            strong Delivery Date:
+                            span #{deliveryDate}
 
-      .navigation-buttons
-        a(href="/checkout")
-          button Back to Checkout
-        a(href=`/complete-delivery/${transactionId}`)
-          button Confirm Delivery
-    else
-      h2 ENTER SHIPPING ADDRESS
-      form(action=`/confirm-delivery/${transactionId}`, method="POST")
-        .name-fields
-          .form-group
-            label(for="firstName") First name
-            input(type="text", id="firstName", name="firstName", required)
-          .form-group
-            label(for="lastName") Last name
-            input(type="text", id="lastName", name="lastName", required)
-        .form-group
-          label(for="country") Country / Region
-          select(id="country", name="country", required)
-            option(value="UK") United Kingdom
-            option(value="US") United States
-            option(value="CA") Canada
+                .navigation-buttons
+                    a(href="/delivery")
+                        button Back to Edit Delivery
+                    form(action=`/confirm-delivery/${transactionId}`, method="POST")
+                        button Confirm Delivery and Proceed to Payment
+            else
+                h2 ENTER SHIPPING ADDRESS
+                form(action="/delivery", method="POST")
+                    .form-group
+                        label(for="addressLine1") Address Line 1 *
+                        input(type="text", id="addressLine1", name="addressLine1", value=(deliveryAddress ? deliveryAddress.split(', ')[0] : '') required)
+                    .form-group
+                        label(for="addressLine2") Address Line 2 (Optional)
+                        input(type="text", id="addressLine2", name="addressLine2", value="#{deliveryAddress ? deliveryAddress.split(', ')[1]?.trim() : ''}")
+                    .form-group
+                        label(for="city") City *
+                        input(type="text", id="city", name="city", value="#{deliveryAddress ? deliveryAddress.split(', ')[2]?.trim() : ''}" required)
+                    .form-group
+                        label(for="postcode") Postcode *
+                        input(type="text", id="postcode", name="postcode", value="#{deliveryAddress ? deliveryAddress.split(', ')[3]?.trim() : ''}" required)
+                        //- Removed postcode pattern and small tag
+                    .form-group
+                        label(for="country") Country / Region *
+                        select(id="country", name="country", required)
+                            option(value="UK", selected=(deliveryAddress ? deliveryAddress.includes('UK') : false)) United Kingdom
+                            option(value="US", selected=(deliveryAddress ? deliveryAddress.includes('US') : false)) United States
+                            option(value="CA", selected=(deliveryAddress ? deliveryAddress.includes('CA') : false)) Canada
 
-        .postcode
-          label(for="postcode") Postcode
-          input(type="text", id="postcode", name="postcode")
-        .contact-details
-          p Contact details:
-          p We will only contact you in case there are issues with your order
-          .form-group
-            label(for="email") Email
-            input(type="email", id="email", name="email", value="ella.morris@outlook.com", required)
-          .form-group
-            label(for="phone") Phone number
-            input(type="tel", id="phone", name="phone", required)
-        .legal-text
-          | The personal data you have entered will be used by FitXchange
-        button(type="submit") Confirm
+                    .contact-details
+                        p Contact details:
+                        p We will only contact you in case there are issues with your order
+                        .form-group
+                            label(for="email") Email Address *
+                            input(type="email", id="email", name="email", required)
+                            if error === 'Invalid email format.'
+                                .error-message #{error}
+                        .form-group
+                            label(for="phone") Phone number *
+                            input(type="tel", id="phone", name="phone", required )
+                            if error === 'Invalid phone number. Please enter 11 digits.'
+                                .error-message #{error}
+
+                    .form-group
+                        label(for="deliveryOption") Delivery Option *
+                        select(id="deliveryOption", name="deliveryOption", required)
+                            option(value="Standard Delivery", selected=(deliveryOption === 'Standard Delivery')) Standard Delivery
+                            option(value="Express Delivery", selected=(deliveryOption === 'Express Delivery')) Express Delivery
+                            option(value="Next Day Delivery", selected=(deliveryOption === 'Next Day Delivery')) Next Day Delivery
+
+                    .form-group
+                        label(for="deliveryDate") Delivery Date (Optional)
+                        input(type="date", id="deliveryDate", name="deliveryDate", value=(deliveryDate ? deliveryDate.slice(0, 10) : ''))
+
+                    .legal-text
+                        | The personal data you have entered will be used by FitXchange
+
+                    button(type="submit") Continue to Confirmation
+
+        .price-summary
+            h3 Price Summary
+            .summary-item
+                p
+                    strong Subtotal:
+                    span £#{subtotal ? subtotal.toFixed(2) : '0.00'}
+            .summary-item
+                p
+                    strong Delivery Cost:
+                    span £#{deliveryCost ? deliveryCost.toFixed(2) : '0.00'}
+            .summary-item
+                p
+                    strong Total Amount:
+                    span £#{totalAmount ? totalAmount.toFixed(2) : '0.00'}
+
+        if error && error !== 'Invalid email format.' && error !== 'Invalid phone number. Please enter 11 digits.'
+            p.error-general #{error}

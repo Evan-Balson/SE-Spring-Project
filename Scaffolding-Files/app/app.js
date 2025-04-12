@@ -77,16 +77,21 @@ const { listingController } = require('./controllers/listingController');
 const homeFiltersController = require('./controllers/homeFilterController');
 const accountController = require('./controllers/accountController');
 const checkoutController = require('./controllers/checkoutController');
+const deliveryController = require('./controllers/deliveryController');
+const paymentController = require('./controllers/PaymentController.js');
+const confirmationController = require('./controllers/confirmationController')
 
 // Get the models
-const { User } = require("./models/User");
-const { category } = require("./models/category");
-const Cart = require("./models/Cart");
+const { User } = require('./models/User');
+const { category } = require('./models/category');
+const Cart = require('./models/Cart');
+const Delivery = require('./models/Delivery.js');
 
-const about = require("./chatBot/aboutFitxchange");
+/*const about = require("../chatBot/aboutFitxchange");
 
 const aboutCompany = about.aboutCompany;
 const termsAndConditions = about.termsAndConditions;
+*/
 
 //----------------------------------------------------------------------------
 
@@ -208,35 +213,13 @@ app.get("/new-listing", function(req, res){
     res.render("new-listing",{title:'New Listing'});
 });
 app.post("/new-listing", upload.single('image'), listingController.submitListing);
-/*
-// Create a route for cart lising
-app.get("/cart", async function(req, res) {
-    activeUser =  req.session.activeUser || activeUser;
-    if (activeUser.login_Status) {
-        try {
-            // Fetch cart items for the logged-in user
-            const cartItems = await Cart.getCartItems(activeUser.userID);
 
-            //console.log(cartItems);
-            
-            res.render("cart", { title: 'My Cart', cartItems });
-            
-        } catch (error) {
-            console.error('Error fetching cart items:', error);
-            res.status(500).render("error", { message: 'An error occurred while fetching cart items.' });
-        }
-    } else {
-        // If the user is not logged in, redirect to login page
-        res.render("login", { title: 'Login', referencePage: 'cart' });
-    }
-});
-*/
 
 // View cart page
 app.get('/cart', ensureLoggedIn, cartController.viewCart);
 
 // Delete a single item from the cart
-app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.deleteCartItem);
+app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.removeFromCart);
 
 // Add item to cart
 app.post('/cart/add', ensureLoggedIn, cartController.addToCart);
@@ -270,25 +253,24 @@ app.get('/Outfit/:orderId', async (req, res) => {
     }
 });
 
-// Create a route for delete cart item -/
-app.get('/remove/:cartId', async (req, res) => {
-    const cartId = req.params.cartId; // Get the cart ID from the URL parameter
-    try {
-        await Cart.deleteCartItem(cartId); // Call the delete method from Cart model
-        res.redirect('/cart'); // Redirect to the cart page after deletion
-    } catch (error) {
-        console.error('Error deleting cart item:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
 // Create a route for checkout listing - /checkout
-app.get("/checkout", checkoutController.getCheckoutPage);
+app.get("/checkout", checkoutController.getCheckout);
 
+// Route for processing the checkout
+app.post("/checkout", checkoutController.processCheckout);
 
-// app.post("/checkout", checkoutController.processCheckout);
+app.get('/delivery', deliveryController.viewDeliveryPage.bind(deliveryController));
 
+app.post('/delivery', deliveryController.addDelivery.bind(deliveryController));
 
+// New route for handling the delivery confirmation POST request
+app.post('/confirm-delivery/:transactionId', deliveryController.confirmDelivery.bind(deliveryController));
+
+app.get('/payment', paymentController.viewPaymentPage);
+
+app.post('/process-payment', paymentController.processPayment);
+
+app.get('/confirmation', confirmationController.viewConfirmationPage);
 
 // Create a route for login
 app.get("/login", async function(req, res){

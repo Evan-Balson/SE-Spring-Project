@@ -1,71 +1,100 @@
-const  Cart  = require("../models/Cart");
-console.log("Imported Cart object:", Cart);
+const Cart = require("../models/Cart");
 
-exports.viewCart = async (req, res) => {
-    console.log("Viewing Cart - Session:", req.session.activeUser);
+// View cart
+const viewCart = async (req, res) => {
     try {
-        const userId = req.session.activeUser.userID;
-        console.log("Viewing Cart - User ID:", userId); // Added log
-        const cartItems = await Cart.getCartItems(userId);
-        console.log("Viewing Cart - Cart Items:", cartItems); // Added log
+        const userId = req.session.activeUser?.userID;
+        console.log('User ID in viewCart:', userId);
 
-        // Calculate the total price for the entire cart
-        //const totalPrice = cartItems.reduce((acc, item) => acc + (item.price * item.Quantity), 0);
+        if (!userId) {
+            return res.render("cart", {
+                title: 'My Cart',
+                cartItems: [],
+                total: 0,
+                errorMessage: 'User not logged in.'
+            });
+        }
 
+        const { cartItems } = await Cart.getCartItems(userId);
+        console.log("Fetched cart items:", cartItems); // Log the fetched items
 
-        res.render("cart", { title: 'My Cart', cartItems });
+        const total = cartItems.reduce((sum, item) => sum + (item.price * item.Quantity), 0);
+
+        return res.render("cart", {
+            title: 'Your Cart',
+            cartItems, // Pass the array directly
+            total
+        });
     } catch (error) {
         console.error('Error fetching cart items:', error);
-        res.status(500).json({ message: 'An error occurred while fetching your cart items.' });
+        return res.render("cart", {
+            title: 'My Cart',
+            cartItems: [],
+            total: 0,
+            errorMessage: 'Failed to load cart items.'
+        });
     }
 };
 
-exports.deleteCartItem = async (req, res) => {
+// Remove item from cart
+const removeFromCart = async (req, res) => {
     try {
+        const userId = req.session.activeUser?.userID;
         const cartId = req.params.cartId;
-        await Cart.deleteCartItem(cartId);
-        res.redirect('/cart');
+
+        if (!userId || !cartId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing user ID or cart ID.'
+            });
+        }
+
+        const result = await Cart.removeFromCart(userId, cartId);
+
+        if (result) {
+            return res.redirect('/cart');
+        } else {
+            return res.status(500).json({ success: false, message: 'Failed to remove item from cart.' });
+        }
     } catch (error) {
-        console.error('Error deleting cart item:', error);
-        res.status(500).json({ message: 'An error occurred while deleting the cart item.' });
+        console.error('Error removing cart item:', error);
+        return res.status(500).json({ success: false, message: 'Error removing item.', error: error.message });
     }
 };
 
-exports.addToCart = async (req, res) => {
+// Add item to cart
+const addToCart = async (req, res) => {
     const { inventoryId, quantity } = req.body;
     const userId = req.session.activeUser?.userID;
 
-    // Check for undefined values
     if (!userId || !inventoryId) {
-        let errorMessage = '';
-        if (!userId && !inventoryId) {
-            errorMessage = 'User ID and Inventory ID are missing.';
-        } else if (!userId) {
-            errorMessage = 'User ID is missing or user is not logged in.';
-        } else {
-            errorMessage = 'Inventory ID is missing.';
-        }
+        const errorMessage = !userId && !inventoryId
+            ? 'User ID and Inventory ID are missing.'
+            : !userId
+                ? 'User ID is missing or user is not logged in.'
+                : 'Inventory ID is missing.';
         return res.status(400).json({ success: false, message: errorMessage });
     }
 
     try {
-        // Check if the item is already in the cart for the user
         const existingCartItem = await Cart.getCartItemByUserAndInventory(userId, inventoryId);
 
-        if (existingCartItem) {
-            return res.status(409).json({ success: false, message: 'Item is already in your cart.' });
+        const itemQuantity = parseInt(quantity, 10) || 1;
+
+        const result = await Cart.addToCart(userId, inventoryId, itemQuantity);
+        if (result) {
+            return res.status(200).json({ success: true, message: 'Item added to cart successfully.' });
+        } else {
+            return res.status(500).json({ success: false, message: 'Failed to add item to cart.' });
         }
-
-        // Default quantity to 1 if not provided in the request body
-        const itemQuantity = parseInt(quantity) || 1;
-
-        // Add the item to the cart
-        await Cart.addToCart(userId, inventoryId, itemQuantity);
-        res.status(200).json({ success: true, message: 'Item added to cart successfully.' });
     } catch (error) {
         console.error('Error adding item to cart:', error);
-        res.status(500).json({ success: false, message: 'Failed to add item to cart.', error: error.message });
+        return res.status(500).json({ success: false, message: 'Error adding item.', error: error.message });
     }
 };
 
-module.exports = exports;
+module.exports = {
+    viewCart,
+    removeFromCart,
+    addToCart
+};

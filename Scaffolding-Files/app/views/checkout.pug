@@ -1,31 +1,37 @@
 extends default_web_logged-in_layout.pug
 
 block styles
-  link(rel="stylesheet", href="/css/checkout.css")
+    link(rel="stylesheet", href="/css/checkout.css")
 
 block content
-  .checkout-container
-    .checkout-header
-      h1 Checkout
-      h2 Total Cost: £#{totalPrice.toFixed(2)}
+    .checkout-container
+        .checkout-header
+            h1 Checkout
+            h2 Total Cost: £#{total ? total.toFixed(2) : '0.00'}
 
-    if cartItems.length > 0
-      each item in cartItems
-        .checkout-item
-          img(src=item.image, alt=item.name).item-image
-          .item-details
-            h3= item.name
+        if cartItems && cartItems.length > 0
+            each item in cartItems
+                .checkout-item
+                    img.item-image(src=item.image, alt=item.name)
+                    .item-details
+                        h3 #{item.name}
+                        p Price: £#{(item.price * item.Quantity).toFixed(2)} (#{item.Quantity} x £#{item.price.toFixed(2)})
+                        if item.Quantity
+                            p Quantity: #{item.Quantity}
+                        if item.orderDate
+                            p Order Date: #{item.orderDate}
+                hr
 
-            p Price: £#{item.price}
-            p Order Date: #{item.orderDate}
-          hr
+            .checkout-total
+                h3 Total: £#{total ? total.toFixed(2) : '0.00'}
 
-      .checkout-terms
-        p By clicking "Confirm Borrowing", you accept the terms and potential penalties associated with the items.
-        a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
+            .checkout-terms
+                p By clicking "Shipping", you accept the terms and potential penalties associated with the items.
+                a.termsOfUseLink(href="/terms-and-conditions") See Terms and Conditions
 
-      .checkout-navigation
-        a.back-button(href="/cart") ← Go to Cart
-        a.forward-button(href="/shipping") Shippings →
-    else
-      p Your cart is empty.
+            .checkout-navigation
+                a.back-button(href="/cart") ← Go to Cart
+                a.forward-button(href="/delivery") Shippings →
+
+        else
+            p Your cart is empty.

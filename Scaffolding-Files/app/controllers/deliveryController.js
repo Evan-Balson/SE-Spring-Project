@@ -1,80 +1,115 @@
-const Delivery = require('./controllers/Delivery.js')
-const db = require('../services/db')
-const deliveryController = {
+const db = require('../services/db');
+const Cart = require('../models/Cart');
+const Delivery = require('../models/Delivery'); // Assuming this model has static methods
+
+const DeliveryController = {
+    viewDeliveryPage: async (req, res) => {
+        try {
+            const transactionId = req.session.transactionId;
+            const userId = req.session.activeUser?.userID;
+
+            if (!transactionId || !userId) {
+                return res.redirect('/checkout');
+            }
+
+            const [deliveryInfo] = await db.query(
+                'SELECT Delivery_Address, Delivery_Option, Delivery_Date FROM Delivery WHERE Transaction_ID = ?',
+                [transactionId]
+            );
+
+            const deliveryDetails = deliveryInfo?.[0] || {};
+
+            res.render('delivery', {
+                title: 'Delivery Details',
+                transactionId,
+                deliveryAddress: req.session.deliveryAddress || deliveryDetails.Delivery_Address || '',
+                deliveryOption: req.session.deliveryOption || deliveryDetails.Delivery_Option || '',
+                deliveryDate: req.session.deliveryDate || deliveryDetails.Delivery_Date || '',
+                subtotal: req.session.subtotal || 0,
+                deliveryCost: req.session.deliveryCost || 0,
+                totalAmount: req.session.totalAmount || 0,
+                showConfirmation: req.session.showDeliveryConfirmation || false // Flag to show confirmation
+            });
+        } catch (error) {
+            console.error('Error viewing delivery page:', error);
+            res.status(500).send('Internal server error.');
+        }
+    },
+
     addDelivery: async (req, res) => {
-      try {
-          const { deliveryAddress, deliveryOption, deliveryDate } = req.body;
-          const transactionId = req.session.transactionId;
-          const userId = req.session.activeUser?.userID;
-  
-          if (!transactionId || !deliveryAddress || !deliveryOption || !deliveryDate) {
-              return res.status(400).send('Missing required delivery details.');
-          }
-  
-          const cartData = await Cart.getCartItems(userId);
-          if (!cartData || !Array.isArray(cartData.cartItems) || cartData.cartItems.length === 0) {
-              return res.status(400).send('Cart is empty or invalid.');
-          }
-  
-          let totalAmount = 0;
-          cartData.cartItems.forEach(item => {
-              totalAmount += parseFloat(item.price || 0); // Ensure price is a number
-          });
-  
-          const deliveryCost = 5.50;
-          const subtotal = totalAmount; 
-          const finalTotalAmount = subtotal + deliveryCost; 
-  
-          // Store as numbers to avoid issues in the view
-          req.session.totalAmount = parseFloat(finalTotalAmount);
-          req.session.subtotal = parseFloat(subtotal);
-          req.session.deliveryCost = parseFloat(deliveryCost);
-          req.session.cartItems = cartData.cartItems;
-  
-          const sql = `INSERT INTO Delivery (Delivery_Address, Delivery_Option, Delivery_Date, Transaction_ID) VALUES (?, ?, ?, ?)`;
-          await db.query(sql, [deliveryAddress, deliveryOption, deliveryDate, transactionId]);
-  
-          res.redirect(`/payment/${transactionId}`);
-      } catch (error) {
-          console.error('Error adding delivery:', error);
-          res.status(500).send('Could not add delivery.');
-      }
-  },
-  
-  confirmDeliveryPage: async (req, res) => {
-    try {
-        const transactionId = req.session.transactionId;
-        const userId = req.session.activeUser?.userID;
+        try {
+            const { addressLine1, addressLine2, city, postcode, country, email, phone, deliveryOption, deliveryDate } = req.body;
+            const transactionId = req.session.transactionId;
+            const userId = req.session.activeUser?.userID;
 
-        if (!transactionId || !userId) return res.redirect('/checkout');
+            if (!transactionId || !addressLine1 || !city || !postcode || !country || !deliveryOption) {
+                return res.status(400).send('Missing required delivery details.');
+            }
 
-        // Get cart items and ensure values are numeric
-        const cartItems = req.session.cartItems || [];
-        let deliveryCost = parseFloat(req.session.deliveryCost || 5);  // Ensure deliveryCost is a number
-        let totalAmount = parseFloat(req.session.totalAmount);  // Ensure totalAmount is a number
-        let subtotal = parseFloat(req.session.subtotal);  // Ensure subtotal is a number
+            if (Delivery && Delivery.validatePostcode && !Delivery.validatePostcode(postcode)) {
+                return res.status(400).send('Invalid UK postcode.');
+            }
 
-        // Log the values to check their types
-        console.log("Delivery Cost:", deliveryCost);  // Should be a number
-        console.log("Total Amount:", totalAmount);  // Should be a number
-        console.log("Subtotal:", subtotal);  // Should be a number
+            const deliveryAddress = `${addressLine1}${addressLine2 ? ', ' + addressLine2 : ''}, ${city}, ${postcode}, ${country}`;
 
-        // Handle case where one or more values may be NaN or invalid
-        if (isNaN(deliveryCost)) deliveryCost = 0;
-        if (isNaN(totalAmount)) totalAmount = 0;
-        if (isNaN(subtotal)) subtotal = 0;
+            const { cartItems } = await Cart.getCartItems(userId);
+            if (!cartItems || cartItems.length === 0) {
+                return res.status(400).send('Cart is empty or invalid.');
+            }
 
-        res.render('delivery', {
-            title: 'Confirm Delivery',
-            transactionId,
-            cartItems,
-            deliveryCost,
-            totalAmount,
-            subtotal,
-        });
-    } catch (error) {
-        console.error('Error showing delivery page:', error);
-        res.status(500).send('Internal server error.');
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.Quantity), 0);
+            const deliveryCost = Delivery && Delivery.getDeliveryCost ? Delivery.getDeliveryCost(deliveryOption) : 0; // Ensure Delivery and getDeliveryCost exist
+            const totalAmount = subtotal + deliveryCost;
+
+            req.session.deliveryAddress = deliveryAddress;
+            req.session.deliveryOption = deliveryOption;
+            req.session.deliveryDate = deliveryDate || new Date().toISOString().slice(0, 10);
+            req.session.subtotal = parseFloat(subtotal.toFixed(2));
+            req.session.deliveryCost = parseFloat(deliveryCost.toFixed(2));
+            req.session.totalAmount = parseFloat(totalAmount.toFixed(2));
+            req.session.cartItems = cartItems;
+            req.session.showDeliveryConfirmation = true; // Set flag to show confirmation
+
+            const [existing] = await db.query(
+                'SELECT * FROM Delivery WHERE Transaction_ID = ?',
+                [transactionId]
+            );
+
+            if (Array.isArray(existing) && existing.length === 0) {
+                await db.query(
+                    `INSERT INTO Delivery (Delivery_Address, Delivery_Option, Delivery_Date, Transaction_ID)
+                     VALUES (?, ?, ?, ?)`,
+                    [deliveryAddress, deliveryOption, deliveryDate, transactionId]
+                );
+            } else if (Array.isArray(existing) && existing.length > 0) {
+                await db.query(
+                    `UPDATE Delivery SET Delivery_Address = ?, Delivery_Option = ?, Delivery_Date = ?
+                     WHERE Transaction_ID = ?`,
+                    [deliveryAddress, deliveryOption, deliveryDate, transactionId]
+                );
+            } else {
+                console.warn('Unexpected result from database query: ', existing);
+                return res.status(500).send('Database error occurred.');
+            }
+
+            // Redirect back to the delivery page to show confirmation
+            return res.redirect('/delivery');
+        } catch (error) {
+            console.error('Error adding delivery:', error);
+            res.status(500).send('Could not add delivery.');
+        }
+    },
+
+    confirmDelivery: async (req, res) => {
+        try {
+            // Once the user confirms, remove the confirmation flag from the session
+            req.session.showDeliveryConfirmation = false;
+            return res.redirect('/payment');
+        } catch (error) {
+            console.error('Error confirming delivery:', error);
+            res.status(500).send('Internal server error.');
+        }
     }
-    }
-  };
+};
+
+module.exports = DeliveryController;

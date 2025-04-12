@@ -49,7 +49,7 @@ block content
           window.alert(data.message);
         } else {
           console.error('Error adding to cart:', data.message);
-          // Optionally display an error message in the UI
+          
         }
       } catch (error) {
         console.error('Error adding to cart:', error);
@@ -75,10 +75,10 @@ block content
         });
         const data = await response.json();
         if (data.success) {
-          window.alert(data.message); // Display the success message for favorites
+          window.alert(data.message); 
         } else {
           console.error('Error adding to favorites:', data.message);
-          // Optionally display an error message in the UI
+          
         }
       } catch (error) {
         console.error('Error adding to favorites:', error);

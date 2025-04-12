@@ -1,0 +1,40 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/confirmation.css") // Renamed CSS file
+
+block content
+    .confirmation-container
+        h2 Order Confirmation // Updated heading
+
+        p.success Payment successful!
+
+        h3 Transaction Details
+        p Transaction ID: #{confirmationData.transactionId}
+        p Payment ID: #{confirmationData.paymentId}
+        p Order Date: #{confirmationData.orderDate}
+        p Delivery Address: #{confirmationData.deliveryAddress}
+        p Delivery Option: #{confirmationData.deliveryOption}
+        p Estimated Delivery Date: #{estimatedDeliveryDate}
+
+        h3 Items
+        table
+            thead
+                tr
+                    th Item Name
+                    th Quantity
+                    th Price
+                    th Total
+            tbody
+                each item in confirmationData.items
+                    tr
+                        td #{item.name}
+                        td #{item.Quantity}
+                        td £#{item.price.toFixed(2)}
+                        td £#{(item.price * item.Quantity).toFixed(2)}
+            tfoot
+                tr
+                    td(colspan="3") Total Price:
+                    td £#{confirmationData.totalAmount.toFixed(2)}
+
+        p Thank you for your order!
