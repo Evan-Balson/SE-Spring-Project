@@ -23,10 +23,10 @@ block content
             // Avatar
             .avatar
               if msg.speaker === 'user'
-                if activeUser.Profile_Image_Path === ''
+                if activeUser.Profile_Image === ''
                   img(src='/images/user_avatar.png' alt='User')
                 else
-                  img(src=activeUser.Profile_Image_Path, alt='User')
+                  img(src=activeUser.Profile_Image, alt='User')
               else
                 img(src='/images/bot_avatar.png' alt='Bot')
             // Message content
