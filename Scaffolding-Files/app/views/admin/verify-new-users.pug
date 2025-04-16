@@ -24,7 +24,10 @@ block content
             td #{user.Email_Address}
             td #{user.Address}
             td
-              form(action=`/admin/verify-new-users/remove/${user.User_ID}`, method="POST", style="display:inline")
-                button(type="submit", class="reject-btn") Remove
+              .action-buttons
+                form(action=`/admin/verify-new-users/approve/${user.User_ID}`, method="POST", style="display:inline")
+                  button(type="submit", class="approve-btn") Approve
+                form(action=`/admin/verify-new-users/remove/${user.User_ID}`, method="POST", style="display:inline")
+                  button(type="submit", class="reject-btn") Reject
   else
     p No users found.
