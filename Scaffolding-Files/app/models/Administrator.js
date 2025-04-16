@@ -17,19 +17,6 @@ class Administrator extends User {
     }
 
     // Methods
-    // verifying user
-    async verifyUser(userID){
-        try{
-            verifyUserSQL = `SELECT * FROM User`;
-            var result = await db.query(verifyUserSQL, [userID]);
-            return result;
-        } catch (error) {
-            console.error("Error failed to verify user:", error);
-            throw error;
-        }
-    
-    }
-
     async getAllOutfits() {
         try {
             const query = `SELECT Inventory_ID, Name, Price, Quantity, Color, Size, Description FROM Inventory;`;
@@ -110,7 +97,7 @@ class Administrator extends User {
 
     async getAllUsers() {
         try {
-            const query = `SELECT User_ID, Name, Role, Email_Address, Address FROM User;`;
+            const query = `SELECT User_ID, Name, Role, Email_Address, Address FROM User WHERE enrollment_status = 'pending';`;
             const result = await db.query(query);
             return result;
         } catch (error) {
@@ -119,6 +106,16 @@ class Administrator extends User {
         }
     }
     
+    async approveUser(userId) {
+        try {
+            const query = `UPDATE User SET enrollment_status = 'confirmed' WHERE User_ID = ?;`;
+            await db.query(query, [userId]);
+        } catch (error) {
+            console.error("Error removing user:", error);
+            throw error;
+        }
+    }
+
     async removeUser(userId) {
         try {
             const query = `DELETE FROM User WHERE User_ID = ?;`;
