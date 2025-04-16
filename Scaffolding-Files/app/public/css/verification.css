@@ -1,0 +1,60 @@
+/* Center the content */
+body {
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    background: url('/images/FitXChange bg3.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  
+  /* Create an overlay with a semi-transparent gradient */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(30deg, rgba(211, 211, 211, 0.8), rgba(255, 255, 255, 0.8));
+    z-index: -1; /* Place behind the body content */
+  }
+  
+  .block-content {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 40px 60px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    color: #555;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  /* Button styling */
+  .button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #004544;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #09d8d5;
+  }
+  

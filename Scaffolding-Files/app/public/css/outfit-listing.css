@@ -126,6 +126,17 @@ p.description {
   color: #555;
 }
 
+ul{
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.listed-by-you{
+  margin-top: 3%;
+  color: darkcyan;
+  list-style: none;
+}
+
 
 /* Responsive adjustments for screens smaller than 1024px */
 @media (max-width: 1024px) {

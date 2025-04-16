@@ -14,12 +14,11 @@ block content
             img(src=item.image, alt=item.name)
             .details
               h2= item.name
-              p Description: #{item.description}
-              p Quantity: #{item.quantity}
-              p Misuse Penalty: #{item.penalty} 
-              p Order Date: #{item.orderDate}
-              p Delivery Date: #{item.deliveryDate}
-              p Dispatch To: #{item.dispatchTo}
+              p Description: #{item.Description}
+              p Quantity: #{item.Quantity}
+              p Price: £#{item.Price}
+              p Delivery Date: Collect from: #{item.sellerAddress}
+              p Dispatch To: #{activeUser.userAddress}
               hr
         .terms
           p 

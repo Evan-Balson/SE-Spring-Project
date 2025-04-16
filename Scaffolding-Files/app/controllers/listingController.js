@@ -143,7 +143,8 @@ const path = require('path');
                 title: "Outfit Details", 
                 product, 
                 avgRating, 
-                totalReviews 
+                totalReviews,
+                userID: user.userID
             });
         }
 
@@ -153,7 +154,8 @@ const path = require('path');
             title: "Outfit Details", 
             product, 
             avgRating, 
-            totalReviews 
+            totalReviews,
+            userID: user.userID
           });
           }
           

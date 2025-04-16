@@ -5,20 +5,15 @@ const db = require('../services/db');
 
 const getCheckout = async (req, res) => {
     try {
-        // Check if activeUser exists in the session
-        if (!req.session.activeUser || !req.session.activeUser.userID) {
-            return res.redirect('/login');
-        }
 
         const userId = req.session.activeUser.userID;
         console.log("Checkout User ID:", userId);
         console.log("Session Data:", req.session);
 
         // Fetch cart items for the user
-        const cartItems = await Cart.getCartItems(userId);
-        console.log("Checkout Cart Items:", cartItems);
+        const cartItems = await Cart.getCheckoutDetails(userId);
 
-        return res.render('checkout', { title: 'Checkout', cartItems });
+        return cartItems
     } catch (error) {
         console.error('Error fetching checkout items:', error);
         return res.status(500).send('Internal Server Error');
@@ -41,7 +36,7 @@ const processCheckout = async (req, res) => {
     const paymentID = paymentResults[0].Payment_ID;
     
     // Retrieve cart items with only Inventory details.
-    const cartItems = await Cart.getCartDetails(activeUser.userID);
+    const cartItems = await Cart.getCheckoutDetails(activeUser.userID);
     if (!cartItems || cartItems.length === 0) {
       console.log("Checkout: Cart is empty for user:", activeUser.userID);
       return res.redirect("/cart");

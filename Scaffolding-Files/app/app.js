@@ -298,12 +298,20 @@ app.get("/checkout", async function(req, res) {
 
   activeUser =  req.session.activeUser || activeUser;
  
-  const cartItems = await Cart.getCartItems(activeUser.userID); 
-
-  console.log(cartItems);
 
   if(activeUser.login_Status){
-      res.render("checkout",{title:'Checkout', cartItems});
+    
+    console.log("User enrollment status is: ",activeUser.enrollment_status);
+    if(activeUser.enrollment_status==='pending'){
+      res.render("awaiting-enrollment",{title:'Enrollment Pending'});
+
+    }
+    else{
+      const cartItems = await checkoutController.getCheckout(req,res); 
+
+      console.log(cartItems);
+      res.render("checkout",{title:'Checkout', cartItems, activeUser});
+    }
   }
   else{
       res.render("login",{title:'Login', referencePage: 'checkout' });}

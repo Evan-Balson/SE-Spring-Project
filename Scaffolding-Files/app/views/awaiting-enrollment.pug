@@ -1,0 +1,10 @@
+extends default_web_logged-in_layout.pug
+
+block styles
+  link(rel="stylesheet", href="/css/verification.css")
+
+block content
+  .block-content
+    h1 Your account is still being verified.
+    h2 Please check back later.
+    a.button(href="/cart") Return to Cart

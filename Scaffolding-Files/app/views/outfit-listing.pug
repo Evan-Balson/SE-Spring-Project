@@ -4,6 +4,7 @@ block styles
   link(rel="stylesheet", href="/css/outfit-listing.css")
   
 block content
+
   .product-div
     .product-detail-container
       .image-gallery
@@ -41,13 +42,20 @@ block content
         p Availability: #{product.Availability ? 'In Stock' : 'Out of Stock'}
         p Quantity Available: #{product.Quantity}
 
-        .button-container
-          li
-            a.buttonhere.add-to-cart(href=`/cart/add?inventoryId=${product.Inventory_ID}`, data-id=product.Inventory_ID, data-type="cart") Add to Cart
-            span.success-label.hidden(data-id=product.Inventory_ID, data-type="cart") Added to Cart!
-            span.success-label.hidden(data-id=product.Inventory_ID, data-type="favourites") Added to Favourites!
-          li
-            a.buttonhere.add-to-fav(href=`/favourites/add?inventoryId=${product.Inventory_ID}`, data-id=product.Inventory_ID, data-type="favourites") Add to Favourites
+        // Check if active user is the seller.
+        if product.User_ID === activeUser.userID
+          p.listed-by-you This item is listed by you and cannot be added to cart or favourites.
+          ul
+            li.backLink
+              a.goback-link(href="/") ← Return to Browse
+        else
+          .button-container
+            li
+              a.buttonhere.add-to-cart(href=`/cart/add?inventoryId=${product.Inventory_ID}`, data-id=product.Inventory_ID, data-type="cart") Add to Cart
+              span.success-label.hidden(data-id=product.Inventory_ID, data-type="cart") Added to Cart!
+              span.success-label.hidden(data-id=product.Inventory_ID, data-type="favourites") Added to Favourites!
+            li
+              a.buttonhere.add-to-fav(href=`/favourites/add?inventoryId=${product.Inventory_ID}`, data-id=product.Inventory_ID, data-type="favourites") Add to Favourites
             
   script.
     function setMainImage(src) {

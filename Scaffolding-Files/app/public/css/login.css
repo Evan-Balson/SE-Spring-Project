@@ -71,7 +71,7 @@ body::before {
   }
   
   .login-button {
-    background-color: #004544; /* Pink color */
+    background-color: #004544;
     color: white;
     border: none;
     padding: 10px;

@@ -12,8 +12,9 @@ class User {
     userContact;
     Profile_Image;
     login_Status;
+    enrollment_status;
 
-    constructor(id, name, role, email, password, address, phone, image, login) {
+    constructor(id, name, role, email, password, address, phone, image, login, enrollment_status) {
         this.userID = id;
         this.userName = name;
         this.userEmail = email;
@@ -23,6 +24,7 @@ class User {
         this.userContact = phone;
         this.Profile_Image = image;
         this.login_Status = login;
+        this.enrollment_status = enrollment_status;
     }
 
     setLoginStatus(login){
@@ -39,7 +41,19 @@ class User {
                 const user = result[0];
                 const passwordMatch = await bcrypt.compare(password, user.Password);
                 if (passwordMatch) {
-                    return new User(user.User_ID, user.Name, user.Role, user.Email_Address, user.Password, user.Address, user.Contact_Number, user.Profile_Image_Path);
+                    return new User(
+                        user.User_ID,
+                        user.Name,
+                        user.Role,
+                        user.Email_Address,
+                        user.Password,
+                        user.Address,
+                        user.Contact_Number,
+                        user.Profile_Image_Path,
+                        user.login_status,
+                        user.enrollment_status
+                      );
+                    
                 } else {
                     console.log('Incorrect password');
                     return null;
@@ -111,7 +125,8 @@ class User {
             user.Address,
             user.Contact_Number,
             user.Profile_Image_Path,
-            user.login_status
+            user.login_status,
+            user.enrollment_status
           );
         }
         return null;

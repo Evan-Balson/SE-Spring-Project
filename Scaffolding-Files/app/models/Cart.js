@@ -14,6 +14,31 @@ class Cart {
     }
   }
 
+  static async getCheckoutDetails(userID) {
+    const sql = `
+      SELECT 
+        c.Cart_ID,
+        c.Quantity,
+        c.Inventory_ID AS orderId,
+        i.Name AS name,
+        i.Product_Image_Path AS image,
+        i.Description,
+        i.Price,
+        u.Address AS sellerAddress
+      FROM Cart c
+      JOIN Inventory i ON c.Inventory_ID = i.Inventory_ID
+      JOIN User u ON i.User_ID = u.User_ID
+      WHERE c.User_ID = ?
+    `;
+    try {
+      const results = await db.query(sql, [userID]);
+      return results;
+    } catch (error) {
+      console.error('Error fetching checkout details:', error);
+      throw error;
+    }
+  }
+
   static async deleteCartItem(cartId) {
     try {
       // Retrieve the current quantity for the given cart item.
