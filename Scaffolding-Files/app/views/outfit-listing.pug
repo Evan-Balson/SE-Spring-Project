@@ -42,11 +42,47 @@ block content
         p Quantity Available: #{product.Quantity}
 
         .button-container
-          button.buttonhere: a(href=`/cart/add?inventoryId=${product.Inventory_ID}`) Add to Cart
-          button.buttonhere: a(href=`/favourites/add?inventoryId=${product.Inventory_ID}`) Add to Favorites
-
+          li
+            a.buttonhere.add-to-cart(href=`/cart/add?inventoryId=${product.Inventory_ID}`, data-id=product.Inventory_ID, data-type="cart") Add to Cart
+            span.success-label.hidden(data-id=product.Inventory_ID, data-type="cart") Added to Cart!
+            span.success-label.hidden(data-id=product.Inventory_ID, data-type="favourites") Added to Favourites!
+          li
+            a.buttonhere.add-to-fav(href=`/favourites/add?inventoryId=${product.Inventory_ID}`, data-id=product.Inventory_ID, data-type="favourites") Add to Favourites
+            
   script.
     function setMainImage(src) {
       document.getElementById('mainImage').src = src;
     }
+
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const cartButtons = document.querySelectorAll('.add-to-cart');
+      const favButtons = document.querySelectorAll('.add-to-fav');
+
+      function showLabel(btn) {
+        const id = btn.dataset.id;
+        const type = btn.dataset.type;
+        const label = document.querySelector(`.success-label[data-id='${id}'][data-type='${type}']`);
+
+        if (label) {
+          label.classList.remove('hidden');
+          setTimeout(() => label.classList.add('hidden'), 3000);
+        }
+      }
+
+      cartButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          // e.preventDefault(); // Uncomment if using AJAX
+          showLabel(btn);
+        });
+      });
+
+      favButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          // e.preventDefault(); // Uncomment if using AJAX
+          showLabel(btn);
+        });
+      });
+    });
+
     

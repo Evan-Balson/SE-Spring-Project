@@ -4,13 +4,12 @@ const { Cart } = require("../models/Cart");
 const viewCart = async (req, res) => {
     try {
         const userId = req.session.activeUser.userID;
-        const cartItems = await Cart.getCartItems(userId);
-        return res.render("cart", { title: 'My Cart', cartItems });
+        const cartItems = await Cart.getCartDetails(userId);
+        console.log(cartItems);
+        return res.render("cart", { title: 'My Cart', cartItems:cartItems });
     } catch (error) {
         console.error('Error fetching cart items:', error);
-        return res.status(500).render("error", {
-            message: 'An error occurred while fetching your cart items.'
-        });
+        
     }
 };
 
@@ -22,28 +21,47 @@ const deleteCartItem = async (req, res) => {
         return res.redirect('/cart');
     } catch (error) {
         console.error('Error deleting cart item:', error);
-        return res.status(500).render("error", {
-            message: 'An error occurred while deleting the cart item.'
-        });
+
     }
 };
 
 // Add an item to the cart
 const addToCart = async (req, res) => {
     try {
-        const userId = req.session.activeUser.userID;
-        const { inventoryId, quantity } = req.body;
-        await Cart.addToCart(userId, inventoryId, quantity);
-        toastr.success("Item successfully added to cart");
+      const userId = req.session.activeUser && req.session.activeUser.userID;
+      // Using req.query if it's a GET request; or req.body if it's POST—adjust as needed.
+      const inventoryId = req.query.inventoryId || req.body.inventoryId;
+      // Parse quantity, defaulting to 1 if not provided or not a valid number.
+      let quantity = req.query.quantity || req.body.quantity;
+      quantity = parseInt(quantity, 10);
+      if (isNaN(quantity)) {
+        quantity = 1;
+      }
+  /*
+      // Validate parameters:
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is missing." });
+      }
+      if (!inventoryId) {
+        return res.status(400).json({ message: "Inventory ID is missing." });
+      }*/
+  
+      return await Cart.addToCart(userId, inventoryId, quantity);
+      //res.send("Added to cart");
+      /*
+      if(result.success) {
         return res.status(200).json({ message: 'Item added to cart successfully.' });
+      } else {
+        return res.status(400).json({ message: 'Failed to add item to cart.' });
+      }*/
     } catch (error) {
-        console.error('Error adding item to cart:', error);
-        return res.status(500).json({
-            message: 'Failed to add item to cart.',
-            error: error.message
-        });
+      console.error('Error adding item to cart:', error);
+      return res.status(500).json({
+        message: 'Failed to add item to cart.',
+        error: error.message
+      });
     }
-};
+  };
 
 module.exports = {
     viewCart,

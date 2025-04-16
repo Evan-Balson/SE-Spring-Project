@@ -77,26 +77,88 @@ class Transaction {
     }
   }
 
-  static async getAllTransactions(userID) {
-    const query = `SELECT t.Transaction_ID, t.Transaction_Date AS orderDate, t.Inventory_ID AS inventoryID, i.Name AS itemName, i.Description AS description, i.Product_Image_Path AS image, d.Delivery_Address AS dispatchTo, t.Total_Price AS penalty FROM Transaction t JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID WHERE t.User_ID = ? ORDER BY t.Transaction_Date DESC;`;
-    const results = await db.query(query, [userID]);
-    return results;
-  }
-
-  static async searchTransactions(userID, sortOrder, searchString) {
-    if (sortOrder === '*') {
-      const defaultMonths = 12;
-      const query = `SELECT t.Transaction_ID, t.Transaction_Date AS orderDate, t.Inventory_ID AS inventoryID, i.Name AS itemName, i.Description AS description, i.Product_Image_Path AS image, d.Delivery_Address AS dispatchTo, t.Total_Price AS penalty FROM Transaction t JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID WHERE t.User_ID = ? ORDER BY t.Transaction_Date DESC;`;
-      const results = await db.query(query, [userID, defaultMonths]);
+  static async getAllTransactions(userID, sortOrder) {
+    if (sortOrder === '*' || !sortOrder) {
+      const query = "SELECT t.Transaction_ID, t.Transaction_Date AS orderDate, t.Inventory_ID AS inventoryID, i.Name AS itemName, i.Description AS description, i.Product_Image_Path AS image, d.Delivery_Address AS dispatchTo, t.Total_Price AS penalty FROM Transaction t JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID WHERE t.User_ID = ? ORDER BY t.Transaction_Date DESC;";
+      const results = await db.query(query, [userID]);
+      return results;
+    } else {
+      const months = parseInt(sortOrder, 10) || 12;
+      const query = "SELECT t.Transaction_ID, t.Transaction_Date AS orderDate, t.Inventory_ID AS inventoryID, i.Name AS itemName, i.Description AS description, i.Product_Image_Path AS image, d.Delivery_Address AS dispatchTo, t.Total_Price AS penalty FROM Transaction t JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID WHERE t.User_ID = ? AND t.Transaction_Date >= DATE_SUB(CURDATE(), INTERVAL ? MONTH) ORDER BY t.Transaction_Date DESC;";
+      const results = await db.query(query, [userID, months]);
       return results;
     }
-
-    const months = parseInt(sortOrder, 10) || 12;
+  }
+  
+  static async searchTransactions(userID, sortOrder, searchString) {
     const likeString = `%${searchString.trim()}%`;
-    const query = `SELECT DISTINCT t.Transaction_ID, t.Transaction_Date AS orderDate, t.Inventory_ID AS inventoryID, i.Name AS itemName, i.Description AS description, i.Product_Image_Path AS image, d.Delivery_Address AS dispatchTo, t.Total_Price AS penalty FROM Transaction t JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID LEFT JOIN Outfit_and_Categories oc ON i.Inventory_ID = oc.Inventory_ID LEFT JOIN Category c ON oc.Category_ID = c.Category_ID WHERE t.User_ID = ? AND t.Transaction_Date >= DATE_SUB(CURDATE(), INTERVAL ? MONTH) AND (i.Description LIKE ? OR c.Category_Name LIKE ?) ORDER BY t.Transaction_Date DESC;`;
-    const results = await db.query(query, [userID, months, likeString, likeString]);
+    const hasSearch = searchString.trim() !== '';
+  
+    let query = '';
+    let params = [];
+  
+    if (sortOrder === '*') {
+      query = `
+        SELECT DISTINCT 
+          t.Transaction_ID, 
+          t.Transaction_Date AS orderDate, 
+          t.Inventory_ID AS inventoryID, 
+          i.Name AS itemName, 
+          i.Description AS description, 
+          i.Product_Image_Path AS image, 
+          d.Delivery_Address AS dispatchTo, 
+          t.Total_Price AS penalty 
+        FROM Transaction t 
+        JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID 
+        LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID 
+        LEFT JOIN Outfit_and_Categories oc ON i.Inventory_ID = oc.Inventory_ID 
+        LEFT JOIN Category c ON oc.Category_ID = c.Category_ID 
+        WHERE t.User_ID = ?`;
+  
+      params.push(userID);
+  
+      if (hasSearch) {
+        query += ` AND (i.Description LIKE ? OR c.Category_Name LIKE ?)`;
+        params.push(likeString, likeString);
+      }
+  
+      query += ` ORDER BY t.Transaction_Date DESC`;
+  
+    } else {
+      const months = parseInt(sortOrder, 10) || 12;
+      query = `
+        SELECT DISTINCT 
+          t.Transaction_ID, 
+          t.Transaction_Date AS orderDate, 
+          t.Inventory_ID AS inventoryID, 
+          i.Name AS itemName, 
+          i.Description AS description, 
+          i.Product_Image_Path AS image, 
+          d.Delivery_Address AS dispatchTo, 
+          t.Total_Price AS penalty 
+        FROM Transaction t 
+        JOIN Inventory i ON t.Inventory_ID = i.Inventory_ID 
+        LEFT JOIN Delivery d ON t.Transaction_ID = d.Transaction_ID 
+        LEFT JOIN Outfit_and_Categories oc ON i.Inventory_ID = oc.Inventory_ID 
+        LEFT JOIN Category c ON oc.Category_ID = c.Category_ID 
+        WHERE t.User_ID = ? 
+          AND t.Transaction_Date >= DATE_SUB(CURDATE(), INTERVAL ? MONTH)`;
+  
+      params.push(userID, months);
+  
+      if (hasSearch) {
+        query += ` AND (i.Description LIKE ? OR c.Category_Name LIKE ?)`;
+        params.push(likeString, likeString);
+      }
+  
+      query += ` ORDER BY t.Transaction_Date DESC`;
+    }
+  
+    const results = await db.query(query, params);
     return results;
   }
+  
+  
 
 }
 

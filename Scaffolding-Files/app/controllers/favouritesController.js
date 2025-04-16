@@ -10,8 +10,10 @@ const addToFavourites = async (userId, inventoryId) => {
     if (!userId || !inventoryId) {
       throw new Error("User ID or Inventory ID is missing.");
     }
+    
     // Call the model function to add the item to favourites.
-    await favourites.addToFavourites(userId, inventoryId);
+    return await favourites.addToFavourites(userId, inventoryId);
+    
   };
 
 // Controller to handle removing an item from favorites

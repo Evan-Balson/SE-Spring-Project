@@ -78,6 +78,7 @@ const homeFiltersController = require('./controllers/homeFilterController');
 const accountController = require('./controllers/accountController');
 const checkoutController = require('./controllers/checkoutController');
 const outfitRatingController = require('./controllers/outfitRatingController');
+const orderHistoryController = require('./controllers/orderHistoryController');
 
 
 // Get the models
@@ -238,11 +239,9 @@ app.get("/cart", async function(req, res) {
     if (activeUser.login_Status) {
         try {
             // Fetch cart items for the logged-in user
-            const cartItems = await Cart.getCartItems(activeUser.userID);
-
-            console.log(cartItems);
+            cartController.viewCart(req, res);
             
-            res.render("cart", { title: 'My Cart', cartItems:cartItems });
+            
             
         } catch (error) {
             console.error('Error fetching cart items:', error);
@@ -258,20 +257,10 @@ app.get("/cart", async function(req, res) {
 //app.get('/cart', ensureLoggedIn, cartController.viewCart);
 
 // Delete a single item from the cart
-app.post('/cart/delete/:cartId', ensureLoggedIn, cartController.deleteCartItem);
+app.post('/cart/delete/:cartId', cartController.deleteCartItem);
 
-app.get('/cart/add', async (req, res) => {
-    const inventoryId = req.query.inventoryId;
-    const userId = req.session.activeUser.userID; // Get the user ID from the session
-  
-    try {
-      await Cart.addToCart(userId, inventoryId); // Add the item to the cart
-      res.redirect('/cart'); // Redirect to the cart page
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      res.status(500).send('Error adding to cart');
-    }
-  });
+app.get('/cart/add', cartController.addToCart);
+
 
 // Create a route for outfit details -/
 app.get('/Outfit/:orderId', async (req, res) => {
@@ -351,42 +340,25 @@ app.get("/register", async function(req, res){
 });
 app.post("/register", upload.single('image'), registrationController.registerUser);
 
-
-// Create a route for order history (GET)
-app.get("/order-history", async function(req, res) {  
-  activeUser = req.session.activeUser || activeUser
-  if (activeUser.login_Status) {
-    console.log(activeUser);
-      // Use "*" as default sort order, which the model converts to a default period (e.g., 12 months)
-      const orders = await Transaction.getAllTransactions(activeUser.userID, "*");
-      console.log(orders);
-      res.render("order-history", { title: 'My Orders', orders, sortOrder: "*", searchQuery: "" });
+// GET route for order history (using query parameters)
+app.get("/order-history", async (req, res) => {
+  const activeUser = req.session.activeUser || {};
+  if (activeUser && activeUser.login_Status) {
+    // The controller will use req.query for sorting/searching.
+    await orderHistoryController.getOrderHistory(req, res);
   } else {
-      res.render("login", { title: 'Login', referencePage: 'order-history' });
+    res.render("login", { title: 'Login', referencePage: 'order-history' });
   }
 });
 
-// Create a route for order history filtering/search (POST)
-app.post("/order-history", async function(req, res) {
-  activeUser = req.session.activeUser || activeUser
+// POST route for filtering/searching order history
+app.post("/order-history", async (req, res) => {
+  const activeUser = req.session.activeUser || {};
   if (!activeUser || !activeUser.login_Status) {
-      return res.render("login", { title: 'Login', referencePage: 'order-history' });
+    return res.render("login", { title: 'Login', referencePage: 'order-history' });
   }
-  
-  // Get filter parameters from form; default sortOrder is "*"
-  const sortOrder = req.body.sortOrder || "*";
-  const searchString = req.body.search || "";
-  
-  let orders;
-  if (searchString.trim() === "") {
-      // No search string; show all orders for the period, using the provided sortOrder
-      orders = await Transaction.getAllTransactions(activeUser.userID, sortOrder);
-  } else {
-      // Perform a search on description and category name
-      orders = await Transaction.searchTransactions(activeUser.userID, sortOrder, searchString);
-  }
-
-  res.render("order-history", { title: 'My Orders', orders, sortOrder, searchQuery: searchString });
+  // The controller will use req.body to determine sortOrder and searchQuery.
+  await orderHistoryController.getOrderHistory(req, res);
 });
 
 // New POST route for order rating submission
@@ -549,6 +521,8 @@ app.get("/favourites/add", async (req, res) => {
 
   try {
       await favouritesController.addToFavourites(userId, inventoryId);
+
+      //res.send("added to favourites.");
     
   } catch (error) {
       console.error('Error adding to favorites:', error);

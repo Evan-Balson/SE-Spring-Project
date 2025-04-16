@@ -1,24 +1,28 @@
-// controllers/orderHistoryController.js
-const Transaction = require('../models/Transaction');
+const {Transaction} = require('../models/Transaction');
 
-exports.getOrderHistory = async (req, res) => {
+const getOrderHistory = async (req, res) => {
   try {
-    // Retrieve filter criteria from query parameters:
-    const user = req.session.activeUser;
-    console.log(user.userID)
-    const sortOrder = req.query.sortOrder || "12";  // default: past 12 months
-    const searchQuery = req.query.search || "";
+    const user = req.session.activeUser;  // Ensure activeUser is set in the session
+    console.log("Active user:", user.userID);
+
+    // Get sort order and search query from request query parameters (for GET requests)  
+    // or from the body (for POST requests) as appropriate.
+    const sortOrder = req.method === 'GET' ? req.query.sortOrder || "*" : req.body.sortOrder || "*";
+    const searchQuery = req.method === 'GET' ? req.query.search || "" : req.body.search || "";
 
     let orders;
-    // If a search string exists, use the searchTransactions method.
+    // If a search query exists, use the searchTransactions method.
     if (searchQuery && searchQuery.trim() !== "") {
       orders = await Transaction.searchTransactions(user.userID, sortOrder, searchQuery);
+      console.log(user.userID, sortOrder, searchQuery);
+      console.log(orders);
     } else {
-      orders = await Transaction.getAllTransactions(user.UserID);
+      orders = await Transaction.getAllTransactions(user.userID, sortOrder);
+      console.log(orders);
+      console.log(sortOrder);
     }
 
-    // Render the order history page with the orders array.
-    // (The view below expects an "orders" variable.)
+    // Render the order history page.
     res.render('order-history', {
       title: 'Your Order History',
       orders: orders,
@@ -30,3 +34,7 @@ exports.getOrderHistory = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+module.exports ={
+  getOrderHistory
+}

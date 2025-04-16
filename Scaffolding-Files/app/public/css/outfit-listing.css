@@ -72,8 +72,8 @@ p.description {
 
 .buttonhere{
   background-color: #004544;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 25px;
+  padding-bottom: 25px;
   border-radius: 30px;
   
 }
@@ -81,7 +81,7 @@ p.description {
 .button-container {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 .button-container a {
     padding: 10px 20px;
@@ -89,6 +89,28 @@ p.description {
     text-decoration: none; 
     color: #e2e2e2;
 }
+
+
+.buttonhere:hover {
+  background-color: #08afac;
+}
+
+.success-label {
+  color: green;
+  margin-left: 55px;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
+.button-container ul,
+.button-container li {
+  list-style: none;
+
+}
+
 
 .star-rating {
   display: inline-block;
