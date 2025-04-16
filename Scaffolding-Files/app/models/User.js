@@ -66,28 +66,22 @@ class User {
         const emailAddress = email;
         const contactNumber = phone; 
         var profileImagePath = null;
+        const enrollment_status = "pending";
         if(image){
             profileImagePath = image;
         }
         else{profileImagePath = "../images/default-profile-image.jpg";}
         const loginStatus = false;  // Default login status as false until they log in
         
-            //const { firstName, lastName, email, address, phone, dob, , password, image } = userData;
-        const sql = `
-            INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-        `;
-        //INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status) VALUES
-
         try {
             const hashedPassword = await bcrypt.hash(password, 10);
             console.log("Hashed password:", hashedPassword);
             const sql = `
-                INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+                INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status, enrollment_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             `;
 
-            const params = [userID, `${firstName} ${lastName}`, role, Address, emailAddress, contactNumber, hashedPassword, profileImagePath, loginStatus];
+            const params = [userID, `${firstName} ${lastName}`, role, Address, emailAddress, contactNumber, hashedPassword, profileImagePath, loginStatus, enrollment_status];
             const result = await db.query(sql, params);
             return result;
         } catch (error) {

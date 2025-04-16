@@ -33,7 +33,8 @@ CREATE TABLE User (
     Contact_Number BIGINT(15),
     Password VARCHAR(255),
     Profile_Image_Path VARCHAR(255),
-    login_status BOOLEAN
+    login_status BOOLEAN,
+    enrollment_status VARCHAR(20)
 
 );
 
@@ -162,11 +163,11 @@ CREATE TABLE Cart (
 -- ----------------------------------------------------------------------------------
 
 -- 1. User Table (only three users: two customers and one admin)
-INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status)
+INSERT INTO User (User_ID, Name, Role, Address, Email_Address, Contact_Number, Password, Profile_Image_Path, login_status, enrollment_status)
 VALUES
-  ('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE),
-  ('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile2.jpeg', FALSE),
-  ('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile3.jpeg', FALSE);
+  ('U001', 'Ella Morris', 'Customer', '12 High St, Oxford, OX1 4DB', 'ella.morris@outlook.com', 447890123456, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile.jpg', FALSE, 'confirmed'),
+  ('U002', 'Mason Clarke', 'Admin', '58 Queen St, Edinburgh, EH2 3NS', 'mason.clarke@gmail.com', 447890123457, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile2.jpeg', FALSE, 'confirmed'),
+  ('U003', 'Ava Taylor', 'Customer', '103 King’s Road, Chelsea, SW3 5EQ', 'ava.taylor@yahoo.com', 447890123458, '$2b$10$2c6Zccm64KpY2jZjb2/NIu/W/v5FGm2jfFTyEuLo5pNh2Gnneuupe', '../images/profile3.jpeg', FALSE, 'confirmed');
 
 -- 2. Payment Table
 INSERT INTO Payment (Payment_ID, Payment_Type, User_ID)
