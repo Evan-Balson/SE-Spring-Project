@@ -28,8 +28,8 @@ CREATE TABLE User (
     User_ID VARCHAR(20) PRIMARY KEY NOT NULL,
     Name VARCHAR(20),
     Role VARCHAR(10),
-    Address VARCHAR(40),
-    Email_Address VARCHAR(60),
+    Address VARCHAR(100),
+    Email_Address VARCHAR(100),
     Contact_Number BIGINT(15),
     Password VARCHAR(255),
     Profile_Image_Path VARCHAR(255),
@@ -52,7 +52,7 @@ CREATE TABLE Inventory (
     Price DOUBLE(5, 2),
     Availability BOOLEAN,
     Quantity INT(5),
-    Name VARCHAR(20),
+    Name VARCHAR(60),
     Color VARCHAR(10),
     Size VARCHAR(10),
     Description VARCHAR(500),
@@ -204,47 +204,49 @@ INSERT INTO Inventory
 VALUES
   ('I001', 200.00, TRUE, 15, 'Modern Office Blazer', 'Navy', 'M', 'A tailored modern office blazer perfect for formal settings with a structured silhouette and fine fabric.', 10, 'U001', '../images/image (3).jpg'),
   
-  ('I002', 320.00, TRUE, 8, 'Chic Leather Jacket', 'Black', 'L', 'A chic leather jacket designed for a bold look with high-quality materials and impeccable stitching.', 10, 'U002', '../images/image (4).jpg'),
+  ('I002', 320.00, TRUE, 8, 'High‑Rise Wide‑Leg Leather Trousers', 'Black', 'L', 'High‑rise wide‑leg leather trousers crafted from premium lambskin for a modern silhouette and enduring style.', 10, 'U002', '../images/image (4).jpg'),
+
+  ('I003', 120.00, TRUE, 15, 'Wrap Blouse', 'Ivory', 'M', 'Elegant ivory wrap blouse with draped front and buttoned cuffs, perfect for both office and casual wear.', 15, 'U003', '../images/image (1).png'),
+
+  ('I004', 120.00, TRUE, 25, 'Ribbed Knit Sweater Dress', 'Cream', 'M', 'Cozy ribbed knit sweater dress with a high turtleneck and long sleeves, perfect for layering under a winter coat.', 10, 'U001', '../images/image (1).jpeg'),
   
-  ('I003', 80.00, TRUE, 20, 'Slim Fit Trousers', 'Grey', '32', 'Stylish slim fit trousers offering a sharp look and comfortable wear, ideal for both office and leisure.', 10, 'U003', '../images/image (1).png'),
+  ('I005', 120.00, TRUE, 10, 'Cable Knit Turtleneck Sweater Dress', 'Cream', 'S', 'Cozy mid‑length cable knit sweater dress with a high turtleneck, perfect for layering under a long coat.', 10, 'U002', '../images/image (5).jpg'),
+
+  ('I006', 150.00, TRUE, 15, 'Light Wash Denim Shirt', 'Light Blue', 'M', 'Casual light‑wash denim shirt with a button‑front design and chest pocket, perfect for layering over tees for a relaxed, everyday look.', 10, 'U003', '../images/image (2).png'),
   
-  ('I004', 50.00, TRUE, 25, 'Classic White Shirt', 'White', 'M', 'A timeless classic white shirt crafted from premium cotton for a crisp and elegant appearance.', 10, 'U001', '../images/image (1).jpeg'),
+  ('I007', 400.00, TRUE, 5, 'Tailored Wool‑Blend Blazer', 'Navy', 'L', 'Structured wool‑blend single‑button blazer with notch lapels and padded shoulders for a polished, professional look.', 10, 'U001', '../images/image (6).jpg'),
   
-  ('I005', 120.00, TRUE, 10, 'Elegant Pencil Skirt', 'Black', 'S', 'An elegant pencil skirt with a streamlined design and refined fit, perfect for professional environments.', 10, 'U002', '../images/image (5).jpg'),
+  ('I008', 70.00, TRUE, 18, 'Structured Wool‑Blend Turtleneck Sweater', 'Navy', 'M', 'Tailored wool‑blend turtleneck sweater offering a sleek silhouette and cozy warmth, ideal for layering under blazers.', 10, 'U002', '../images/image (7).jpg'),
   
-  ('I006', 150.00, TRUE, 15, 'Designer Denim Jeans', 'Indigo', '32', 'Designer denim jeans featuring a modern cut and durable fabric, blending style with exceptional comfort.', 10, 'U003', '../images/image (1).jpeg'),
+  ('I009', 95.00, TRUE, 12, 'Smocked Tiered Wide‑Leg Pants', 'White', 'M', 'Breezy smocked‑waist tiered wide‑leg pants in lightweight fabric, perfect for effortless beach style and all-day comfort.', 10, 'U003', '../images/image (8).jpg'),
+
   
-  ('I007', 400.00, TRUE, 5, 'Luxury Wool Overcoat', 'Camel', 'L', 'A luxury wool overcoat providing exceptional warmth and sophisticated style with fine wool blends.', 10, 'U001', '../images/image (6).jpg'),
-  
-  ('I008', 70.00, TRUE, 18, 'Casual Knit Sweater', 'Navy', 'M', 'A casual knit sweater offering a relaxed fit and soft texture, ideal for cool days and laid-back style.', 10, 'U002', '../images/image (7).jpg'),
-  
-  ('I009', 110.00, TRUE, 12, 'Versatile Oxford Shoes', 'Brown', '9', 'Versatile Oxford shoes that combine classic design with modern comfort for various occasions.', 10, 'U003', '../images/image (8).jpg'),
-  
-  ('I010', 90.00, TRUE, 30, 'Trendy Aviator Sunglasses', 'Gold', 'One Size', 'Trendy aviator sunglasses with a sleek design and UV protection, adding a stylish edge to any look.', 10, 'U001', '../images/image (2).jpg');
+  ('I010', 250.00, TRUE, 30, 'Structured Leather Tote Bag', 'Camel', 'One Size', 'Spacious structured leather tote bag with dual top handles and a minimalist silhouette, perfect for everyday use and carrying all your essentials.', 10, 'U001', '../images/image (2).jpg');
 
 -- Set B: (I011 – I020) using your second set of 10 images
 INSERT INTO Inventory 
     (Inventory_ID, Price, Availability, Quantity, Name, Color, Size, Description, Condition_Level, User_ID, Product_Image_Path)
 VALUES
-  ('I011', 150.00, TRUE, 12, 'Stylish Silk Blouse', 'Ivory', 'M', 'A luxurious silk blouse featuring a subtle sheen and delicate drape, perfect for an elegantly refined look.', 10, 'U001', '../images/image (1).jpg'),
+  ('I011', 280.00, TRUE, 12, 'Winter Essentials Set', 'Grey & Tan', 'One Size', 'Coordinated set featuring a chunky knit pom‑pom beanie, pearl‑embellished sweatshirt, distressed denim jeans, and shearling‑lined ankle boots for a cozy, head‑to‑toe winter look.', 10, 'U001', '../images/image (1).jpg'),
   
-  ('I012', 130.00, TRUE, 10, 'Tailored Midi Skirt', 'Black', 'S', 'A refined midi skirt with precise tailoring and a flattering cut, offering a polished silhouette for any occasion.', 10, 'U002', '../images/image (2).jpeg'),
+  ('I012', 450.00, TRUE, 10, 'Premium Wool Three‑Piece Suit', 'Black', 'M', 'Premium wool three‑piece suit featuring a slim‑fit jacket, matching waistcoat, and tailored trousers for a sophisticated, timeless silhouette.', 10, 'U002', '../images/image (2).jpeg'),
   
-  ('I013', 100.00, TRUE, 20, 'Modern Casual Sneakers', 'White', '9', 'Contemporary sneakers that blend comfort with urban style, designed with cushioned soles and durable materials for daily wear.', 10, 'U003', '../images/image (2).png'),
+  ('I013', 250.00, TRUE, 20, 'Fall Layered Outfit Set', 'Grey & Tan', 'One Size', 'Coordinated set featuring a lace‑shoulder long‑sleeve top, chunky knit pom‑pom beanie, classic blue jeans, and padded‑cuff lace‑up ankle boots for a complete autumn look.', 10, 'U003', '../images/image (14).jpg'),
   
-  ('I014', 200.00, TRUE, 7, 'Vintage Denim Jacket', 'Blue', 'L', 'A vintage denim jacket combining classic appeal with rugged charm, ideal for versatile styling and an effortlessly cool vibe.', 10, 'U001', '../images/image (3).jpeg'),
+  ('I014', 240.00, TRUE, 7, 'Complete Athleisure Workout Set', 'Black & Grey', 'M', 'Coordinated set including a supportive strappy sports bra, breathable tank top, high‑waisted performance capri leggings, lightweight training shoes, and a reusable water bottle for seamless workouts.', 10, 'U001', '../images/image (3).jpeg'),
   
-  ('I015', 250.00, TRUE, 8, 'Elegant High Heels', 'Red', '7', 'Elegant high heels meticulously crafted with refined details, providing a perfect balance between striking style and comfort.', 10, 'U002', '../images/image (9).jpg'),
+  ('I015', 150.00, TRUE, 8, 'Crochet Lace Beach Cover‑Up Dress', 'White', 'One Size', 'Lightweight crochet lace cover‑up dress with a relaxed silhouette, perfect for beach days and resort wear.', 10, 'U002', '../images/image (9).jpg'),
   
-  ('I016', 40.00, TRUE, 25, 'Casual Cotton T-Shirt', 'White', 'M', 'A comfortable cotton T-shirt with a relaxed fit and vibrant print, ideal for everyday casual style.', 10, 'U003', '../images/image (10).jpg'),
+  ('I016', 180.00, TRUE, 25, 'Ribbed Knit Cardigan & Crewneck Sweater Set', 'Brown & Taupe', 'M', 'Coordinated set featuring a chunky ribbed button‑front cardigan paired with a soft crewneck sweater for layered warmth and effortless style.', 10, 'U003', '../images/image (11).jpg'),
   
-  ('I017', 300.00, TRUE, 6, 'Classic Trench Coat', 'Beige', 'M', 'A classic trench coat with a sleek, tailored design perfect for layering over both professional and casual outfits.', 10, 'U001', '../images/image (11).jpg'),
+  ('I017', 350.00, TRUE, 6, 'Tropical Vacation Set', 'Multi', 'M', 'Coordinated resort set featuring a vibrant floral short‑sleeve shirt, matching turquoise swim shorts, a straw fedora hat, and classic aviator sunglasses for effortless beach style.', 10, 'U001', '../images/image (10).jpg'),
   
-  ('I018', 120.00, TRUE, 15, 'Sporty Running Shoes', 'Black', '10', 'Durable running shoes engineered for high performance with modern design and excellent support for active lifestyles.', 10, 'U002', '../images/image (12).jpg'),
+  ('I018', 550.00, TRUE, 15, 'Premium Turtleneck Blazer & Trousers Set', 'Black', 'M', 'Slim‑fit wool‑blend blazer paired with matching tailored trousers and a fitted turtleneck sweater for a modern, monochrome look.', 10, 'U002', '../images/image (12).jpg'),
   
-  ('I019', 450.00, TRUE, 4, 'Designer Leather Bag', 'Brown', 'One Size', 'A designer leather bag showcasing meticulous craftsmanship and refined details to add a luxurious touch to any ensemble.', 10, 'U003', '../images/image (13).jpg'),
+  ('I019', 150.00, TRUE, 4, 'Casual Denim Tote Bag', 'Light Blue & Tan', 'One Size', 'Relaxed light‑wash denim tote bag with contrasting tan leather handles, interior slip pockets, and a roomy interior—perfect for sunny day outings.', 10, 'U003', '../images/image (13).jpg'),
   
-  ('I020', 90.00, TRUE, 30, 'Elegant Silk Scarf', 'Multicolor', 'One Size', 'An elegant silk scarf featuring intricate patterns and a soft texture, adding a sophisticated flair as a stylish accessory.', 10, 'U001', '../images/image (14).jpg');
+  ('I020', 180.00, TRUE, 30, 'Floral Print Dress Duo Set', 'Multicolor', 'One Size', 'Coordinated set of two lightweight floral dresses—one on a white background with vibrant blooms and one on a black base with delicate blossoms—crafted from breathable fabric for effortless summer style.', 10, 'U001', '../images/sample.jpg');
+
 
 -- 6. Transaction Table (Sample Transactions)
 INSERT INTO Transaction (Transaction_ID, Payment_ID, Transaction_Date, Total_Price, User_ID, Inventory_ID)

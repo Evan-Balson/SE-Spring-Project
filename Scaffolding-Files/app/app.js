@@ -414,7 +414,7 @@ app.post('/chat', async (req, res) => {
 
   try {
     // Get GPT or NLP response
-    const gptReply = await processUserMessage(userMessage, aboutCompany, termsAndConditions);
+    const gptReply = await processUserMessage(userMessage, aboutCompany, termsAndConditions, req.session.chatHistory);
 
     // Attempt to parse GPT reply as JSON (for outfit search)
     let categories;

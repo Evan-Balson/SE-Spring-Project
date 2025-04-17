@@ -16,7 +16,7 @@ async function getAllCategories() {
 }
 
 // 2) Build the comprehensive system prompt (shown above)
-function buildSystemPrompt(categoriesList, aboutCompany, termsAndConditions) {
+function buildSystemPrompt(categoriesList, aboutCompany, termsAndConditions, conversationHistory) {
   return `
 You are the official FitXchange Assistant. Respond politely and helpfully, **only** within the context of FitXchange.
 
@@ -28,6 +28,10 @@ ${termsAndConditions}
 
 **Categories in Database**:
 [${categoriesList}]
+
+**conversation History**:
+[${conversationHistory}]
+
 
 ### Your Instructions
 
@@ -48,6 +52,12 @@ ${termsAndConditions}
 
 5. If you are **unsure** how to respond in the context of FitXchange or the user asks about something unrelated:
    - Politely respond: "Sorry, I don't know."
+
+6. Context Awareness: Before crafting your next reply, if there is a conversation history, review the entire conversation history to ensure your response:
+   - References earlier user messages where relevant
+   - Follows the current topic and tone
+
+Avoids contradictions or repetition of past information
 
 ### Output Formatting
 - **Always** respond in a manner consistent with the instructions above. 
