@@ -60,7 +60,7 @@ const processCheckout = async (req, res) => {
         transactionDate: transactionDate,
         totalPrice: totalPrice ?? 0,
         userID: activeUser.userID,
-        inventoryID: item.inventoryID}
+        inventoryID: item.orderId}
     
 
       console.log("Processing checkout for cart item:", transactionData);
@@ -70,7 +70,8 @@ const processCheckout = async (req, res) => {
 
       // Update the Inventory: reduce available quantity.
       const updateInventoryQuery = "UPDATE Inventory SET Quantity = Quantity - ? WHERE Inventory_ID = ?";
-      await db.query(updateInventoryQuery, [item.Quantity, item.inventoryID]);
+      console.log((updateInventoryQuery, [item.Quantity, item.orderId]));
+      await db.query(updateInventoryQuery, [item.Quantity, item.orderId]);
 
       // Remove the cart item after successful processing.
       await Cart.deleteCartItem(item.Cart_ID);
