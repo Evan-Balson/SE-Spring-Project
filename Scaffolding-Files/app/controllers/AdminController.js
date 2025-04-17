@@ -38,6 +38,18 @@ class AdminController {
             res.status(500).send("Error occurred while fetching users.");
         }
     }
+
+    static async approveUser(req, res) {
+        const userId = req.params.id; // Get the user ID from the request
+        const admin = new Administrator(); // Create an admin instance
+        try {
+            await admin.approveUser(userId); // Remove the user
+            res.redirect("/admin/verify-new-users"); // Redirect back to the verify users page
+        } catch (error) {
+            console.error("Error removing user:", error);
+            res.status(500).send("Error occurred while removing user.");
+        }
+    }
     
     static async removeUser(req, res) {
         const userId = req.params.id; // Get the user ID from the request

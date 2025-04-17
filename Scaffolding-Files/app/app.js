@@ -495,13 +495,7 @@ app.post('/chat', async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 });
-  
-  
-app.get("/inspect-items", function(req, res){
 
-    res.render("admin/inspect-items",{title:'Login'});
-
-});
 
 // Route to view saved items for the logged-in user
 app.get("/favourites", async (req, res) => {
@@ -581,6 +575,7 @@ app.get("/admin", AdminController.adminDashboard);
 app.get("/admin/verify-new-users", AdminController.verifyNewUsers);
 
 app.post("/admin/verify-new-users/remove/:id", AdminController.removeUser);
+app.post("/admin/verify-new-users/approve/:id", AdminController.approveUser);
 
 app.get("/admin/inspect-items", AdminController.inspectItems);
 
